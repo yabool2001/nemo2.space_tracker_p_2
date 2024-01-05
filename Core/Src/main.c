@@ -52,7 +52,8 @@ UART_HandleTypeDef huart3;
 UART_HandleTypeDef huart5;
 
 /* USER CODE BEGIN PV */
-
+const char*	hello = "\nHello nemo2.space tracker p2\n\n" ;
+const char*	fv = "0.0.1" ;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -110,7 +111,10 @@ int main(void)
   MX_USART3_UART_Init();
   MX_USART5_UART_Init();
   /* USER CODE BEGIN 2 */
-
+  // System hello
+  HAL_UART_Transmit ( &HUART_DBG , (uint8_t*) hello , strlen ( hello ) , UART_TIMEOUT ) ;
+  // HAL_GPIO_TogglePin ( LDG_GPIO_Port , LDG_Pin ) ;
+  // HAL_GPIO_TogglePin ( LDB_GPIO_Port , LDB_Pin ) ;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -528,6 +532,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
+  __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(ACC_SPI1_CS_GPIO_Port, ACC_SPI1_CS_Pin, GPIO_PIN_RESET);
@@ -535,6 +540,21 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, ASTRO_WKUP_Pin|ASTRO_RST_Pin|RF_SW_CTL2_Pin|RF_SW_CTL1_Pin
                           |GNSS_RST_Pin|GNSS_PWR_SW_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOD, LDG_Pin|LDB_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : ACC_INT1_IT0_Pin */
+  GPIO_InitStruct.Pin = ACC_INT1_IT0_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(ACC_INT1_IT0_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : ACC_INT2_Pin */
+  GPIO_InitStruct.Pin = ACC_INT2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(ACC_INT2_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : ACC_SPI1_CS_Pin */
   GPIO_InitStruct.Pin = ACC_SPI1_CS_Pin;
@@ -563,6 +583,19 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : LDG_Pin LDB_Pin */
+  GPIO_InitStruct.Pin = LDG_Pin|LDB_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : SW1_Pin SW2_Pin */
+  GPIO_InitStruct.Pin = SW1_Pin|SW2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */

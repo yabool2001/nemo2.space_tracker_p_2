@@ -31,7 +31,9 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -57,6 +59,10 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define ACC_INT1_IT0_Pin GPIO_PIN_0
+#define ACC_INT1_IT0_GPIO_Port GPIOA
+#define ACC_INT2_Pin GPIO_PIN_1
+#define ACC_INT2_GPIO_Port GPIOA
 #define DBG_TX_Pin GPIO_PIN_2
 #define DBG_TX_GPIO_Port GPIOA
 #define DBG_RX_Pin GPIO_PIN_3
@@ -89,6 +95,14 @@ void Error_Handler(void);
 #define DBG2_TX_GPIO_Port GPIOA
 #define DBG2_RX_Pin GPIO_PIN_10
 #define DBG2_RX_GPIO_Port GPIOA
+#define LDG_Pin GPIO_PIN_0
+#define LDG_GPIO_Port GPIOD
+#define LDB_Pin GPIO_PIN_1
+#define LDB_GPIO_Port GPIOD
+#define SW1_Pin GPIO_PIN_2
+#define SW1_GPIO_Port GPIOD
+#define SW2_Pin GPIO_PIN_3
+#define SW2_GPIO_Port GPIOD
 #define GNSS_TX_Pin GPIO_PIN_3
 #define GNSS_TX_GPIO_Port GPIOB
 #define GNSS_RX_Pin GPIO_PIN_4
@@ -103,6 +117,14 @@ void Error_Handler(void);
 #define ASTRO_RX_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
+#define FIRMWARE_RELEASE_YEAR			2024
+#define HUART_DBG2						huart1 // BR = 115200 8N1
+#define HUART_DBG						huart2 // BR = 115200 8N1 -> COM na st-link/v3
+#define HUART_ASTRO						huart3 // BR = 9600 8N1
+#define HUART_GNSS						huart5 // BR = 115200 8N1
+#define SPI_ACC							hspi1
+
+#define UART_TIMEOUT 					1000
 
 /* USER CODE END Private defines */
 
