@@ -67,6 +67,12 @@ static void MX_USART2_UART_Init(void);
 static void MX_USART3_UART_Init(void);
 static void MX_USART5_UART_Init(void);
 /* USER CODE BEGIN PFP */
+void sw_on_ldg ( void ) ;
+void sw_on_ldb ( void ) ;
+void sw_off_ldg ( void ) ;
+void sw_off_ldb ( void ) ;
+void blink_ldg ( uint8_t , uint16_t ) ;
+void blink_ldb ( uint8_t , uint16_t ) ;
 
 /* USER CODE END PFP */
 
@@ -112,9 +118,8 @@ int main(void)
   MX_USART5_UART_Init();
   /* USER CODE BEGIN 2 */
   // System hello
-  HAL_UART_Transmit ( &huart2 , (uint8_t*) hello , strlen ( hello ) , UART_TIMEOUT ) ;
-  // HAL_GPIO_TogglePin ( LDG_GPIO_Port , LDG_Pin ) ;
-  // HAL_GPIO_TogglePin ( LDB_GPIO_Port , LDB_Pin ) ;
+  HAL_UART_Transmit ( &HUART_DBG , (uint8_t*) hello , strlen ( hello ) , UART_TIMEOUT ) ;
+  blink_ldg ( 3 , 250 ) ;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -564,9 +569,9 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(ACC_SPI1_CS_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : ASTRO_WKUP_Pin ASTRO_RST_Pin RF_SW_CTL2_Pin RF_SW_CTL1_Pin
-                           GNSS_RST_Pin GNSS_PWR_SW_Pin */
+                           GNSS_PWR_SW_Pin */
   GPIO_InitStruct.Pin = ASTRO_WKUP_Pin|ASTRO_RST_Pin|RF_SW_CTL2_Pin|RF_SW_CTL1_Pin
-                          |GNSS_RST_Pin|GNSS_PWR_SW_Pin;
+                          |GNSS_PWR_SW_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -577,6 +582,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : GNSS_RST_Pin */
+  GPIO_InitStruct.Pin = GNSS_RST_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GNSS_RST_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : ASTRO_ANT_USE_Pin GNSS_JAM_Pin */
   GPIO_InitStruct.Pin = ASTRO_ANT_USE_Pin|GNSS_JAM_Pin;
@@ -602,6 +614,48 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+// *** HARDWARE OPERATIONS
+
+// ** LED OPERATION
+void sw_on_ldg ( void )
+{
+	HAL_GPIO_WritePin ( LDG_GPIO_Port , LDG_Pin , GPIO_PIN_SET ) ;
+}
+void sw_on_ldb ( void )
+{
+	HAL_GPIO_WritePin ( LDB_GPIO_Port , LDB_Pin , GPIO_PIN_SET ) ;
+}
+void sw_off_ldg ( void )
+{
+	HAL_GPIO_WritePin ( LDG_GPIO_Port , LDG_Pin , GPIO_PIN_RESET ) ;
+}
+void sw_off_ldb ( void )
+{
+	HAL_GPIO_WritePin ( LDB_GPIO_Port , LDB_Pin , GPIO_PIN_RESET ) ;
+}
+void blink_ldg ( uint8_t i , uint16_t d )
+{
+	while ( i )
+	{
+		HAL_GPIO_TogglePin ( LDG_GPIO_Port , LDG_Pin ) ;
+		HAL_Delay ( d ) ;
+		HAL_GPIO_TogglePin ( LDG_GPIO_Port , LDG_Pin ) ;
+		HAL_Delay ( d ) ;
+		i-- ;
+	}
+}
+void blink_ldb ( uint8_t i , uint16_t d )
+{
+	while ( i )
+	{
+		HAL_GPIO_TogglePin ( LDB_GPIO_Port , LDB_Pin ) ;
+		HAL_Delay ( d ) ;
+		HAL_GPIO_TogglePin ( LDB_GPIO_Port , LDB_Pin ) ;
+		HAL_Delay ( d ) ;
+		i-- ;
+	}
+}
 
 /* USER CODE END 4 */
 
