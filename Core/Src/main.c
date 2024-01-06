@@ -52,8 +52,22 @@ UART_HandleTypeDef huart3;
 UART_HandleTypeDef huart5;
 
 /* USER CODE BEGIN PV */
-const char*	hello = "\nHello nemo2.space tracker p2\n\n" ;
+
+// SYSTEM
+char*	hello = "\nHello nemo2.space tracker p 2\n" ;
 const char*	fv = "0.0.1" ;
+uint8_t 	rx_byte = 0 ;
+
+// RTC
+char		rtc_dt_s[20] ;
+
+// ASTRO
+uint16_t	astro_payload_id = 0 ;
+char		payload[ASTRO_PAYLOAD_MAX_LEN] = {0}; // 160 bajtów
+
+// TIM
+uint16_t	tim_seconds = 0 ;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -67,12 +81,17 @@ static void MX_USART2_UART_Init(void);
 static void MX_USART3_UART_Init(void);
 static void MX_USART5_UART_Init(void);
 /* USER CODE BEGIN PFP */
-void sw_on_ldg ( void ) ;
-void sw_on_ldb ( void ) ;
-void sw_off_ldg ( void ) ;
-void sw_off_ldb ( void ) ;
-void blink_ldg ( uint8_t , uint16_t ) ;
-void blink_ldb ( uint8_t , uint16_t ) ;
+void my_ldg_sw_on ( void ) ;
+void my_ldb_sw_on ( void ) ;
+void my_ldg_sw_off ( void ) ;
+void my_ldb_sw_off ( void ) ;
+void my_ldg_blink ( uint8_t , uint16_t ) ; // number of blinks, period of blink
+void my_ldb_blink ( uint8_t , uint16_t ) ; // number of blinks, period of blink
+void my_gnss_sw_on ( void ) ;
+void my_gnss_sw_off ( void ) ;
+void my_ant_sw_pos ( uint8_t ) ;
+
+bool is_system_initialized ( void ) ;
 
 /* USER CODE END PFP */
 
@@ -118,14 +137,22 @@ int main(void)
   MX_USART5_UART_Init();
   /* USER CODE BEGIN 2 */
   // System hello
-  HAL_UART_Transmit ( &HUART_DBG , (uint8_t*) hello , strlen ( hello ) , UART_TIMEOUT ) ;
-  blink_ldg ( 3 , 250 ) ;
+  send_debug_logs ( hello ) ;
+  //HAL_UART_Transmit ( &HUART_DBG , (uint8_t*) hello , strlen ( hello ) , UART_TIMEOUT ) ;
+
+  if ( !is_system_initialized () )
+  {
+  }
+
+
+  my_gnss_sw_on () ;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -406,7 +433,7 @@ static void MX_USART2_UART_Init(void)
 
   /* USER CODE END USART2_Init 1 */
   huart2.Instance = USART2;
-  huart2.Init.BaudRate = 115200;
+  huart2.Init.BaudRate = 230400;
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
   huart2.Init.Parity = UART_PARITY_NONE;
@@ -543,8 +570,11 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(ACC_SPI1_CS_GPIO_Port, ACC_SPI1_CS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, ASTRO_WKUP_Pin|ASTRO_RST_Pin|RF_SW_CTL2_Pin|RF_SW_CTL1_Pin
-                          |GNSS_RST_Pin|GNSS_PWR_SW_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, ASTRO_WKUP_Pin|ASTRO_RST_Pin|RF_SW_CTL2_Pin|GNSS_RST_Pin
+                          |GNSS_PWR_SW_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(RF_SW_CTL1_GPIO_Port, RF_SW_CTL1_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, LDG_Pin|LDB_Pin, GPIO_PIN_RESET);
@@ -617,24 +647,47 @@ static void MX_GPIO_Init(void)
 
 // *** HARDWARE OPERATIONS
 
+// ** SYSTEM OPERATION
+void send_debug_logs ( char* p_tx_buffer )
+{
+    uint32_t length = strlen ( p_tx_buffer ) ;
+
+    if ( length > UART_TX_MAX_BUFF_SIZE )
+    {
+        HAL_UART_Transmit ( &HUART_DBG , ( uint8_t* ) "[ERROR] UART buffer reached max length.\n" , 42 , 1000 ) ;
+        length = UART_TX_MAX_BUFF_SIZE;
+    }
+
+    HAL_UART_Transmit ( &HUART_DBG , ( uint8_t* ) p_tx_buffer , length , 1000 ) ;
+    HAL_UART_Transmit ( &HUART_DBG , ( uint8_t* ) "\n" , 1 , 1000 ) ;
+}
+// System functions
+bool is_system_initialized ( void )
+{
+	// Nie próbuj robić nic z Astronode, bo nie wiesz czy nie trzeba go zainicjować restartem. Ogranicz się do samego systemu.
+	uint16_t yyyy = my_rtc_get_dt_s ( rtc_dt_s ) ;
+	send_debug_logs ( rtc_dt_s ) ;
+	return ( yyyy >= FIRMWARE_RELEASE_YEAR ) ? true : false ;
+}
+
 // ** LED OPERATION
-void sw_on_ldg ( void )
+void my_ldg_sw_on ( void )
 {
 	HAL_GPIO_WritePin ( LDG_GPIO_Port , LDG_Pin , GPIO_PIN_SET ) ;
 }
-void sw_on_ldb ( void )
+void my_ldb_sw_on ( void )
 {
 	HAL_GPIO_WritePin ( LDB_GPIO_Port , LDB_Pin , GPIO_PIN_SET ) ;
 }
-void sw_off_ldg ( void )
+void my_ldg_sw_off ( void )
 {
 	HAL_GPIO_WritePin ( LDG_GPIO_Port , LDG_Pin , GPIO_PIN_RESET ) ;
 }
-void sw_off_ldb ( void )
+void my_ldb_sw_off ( void )
 {
 	HAL_GPIO_WritePin ( LDB_GPIO_Port , LDB_Pin , GPIO_PIN_RESET ) ;
 }
-void blink_ldg ( uint8_t i , uint16_t d )
+void my_ldg_blink ( uint8_t i , uint16_t d )
 {
 	while ( i )
 	{
@@ -645,7 +698,7 @@ void blink_ldg ( uint8_t i , uint16_t d )
 		i-- ;
 	}
 }
-void blink_ldb ( uint8_t i , uint16_t d )
+void my_ldb_blink ( uint8_t i , uint16_t d )
 {
 	while ( i )
 	{
@@ -656,6 +709,74 @@ void blink_ldb ( uint8_t i , uint16_t d )
 		i-- ;
 	}
 }
+
+// ** ANT SW Operations
+void my_ant_sw_pos ( uint8_t pos )
+{
+	if ( pos == 1 ) // Włączenie GNSS czyli ustawienie RF_SW_CTL1 = LOW i RF_SW_CTL2 = HIGH
+	{
+		HAL_GPIO_WritePin ( RF_SW_CTL1_GPIO_Port , RF_SW_CTL1_Pin , GPIO_PIN_RESET ) ;
+		HAL_GPIO_WritePin ( RF_SW_CTL2_GPIO_Port , RF_SW_CTL2_Pin , GPIO_PIN_SET ) ;
+	}
+	else if ( pos == 2 )
+	{
+		HAL_GPIO_WritePin ( RF_SW_CTL1_GPIO_Port , RF_SW_CTL1_Pin , GPIO_PIN_SET ) ;
+		HAL_GPIO_WritePin ( RF_SW_CTL2_GPIO_Port , RF_SW_CTL2_Pin , GPIO_PIN_RESET ) ;
+	}
+}
+
+
+// ** GNSS Operations
+void my_gnss_sw_on ( void )
+{
+	my_ant_sw_pos ( 1 ) ;
+	HAL_GPIO_WritePin ( GNSS_PWR_SW_GPIO_Port , GNSS_PWR_SW_Pin , GPIO_PIN_SET ) ;
+	HAL_GPIO_WritePin ( GNSS_PWR_SW_GPIO_Port , GNSS_RST_Pin , GPIO_PIN_SET ) ;
+	MX_USART5_UART_Init () ;
+}
+void my_gnss_sw_off ( void )
+{
+	my_ant_sw_pos ( 2 ) ;
+	HAL_GPIO_WritePin ( GNSS_PWR_SW_GPIO_Port , GNSS_PWR_SW_Pin , GPIO_PIN_RESET ) ;
+	HAL_GPIO_WritePin ( GNSS_PWR_SW_GPIO_Port , GNSS_RST_Pin , GPIO_PIN_RESET ) ;
+	HAL_UART_DeInit ( &HUART_GNSS ) ;
+
+}
+void my_gnss_receive_byte ( uint8_t* rx_byte , bool verbose )
+{
+	HAL_UART_Receive ( &HUART_GNSS , rx_byte , 1 , UART_TIMEOUT ) ;
+	if ( verbose )
+		HAL_UART_Transmit ( &HUART_DBG , rx_byte , 1 , UART_TIMEOUT ) ;
+}
+
+
+// ** ASTRO Operations
+void reset_astronode ( void )
+{
+    HAL_GPIO_WritePin ( ASTRO_RST_GPIO_Port , ASTRO_RST_Pin , GPIO_PIN_SET ) ;
+    HAL_Delay ( 1 ) ;
+    HAL_GPIO_WritePin ( ASTRO_RST_GPIO_Port , ASTRO_RST_Pin , GPIO_PIN_RESET ) ;
+    HAL_Delay ( 250 ) ;
+}
+void send_astronode_request ( uint8_t* p_tx_buffer , uint32_t length )
+{
+    send_debug_logs ( "Message sent to the Astronode --> " ) ;
+    send_debug_logs ( ( char* ) p_tx_buffer ) ;
+    HAL_UART_Transmit ( &HUART_ASTRO , p_tx_buffer , length , 1000 ) ;
+}
+uint32_t get_systick ( void )
+{
+    return HAL_GetTick() ;
+}
+bool is_systick_timeout_over ( uint32_t starting_value , uint16_t duration )
+{
+    return ( get_systick () - starting_value > duration ) ? true : false ;
+}
+bool is_astronode_character_received ( uint8_t* p_rx_char )
+{
+    return ( HAL_UART_Receive ( &HUART_ASTRO , p_rx_char , 1 , 100 ) == HAL_OK ? true : false ) ;
+}
+
 
 /* USER CODE END 4 */
 

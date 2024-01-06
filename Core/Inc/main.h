@@ -34,6 +34,8 @@ extern "C" {
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+#include <my_astronode.h>
+#include <my_rtc.h>
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -55,7 +57,12 @@ extern "C" {
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-
+extern void send_debug_logs ( char* ) ;
+extern void send_astronode_request ( uint8_t* , uint32_t ) ;
+extern uint32_t get_systick ( void ) ;
+extern bool is_systick_timeout_over ( uint32_t , uint16_t ) ;
+extern bool is_astronode_character_received ( uint8_t* ) ;
+extern void my_gnss_receive_byte ( uint8_t* , bool ) ;
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -125,6 +132,9 @@ void Error_Handler(void);
 #define SPI_ACC							hspi1
 
 #define UART_TIMEOUT 					1000
+#define UART_TX_MAX_BUFF_SIZE			250
+
+#define ASTRO_PAYLOAD_MAX_LEN			160
 
 /* USER CODE END Private defines */
 

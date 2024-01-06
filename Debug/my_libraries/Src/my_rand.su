@@ -1,0 +1,2 @@
+../my_libraries/Src/my_rand.c:12:6:my_rand_get_coordinates	64	static
+../my_libraries/Src/my_rand.c:48:6:my_rand_get_coordinates_old	48	static
