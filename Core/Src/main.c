@@ -112,7 +112,7 @@ int main(void)
   MX_USART5_UART_Init();
   /* USER CODE BEGIN 2 */
   // System hello
-  HAL_UART_Transmit ( &HUART_DBG , (uint8_t*) hello , strlen ( hello ) , UART_TIMEOUT ) ;
+  HAL_UART_Transmit ( &huart2 , (uint8_t*) hello , strlen ( hello ) , UART_TIMEOUT ) ;
   // HAL_GPIO_TogglePin ( LDG_GPIO_Port , LDG_Pin ) ;
   // HAL_GPIO_TogglePin ( LDB_GPIO_Port , LDB_Pin ) ;
   /* USER CODE END 2 */
