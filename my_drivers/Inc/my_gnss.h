@@ -22,5 +22,6 @@ void my_gnss_receive_byte ( uint8_t* , bool ) ;
 void send_debug_logs ( char* ) ;
 bool my_lx6_get_coordinates ( uint16_t , uint16_t , double , double* , int32_t* , int32_t* ) ;
 void my_rtc_set_dt_from_nmea_rmc ( const char* ) ;
+bool my_gnss_get_utc ( uint16_t* , uint16_t ) ;
 
 #endif /* MY_LX6_GNSS_H_ */

@@ -36,6 +36,7 @@ extern "C" {
 #include <stdbool.h>
 #include <my_astronode.h>
 #include <my_rtc.h>
+#include <my_gnss.h>
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -130,6 +131,8 @@ extern void my_gnss_receive_byte ( uint8_t* , bool ) ;
 #define HUART_ASTRO						huart3 // BR = 9600 8N1
 #define HUART_GNSS						huart5 // BR = 115200 8N1
 #define SPI_ACC							hspi1
+#define TIM								htim6
+#define TIM_SECONDS_THS_SYSTEM_RESET	600
 
 #define UART_TIMEOUT 					1000
 #define UART_TX_MAX_BUFF_SIZE			250

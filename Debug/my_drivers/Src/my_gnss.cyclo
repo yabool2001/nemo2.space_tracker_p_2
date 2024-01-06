@@ -1,1 +1,2 @@
 ../my_drivers/Src/my_gnss.c:11:6:my_lx6_get_coordinates	16
+../my_drivers/Src/my_gnss.c:85:6:my_gnss_get_utc	8

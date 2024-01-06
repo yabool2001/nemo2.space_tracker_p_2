@@ -81,3 +81,43 @@ bool my_lx6_get_coordinates ( uint16_t timer , uint16_t active_time_ths , double
 		send_debug_logs ( "my_lx6_gnss.c: No fix." ) ;
 	return r ;
 }
+
+bool my_gnss_get_utc ( uint16_t* timer , uint16_t time_ths )
+{
+	// jak będziesz miał więcej niż 1 sv w wiadomosci GPGSV to możesz brać czas z pakietu RMC
+	uint8_t		rx_byte = 0 ;
+	bool		r = false ;
+	uint8_t		nmea_message[NMEA_MESSAGE_SIZE] = {0} ;
+	uint8_t		i_nmea = 0 ;
+	uint8_t		gsv_tns = 0 ;
+	char* 		nmea_gsv_label = "GSV" ;
+	char* 		nmea_rmc_label = "RMC" ;
+
+	while ( *timer < time_ths  ) // 1200 = 10 min.
+	{
+		my_gnss_receive_byte ( &rx_byte, false ) ;
+		if ( rx_byte )
+		{
+			if ( my_nmea_message ( &rx_byte , nmea_message , &i_nmea ) == 2 )
+			{
+				if ( is_my_nmea_checksum_ok ( (char*) nmea_message ) )
+				{
+					if ( strstr ( (char*) nmea_message , nmea_gsv_label ) )
+					{
+						gsv_tns = my_nmea_get_gsv_tns ( (char*) nmea_message ) ;
+					}
+					if ( gsv_tns > 1 )
+					{
+						if ( strstr ( (char*) nmea_message , nmea_rmc_label ) )
+						{
+							my_rtc_set_dt_from_nmea_rmc ( (char*) nmea_message ) ; // Jeśli więcej niż 1 satelitę to na pewno czas jest dobry
+							r = true ;
+							break ;
+						}
+					}
+				}
+			}
+		}
+	}
+	return r ;
+}

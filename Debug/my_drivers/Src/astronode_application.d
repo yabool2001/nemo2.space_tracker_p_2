@@ -45,7 +45,8 @@ my_drivers/Src/astronode_application.o: \
  C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_drivers/Inc/my_rtc.h \
  C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_libraries/Inc/my_conversions.h \
  C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_libraries/Inc/my_nmea.h \
- C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_libraries/Inc/my_conversions.h
+ C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_libraries/Inc/my_conversions.h \
+ C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_drivers/Inc/my_gnss.h
 C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_drivers/Inc/astronode_definitions.h:
 C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_drivers/Inc/astronode_application.h:
 C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_drivers/Inc/astronode_definitions.h:
@@ -93,3 +94,4 @@ C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_drivers/Inc/my_rtc.h:
 C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_libraries/Inc/my_conversions.h:
 C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_libraries/Inc/my_nmea.h:
 C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_libraries/Inc/my_conversions.h:
+C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_drivers/Inc/my_gnss.h:

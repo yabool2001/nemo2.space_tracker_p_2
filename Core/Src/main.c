@@ -65,6 +65,9 @@ char		rtc_dt_s[20] ;
 uint16_t	astro_payload_id = 0 ;
 char		payload[ASTRO_PAYLOAD_MAX_LEN] = {0}; // 160 bajtów
 
+// GNSS
+uint16_t	get_utc_time_ths = 30 ;
+
 // TIM
 uint16_t	tim_seconds = 0 ;
 
@@ -87,11 +90,16 @@ void my_ldg_sw_off ( void ) ;
 void my_ldb_sw_off ( void ) ;
 void my_ldg_blink ( uint8_t , uint16_t ) ; // number of blinks, period of blink
 void my_ldb_blink ( uint8_t , uint16_t ) ; // number of blinks, period of blink
+bool is_system_initialized ( void ) ;
+
 void my_gnss_sw_on ( void ) ;
 void my_gnss_sw_off ( void ) ;
+
 void my_ant_sw_pos ( uint8_t ) ;
 
-bool is_system_initialized ( void ) ;
+void my_tim_init ( void ) ;
+void my_tim_start ( void ) ;
+void my_tim_stop ( void ) ;
 
 /* USER CODE END PFP */
 
@@ -142,10 +150,15 @@ int main(void)
 
   if ( !is_system_initialized () )
   {
+	  my_tim_init () ;
+	  my_gnss_sw_on () ;
+	  my_tim_start () ;
+	  my_gnss_get_utc ( &tim_seconds , get_utc_time_ths ) ;
+	  my_tim_stop () ;
+	  my_rtc_get_dt_s ( rtc_dt_s ) ;
+	  send_debug_logs ( rtc_dt_s ) ;
   }
 
-
-  my_gnss_sw_on () ;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -777,7 +790,41 @@ bool is_astronode_character_received ( uint8_t* p_rx_char )
     return ( HAL_UART_Receive ( &HUART_ASTRO , p_rx_char , 1 , 100 ) == HAL_OK ? true : false ) ;
 }
 
+// TIM operations
+void my_tim_init ()
+{
+	__HAL_TIM_CLEAR_IT ( &TIM , TIM_IT_UPDATE ) ;
+}
 
+void my_tim_start ()
+{
+	tim_seconds = 0 ;
+	HAL_TIM_Base_Start_IT ( &TIM ) ;
+}
+
+void my_tim_stop ()
+{
+	HAL_TIM_Base_Stop_IT ( &TIM ) ;
+}
+
+
+// *** CALBACKS
+
+// TIM Callback
+
+void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef *htim )
+{
+	char m[20] = { 0 } ;
+	if ( htim->Instance == TIM6 )
+	{
+		tim_seconds++ ;
+		if ( tim_seconds > TIM_SECONDS_THS_SYSTEM_RESET )
+		{
+			send_debug_logs ( "main.c,HAL_TIM_PeriodElapsedCallback,HAL_NVIC_SystemReset" ) ;
+			HAL_NVIC_SystemReset () ;
+		}
+	}
+}
 /* USER CODE END 4 */
 
 /**
