@@ -34,9 +34,10 @@ extern "C" {
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
-#include <my_astronode.h>
-#include <my_rtc.h>
-#include <my_gnss.h>
+#include "my_global.h"
+#include "my_astronode.h"
+#include "my_rtc.h"
+#include "my_gnss.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -58,12 +59,12 @@ extern "C" {
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-extern void send_debug_logs ( char* ) ;
-extern void send_astronode_request ( uint8_t* , uint32_t ) ;
-extern uint32_t get_systick ( void ) ;
-extern bool is_systick_timeout_over ( uint32_t , uint16_t ) ;
-extern bool is_astronode_character_received ( uint8_t* ) ;
-extern void my_gnss_receive_byte ( uint8_t* , bool ) ;
+//void send_debug_logs ( char* ) ;
+void send_astronode_request ( uint8_t* , uint32_t ) ;
+uint32_t get_systick ( void ) ;
+bool is_systick_timeout_over ( uint32_t , uint16_t ) ;
+bool is_astronode_character_received ( uint8_t* ) ;
+//void my_gnss_receive_byte ( uint8_t* , bool ) ;
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -135,7 +136,6 @@ extern void my_gnss_receive_byte ( uint8_t* , bool ) ;
 #define TIM_SECONDS_THS_SYSTEM_RESET	600
 
 #define UART_TIMEOUT 					1000
-#define UART_TX_MAX_BUFF_SIZE			250
 
 #define ASTRO_PAYLOAD_MAX_LEN			160
 

@@ -1,2 +1,3 @@
-../my_drivers/Src/my_gnss.c:11:6:my_lx6_get_coordinates	856	static
-../my_drivers/Src/my_gnss.c:85:6:my_gnss_get_utc	296	static
+../my_drivers/Src/my_gnss.c:10:6:my_gnss_acq_coordinates	288	static
+../my_drivers/Src/my_gnss.c:45:6:my_lx6_get_coordinates	856	static
+../my_drivers/Src/my_gnss.c:119:6:my_gnss_get_utc	288	static

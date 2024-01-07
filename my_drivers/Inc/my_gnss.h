@@ -9,19 +9,18 @@
 #define MY_LX6_GNSS_H_
 
 #include <stdbool.h>
+#include "my_global.h"
 #include "my_nmea.h"
 
 #define NMEA_3D_FIX						'3'
-#define NMEA_MESSAGE_SIZE				250
-#define MY_GNSS_NMEA_MAX_SIZE			12 // 10 + ew. znak minus + '\0'
-#define MY_GNSS_MIN_TNS					3 // Minimalna ilość satelitów
-#define MY_GNSS_MIN_TNS_TIME_THS		10 // Czas w jakim powinno być co najmniej MY_GNSS_NMEA_GSV_MIN_TNS satelitów
+#define MY_GNSS_COORDINATE_MAX_SIZE		12 // 10 + ew. znak minus + '\0'
 #define NMEA_FIX_PDOP_STRING_BUFF_SIZE	5
 
-void my_gnss_receive_byte ( uint8_t* , bool ) ;
-void send_debug_logs ( char* ) ;
+
+// Local functions
+bool my_gnss_acq_coordinates ( fix_astro* ) ;
 bool my_lx6_get_coordinates ( uint16_t , uint16_t , double , double* , int32_t* , int32_t* ) ;
 void my_rtc_set_dt_from_nmea_rmc ( const char* ) ;
-bool my_gnss_get_utc ( uint16_t* , uint16_t ) ;
+bool my_gnss_get_utc () ;
 
 #endif /* MY_LX6_GNSS_H_ */

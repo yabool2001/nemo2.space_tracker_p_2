@@ -33,5 +33,6 @@
 "./my_drivers/Src/my_gnss.o"
 "./my_drivers/Src/my_rtc.o"
 "./my_libraries/Src/my_conversions.o"
+"./my_libraries/Src/my_global.o"
 "./my_libraries/Src/my_nmea.o"
 "./my_libraries/Src/my_rand.o"

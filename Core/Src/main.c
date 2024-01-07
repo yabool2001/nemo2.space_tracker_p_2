@@ -62,14 +62,15 @@ uint8_t 	rx_byte = 0 ;
 char		rtc_dt_s[20] ;
 
 // ASTRO
-uint16_t	astro_payload_id = 0 ;
-char		payload[ASTRO_PAYLOAD_MAX_LEN] = {0}; // 160 bajtów
+uint16_t		astro_payload_id = 0 ;
+char			payload[ASTRO_PAYLOAD_MAX_LEN] = {0}; // 160 bajtów
+fix_astro fix3d ;
+
 
 // GNSS
-uint16_t	get_utc_time_ths = 30 ;
 
 // TIM
-uint16_t	tim_seconds = 0 ;
+
 
 /* USER CODE END PV */
 
@@ -153,8 +154,10 @@ int main(void)
 	  my_tim_init () ;
 	  my_gnss_sw_on () ;
 	  my_tim_start () ;
-	  my_gnss_get_utc ( &tim_seconds , get_utc_time_ths ) ;
+	  //my_gnss_get_utc () ;
+	  my_gnss_acq_coordinates ( &fix3d ) ;
 	  my_tim_stop () ;
+	  my_gnss_sw_off () ;
 	  my_rtc_get_dt_s ( rtc_dt_s ) ;
 	  send_debug_logs ( rtc_dt_s ) ;
   }
@@ -761,6 +764,16 @@ void my_gnss_receive_byte ( uint8_t* rx_byte , bool verbose )
 	if ( verbose )
 		HAL_UART_Transmit ( &HUART_DBG , rx_byte , 1 , UART_TIMEOUT ) ;
 }
+bool is_fix3d ()
+{
+	GPIO_PinState r = HAL_GPIO_ReadPin ( GNSS_3DFIX_IT5_GPIO_Port , GNSS_3DFIX_IT5_Pin ) ;
+	if ( r == GPIO_PIN_SET )
+	{
+		send_debug_logs( "3D Fix" ) ;
+		return true ;
+	}
+	return false ;
+}
 
 
 // ** ASTRO Operations
@@ -814,7 +827,6 @@ void my_tim_stop ()
 
 void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef *htim )
 {
-	char m[20] = { 0 } ;
 	if ( htim->Instance == TIM6 )
 	{
 		tim_seconds++ ;

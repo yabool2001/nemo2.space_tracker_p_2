@@ -6,16 +6,19 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../my_libraries/Src/my_conversions.c \
+../my_libraries/Src/my_global.c \
 ../my_libraries/Src/my_nmea.c \
 ../my_libraries/Src/my_rand.c 
 
 OBJS += \
 ./my_libraries/Src/my_conversions.o \
+./my_libraries/Src/my_global.o \
 ./my_libraries/Src/my_nmea.o \
 ./my_libraries/Src/my_rand.o 
 
 C_DEPS += \
 ./my_libraries/Src/my_conversions.d \
+./my_libraries/Src/my_global.d \
 ./my_libraries/Src/my_nmea.d \
 ./my_libraries/Src/my_rand.d 
 
@@ -27,7 +30,7 @@ my_libraries/Src/%.o my_libraries/Src/%.su my_libraries/Src/%.cyclo: ../my_libra
 clean: clean-my_libraries-2f-Src
 
 clean-my_libraries-2f-Src:
-	-$(RM) ./my_libraries/Src/my_conversions.cyclo ./my_libraries/Src/my_conversions.d ./my_libraries/Src/my_conversions.o ./my_libraries/Src/my_conversions.su ./my_libraries/Src/my_nmea.cyclo ./my_libraries/Src/my_nmea.d ./my_libraries/Src/my_nmea.o ./my_libraries/Src/my_nmea.su ./my_libraries/Src/my_rand.cyclo ./my_libraries/Src/my_rand.d ./my_libraries/Src/my_rand.o ./my_libraries/Src/my_rand.su
+	-$(RM) ./my_libraries/Src/my_conversions.cyclo ./my_libraries/Src/my_conversions.d ./my_libraries/Src/my_conversions.o ./my_libraries/Src/my_conversions.su ./my_libraries/Src/my_global.cyclo ./my_libraries/Src/my_global.d ./my_libraries/Src/my_global.o ./my_libraries/Src/my_global.su ./my_libraries/Src/my_nmea.cyclo ./my_libraries/Src/my_nmea.d ./my_libraries/Src/my_nmea.o ./my_libraries/Src/my_nmea.su ./my_libraries/Src/my_rand.cyclo ./my_libraries/Src/my_rand.d ./my_libraries/Src/my_rand.o ./my_libraries/Src/my_rand.su
 
 .PHONY: clean-my_libraries-2f-Src
 
