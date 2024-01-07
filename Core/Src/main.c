@@ -149,15 +149,22 @@ int main(void)
   send_debug_logs ( hello ) ;
   //HAL_UART_Transmit ( &HUART_DBG , (uint8_t*) hello , strlen ( hello ) , UART_TIMEOUT ) ;
 
+  my_tim_init () ;
+  my_gnss_sw_on () ;
+  my_tim_start () ;
+  //my_gnss_get_utc () ;
+  my_gnss_log ( &fix3d ) ;
+  my_tim_stop () ;
+  //my_gnss_sw_off () ;
+
   if ( !is_system_initialized () )
   {
-	  my_tim_init () ;
 	  my_gnss_sw_on () ;
 	  my_tim_start () ;
 	  //my_gnss_get_utc () ;
 	  my_gnss_acq_coordinates ( &fix3d ) ;
 	  my_tim_stop () ;
-	  my_gnss_sw_off () ;
+	  //my_gnss_sw_off () ;
 	  my_rtc_get_dt_s ( rtc_dt_s ) ;
 	  send_debug_logs ( rtc_dt_s ) ;
   }

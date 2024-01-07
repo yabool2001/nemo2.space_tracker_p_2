@@ -16,7 +16,9 @@ bool my_gnss_acq_coordinates ( fix_astro* fix3d )
 	uint8_t		nmea_message[UART_TX_MAX_BUFF_SIZE] = {0} ;
 
 	char* 		nmea_gsv_label = "GSV" ;
-
+	char* 		nmea_gngsa_label = "GNGSA" ;
+	char* 		nmea_gngll_label = "GNGLL" ;
+/*
 	while ( tim_seconds < fix_acq_ths )
 	{
 		my_gnss_receive_byte ( &rx_byte, false ) ;
@@ -34,11 +36,32 @@ bool my_gnss_acq_coordinates ( fix_astro* fix3d )
 						}
 						gsv_tns = my_nmea_get_gsv_tns ( (char*) nmea_message ) ;
 					}
+					if ( strstr ( (char*) nmea_message , nmea_gngsa_label ) )
+					{
+						nmea_fixed_mode_s = get_my_nmea_gngsa_fixed_mode_s ( (char*) nmea_message ) ;
+						*nmea_fixed_pdop_d = get_my_nmea_gngsa_pdop_d ( (char*) nmea_message ) ;
+					}
+					// czas brać z gll a nie z zapamietanej rmc
+					if ( strstr ( (char*) nmea_message , nmea_gngll_label ) )
+					{
+						if ( *nmea_fixed_pdop_d <= nmea_pdop_ths && nmea_fixed_mode_s == NMEA_3D_FIX )
+						{
+							get_my_nmea_gngll_coordinates ( (char*) nmea_message , nmea_latitude_s , nmea_longitude_s , astro_geo_wr_latitude , astro_geo_wr_longitude ) ; // Nie musze nic kombinować z przenoszeniem tej operacji, bo po niej nie będzie już dalej odbierania wiadomości tylko wyjście
+							my_rtc_set_dt_from_nmea_rmc ( (char*) nmea_message ) ; // Jeśli masz fix to na pewno czas jest dobry
+							r = true ;
+							break ;
+						}
+						else
+						{
+							memcpy ( gngll_message , nmea_message , UART_TX_MAX_BUFF_SIZE ) ; // Zapisuję, żeby potem, jak nie osiągnę jakości nmea_pdop_ths to wykorzystać coordinates do payload
+						}
+					}
 				}
 			}
 		}
 	}
 	return r ;
+*/
 }
 
 
@@ -127,7 +150,7 @@ bool my_gnss_get_utc ()
 	char* 		nmea_gsv_label = "GSV" ;
 	char* 		nmea_rmc_label = "RMC" ;
 
-	while ( tim_seconds < utc_acq_ths  ) // 1200 = 10 min.
+	while ( tim_seconds < utc_acq_ths  )
 	{
 		my_gnss_receive_byte ( &rx_byte, false ) ;
 		if ( rx_byte )
@@ -156,3 +179,9 @@ bool my_gnss_get_utc ()
 	return r ;
 }
 
+void my_gnss_log ()
+{
+	uint8_t rx_byte = 0 ;
+	while ( tim_seconds < utc_acq_ths  )
+		my_gnss_receive_byte ( &rx_byte, true ) ;
+}
