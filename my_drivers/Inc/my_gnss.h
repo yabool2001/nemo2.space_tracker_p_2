@@ -22,6 +22,6 @@ bool my_gnss_acq_coordinates ( fix_astro* ) ;
 bool my_lx6_get_coordinates ( uint16_t , uint16_t , double , double* , int32_t* , int32_t* ) ;
 void my_rtc_set_dt_from_nmea_rmc ( const char* ) ;
 bool my_gnss_get_utc () ;
-void my_gnss_log () ;
+void my_gnss_log ( uint16_t ) ;
 
 #endif /* MY_LX6_GNSS_H_ */

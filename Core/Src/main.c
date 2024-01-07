@@ -95,6 +95,7 @@ bool is_system_initialized ( void ) ;
 
 void my_gnss_sw_on ( void ) ;
 void my_gnss_sw_off ( void ) ;
+void my_gnss_verbose ( uint16_t ) ;
 
 void my_ant_sw_pos ( uint8_t ) ;
 
@@ -150,12 +151,8 @@ int main(void)
   //HAL_UART_Transmit ( &HUART_DBG , (uint8_t*) hello , strlen ( hello ) , UART_TIMEOUT ) ;
 
   my_tim_init () ;
-  my_gnss_sw_on () ;
-  my_tim_start () ;
-  //my_gnss_get_utc () ;
-  my_gnss_log ( &fix3d ) ;
-  my_tim_stop () ;
-  //my_gnss_sw_off () ;
+
+  my_gnss_verbose ( 15 ) ;
 
   if ( !is_system_initialized () )
   {
@@ -780,6 +777,14 @@ bool is_fix3d ()
 		return true ;
 	}
 	return false ;
+}
+void my_gnss_verbose ( uint16_t time_seconds_ths )
+{
+	  my_gnss_sw_on () ;
+	  my_tim_start () ;
+	  my_gnss_log ( time_seconds_ths ) ;
+	  my_tim_stop () ;
+	  my_gnss_sw_off () ;
 }
 
 

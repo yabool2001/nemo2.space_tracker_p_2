@@ -179,9 +179,9 @@ bool my_gnss_get_utc ()
 	return r ;
 }
 
-void my_gnss_log ()
+void my_gnss_log ( uint16_t time_seconds_ths )
 {
 	uint8_t rx_byte = 0 ;
-	while ( tim_seconds < utc_acq_ths  )
+	while ( tim_seconds < time_seconds_ths  )
 		my_gnss_receive_byte ( &rx_byte, true ) ;
 }
