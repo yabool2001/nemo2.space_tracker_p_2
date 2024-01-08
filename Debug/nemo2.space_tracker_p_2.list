@@ -18533,7 +18533,7 @@ bool my_gnss_acq_coordinates ( fix_astro* fix3d )
  8006f72:	741a      	strb	r2, [r3, #16]
 
 	while ( tim_seconds < fix_acq_ths )
- 8006f74:	e0c0      	b.n	80070f8 <my_gnss_acq_coordinates+0x200>
+ 8006f74:	e0c1      	b.n	80070fa <my_gnss_acq_coordinates+0x202>
 	{
 		my_gnss_receive_byte ( &rx_byte, false ) ;
  8006f76:	1d3b      	adds	r3, r7, #4
@@ -18559,7 +18559,7 @@ bool my_gnss_acq_coordinates ( fix_astro* fix3d )
  8006f9e:	7011      	strb	r1, [r2, #0]
  8006fa0:	2b00      	cmp	r3, #0
  8006fa2:	d100      	bne.n	8006fa6 <my_gnss_acq_coordinates+0xae>
- 8006fa4:	e0a8      	b.n	80070f8 <my_gnss_acq_coordinates+0x200>
+ 8006fa4:	e0a9      	b.n	80070fa <my_gnss_acq_coordinates+0x202>
 		{
 			if ( my_nmea_message ( &rx_byte , nmea_message , &i_nmea ) == 2 )
  8006fa6:	1cfa      	adds	r2, r7, #3
@@ -18581,7 +18581,7 @@ bool my_gnss_acq_coordinates ( fix_astro* fix3d )
  8006fc8:	701a      	strb	r2, [r3, #0]
  8006fca:	2902      	cmp	r1, #2
  8006fcc:	d000      	beq.n	8006fd0 <my_gnss_acq_coordinates+0xd8>
- 8006fce:	e093      	b.n	80070f8 <my_gnss_acq_coordinates+0x200>
+ 8006fce:	e094      	b.n	80070fa <my_gnss_acq_coordinates+0x202>
 			{
 				if ( is_my_nmea_checksum_ok ( (char*) nmea_message ) )
  8006fd0:	19bb      	adds	r3, r7, r6
@@ -18599,7 +18599,7 @@ bool my_gnss_acq_coordinates ( fix_astro* fix3d )
  8006fea:	701a      	strb	r2, [r3, #0]
  8006fec:	2900      	cmp	r1, #0
  8006fee:	d100      	bne.n	8006ff2 <my_gnss_acq_coordinates+0xfa>
- 8006ff0:	e082      	b.n	80070f8 <my_gnss_acq_coordinates+0x200>
+ 8006ff0:	e083      	b.n	80070fa <my_gnss_acq_coordinates+0x202>
 				{
 					if ( strstr ( (char*) nmea_message , nmea_rmc_label ) && fix3d->fix_mode == NMEA_3D_FIX )
  8006ff2:	2386      	movs	r3, #134	; 0x86
@@ -18651,7 +18651,7 @@ bool my_gnss_acq_coordinates ( fix_astro* fix3d )
  8007046:	4b3b      	ldr	r3, [pc, #236]	; (8007134 <my_gnss_acq_coordinates+0x23c>)
  8007048:	881b      	ldrh	r3, [r3, #0]
  800704a:	429a      	cmp	r2, r3
- 800704c:	d85c      	bhi.n	8007108 <my_gnss_acq_coordinates+0x210>
+ 800704c:	d85d      	bhi.n	800710a <my_gnss_acq_coordinates+0x212>
 						{
 							break ;
 						}
@@ -18675,7 +18675,7 @@ bool my_gnss_acq_coordinates ( fix_astro* fix3d )
  800706c:	0018      	movs	r0, r3
  800706e:	f002 f810 	bl	8009092 <strstr>
  8007072:	1e03      	subs	r3, r0, #0
- 8007074:	d010      	beq.n	8007098 <my_gnss_acq_coordinates+0x1a0>
+ 8007074:	d015      	beq.n	80070a2 <my_gnss_acq_coordinates+0x1aa>
 					{
 						fix3d->fix_mode = get_my_nmea_gngsa_fixed_mode_s ( (char*) nmea_message ) ;
  8007076:	193b      	adds	r3, r7, r4
@@ -18694,92 +18694,89 @@ bool my_gnss_acq_coordinates ( fix_astro* fix3d )
  8007092:	6879      	ldr	r1, [r7, #4]
  8007094:	608a      	str	r2, [r1, #8]
  8007096:	60cb      	str	r3, [r1, #12]
-						//if ( tim_seconds > 10 )
-						//	__NOP() ;
+						if ( tim_seconds > 10 ) {
+ 8007098:	4b25      	ldr	r3, [pc, #148]	; (8007130 <my_gnss_acq_coordinates+0x238>)
+ 800709a:	881b      	ldrh	r3, [r3, #0]
+ 800709c:	2b0a      	cmp	r3, #10
+ 800709e:	d900      	bls.n	80070a2 <my_gnss_acq_coordinates+0x1aa>
+							__NOP() ; }
+ 80070a0:	46c0      	nop			; (mov r8, r8)
 					}
 					// czas brać z gll a nie z zapamietanej rmc
 					if ( strstr ( (char*) nmea_message , nmea_gngll_label ) )
- 8007098:	1d7b      	adds	r3, r7, #5
- 800709a:	33ff      	adds	r3, #255	; 0xff
- 800709c:	681a      	ldr	r2, [r3, #0]
- 800709e:	2408      	movs	r4, #8
- 80070a0:	193b      	adds	r3, r7, r4
- 80070a2:	0011      	movs	r1, r2
- 80070a4:	0018      	movs	r0, r3
- 80070a6:	f001 fff4 	bl	8009092 <strstr>
- 80070aa:	1e03      	subs	r3, r0, #0
- 80070ac:	d01f      	beq.n	80070ee <my_gnss_acq_coordinates+0x1f6>
+ 80070a2:	1d7b      	adds	r3, r7, #5
+ 80070a4:	33ff      	adds	r3, #255	; 0xff
+ 80070a6:	681a      	ldr	r2, [r3, #0]
+ 80070a8:	2408      	movs	r4, #8
+ 80070aa:	193b      	adds	r3, r7, r4
+ 80070ac:	0011      	movs	r1, r2
+ 80070ae:	0018      	movs	r0, r3
+ 80070b0:	f001 ffef 	bl	8009092 <strstr>
+ 80070b4:	1e03      	subs	r3, r0, #0
+ 80070b6:	d020      	beq.n	80070fa <my_gnss_acq_coordinates+0x202>
 					{
 						my_rtc_set_dt_from_nmea_rmc ( (char*) nmea_message ) ; // Jeśli masz fix to na pewno czas jest dobry
- 80070ae:	193b      	adds	r3, r7, r4
- 80070b0:	0018      	movs	r0, r3
- 80070b2:	f000 f887 	bl	80071c4 <my_rtc_set_dt_from_nmea_rmc>
-						my_nmea_get_gngll_coordinates ( (char*) nmea_message , fix3d ) ; // Nie musze nic kombinować z przenoszeniem tej operacji, bo po niej nie będzie już dalej odbierania wiadomości tylko wyjście
- 80070b6:	687a      	ldr	r2, [r7, #4]
  80070b8:	193b      	adds	r3, r7, r4
- 80070ba:	0011      	movs	r1, r2
- 80070bc:	0018      	movs	r0, r3
- 80070be:	f000 faa9 	bl	8007614 <my_nmea_get_gngll_coordinates>
+ 80070ba:	0018      	movs	r0, r3
+ 80070bc:	f000 f882 	bl	80071c4 <my_rtc_set_dt_from_nmea_rmc>
+						my_nmea_get_gngll_coordinates ( (char*) nmea_message , fix3d ) ; // Nie musze nic kombinować z przenoszeniem tej operacji, bo po niej nie będzie już dalej odbierania wiadomości tylko wyjście
+ 80070c0:	687a      	ldr	r2, [r7, #4]
+ 80070c2:	193b      	adds	r3, r7, r4
+ 80070c4:	0011      	movs	r1, r2
+ 80070c6:	0018      	movs	r0, r3
+ 80070c8:	f000 faa4 	bl	8007614 <my_nmea_get_gngll_coordinates>
 						if ( fix3d->pdop <= pdop_ths && is_utc_saved )
- 80070c2:	687b      	ldr	r3, [r7, #4]
- 80070c4:	6898      	ldr	r0, [r3, #8]
- 80070c6:	68d9      	ldr	r1, [r3, #12]
- 80070c8:	4b1b      	ldr	r3, [pc, #108]	; (8007138 <my_gnss_acq_coordinates+0x240>)
- 80070ca:	681a      	ldr	r2, [r3, #0]
- 80070cc:	685b      	ldr	r3, [r3, #4]
- 80070ce:	f7f9 f9cb 	bl	8000468 <__aeabi_dcmple>
- 80070d2:	1e03      	subs	r3, r0, #0
- 80070d4:	d00b      	beq.n	80070ee <my_gnss_acq_coordinates+0x1f6>
- 80070d6:	238b      	movs	r3, #139	; 0x8b
- 80070d8:	005b      	lsls	r3, r3, #1
- 80070da:	18fb      	adds	r3, r7, r3
- 80070dc:	781b      	ldrb	r3, [r3, #0]
- 80070de:	2b00      	cmp	r3, #0
- 80070e0:	d005      	beq.n	80070ee <my_gnss_acq_coordinates+0x1f6>
+ 80070cc:	687b      	ldr	r3, [r7, #4]
+ 80070ce:	6898      	ldr	r0, [r3, #8]
+ 80070d0:	68d9      	ldr	r1, [r3, #12]
+ 80070d2:	4b19      	ldr	r3, [pc, #100]	; (8007138 <my_gnss_acq_coordinates+0x240>)
+ 80070d4:	681a      	ldr	r2, [r3, #0]
+ 80070d6:	685b      	ldr	r3, [r3, #4]
+ 80070d8:	f7f9 f9c6 	bl	8000468 <__aeabi_dcmple>
+ 80070dc:	1e03      	subs	r3, r0, #0
+ 80070de:	d100      	bne.n	80070e2 <my_gnss_acq_coordinates+0x1ea>
+ 80070e0:	e00b      	b.n	80070fa <my_gnss_acq_coordinates+0x202>
+ 80070e2:	238b      	movs	r3, #139	; 0x8b
+ 80070e4:	005b      	lsls	r3, r3, #1
+ 80070e6:	18fb      	adds	r3, r7, r3
+ 80070e8:	781b      	ldrb	r3, [r3, #0]
+ 80070ea:	2b00      	cmp	r3, #0
+ 80070ec:	d005      	beq.n	80070fa <my_gnss_acq_coordinates+0x202>
 						{
 							r = true ;
- 80070e2:	2318      	movs	r3, #24
- 80070e4:	33ff      	adds	r3, #255	; 0xff
- 80070e6:	18fb      	adds	r3, r7, r3
- 80070e8:	2201      	movs	r2, #1
- 80070ea:	701a      	strb	r2, [r3, #0]
+ 80070ee:	2318      	movs	r3, #24
+ 80070f0:	33ff      	adds	r3, #255	; 0xff
+ 80070f2:	18fb      	adds	r3, r7, r3
+ 80070f4:	2201      	movs	r2, #1
+ 80070f6:	701a      	strb	r2, [r3, #0]
 							break ;
- 80070ec:	e00d      	b.n	800710a <my_gnss_acq_coordinates+0x212>
-						}
-					}
-					if ( tim_seconds > 20 )
- 80070ee:	4b10      	ldr	r3, [pc, #64]	; (8007130 <my_gnss_acq_coordinates+0x238>)
- 80070f0:	881b      	ldrh	r3, [r3, #0]
- 80070f2:	2b14      	cmp	r3, #20
- 80070f4:	d900      	bls.n	80070f8 <my_gnss_acq_coordinates+0x200>
-						__NOP() ;
- 80070f6:	46c0      	nop			; (mov r8, r8)
+ 80070f8:	e008      	b.n	800710c <my_gnss_acq_coordinates+0x214>
 	while ( tim_seconds < fix_acq_ths )
- 80070f8:	4b0d      	ldr	r3, [pc, #52]	; (8007130 <my_gnss_acq_coordinates+0x238>)
- 80070fa:	881a      	ldrh	r2, [r3, #0]
- 80070fc:	4b0f      	ldr	r3, [pc, #60]	; (800713c <my_gnss_acq_coordinates+0x244>)
- 80070fe:	881b      	ldrh	r3, [r3, #0]
- 8007100:	429a      	cmp	r2, r3
- 8007102:	d200      	bcs.n	8007106 <my_gnss_acq_coordinates+0x20e>
- 8007104:	e737      	b.n	8006f76 <my_gnss_acq_coordinates+0x7e>
- 8007106:	e000      	b.n	800710a <my_gnss_acq_coordinates+0x212>
+ 80070fa:	4b0d      	ldr	r3, [pc, #52]	; (8007130 <my_gnss_acq_coordinates+0x238>)
+ 80070fc:	881a      	ldrh	r2, [r3, #0]
+ 80070fe:	4b0f      	ldr	r3, [pc, #60]	; (800713c <my_gnss_acq_coordinates+0x244>)
+ 8007100:	881b      	ldrh	r3, [r3, #0]
+ 8007102:	429a      	cmp	r2, r3
+ 8007104:	d200      	bcs.n	8007108 <my_gnss_acq_coordinates+0x210>
+ 8007106:	e736      	b.n	8006f76 <my_gnss_acq_coordinates+0x7e>
+ 8007108:	e000      	b.n	800710c <my_gnss_acq_coordinates+0x214>
 							break ;
- 8007108:	46c0      	nop			; (mov r8, r8)
+ 800710a:	46c0      	nop			; (mov r8, r8)
+						__NOP() ;*/
 				}
 			}
 		}
 	}
 	return r ;
- 800710a:	2318      	movs	r3, #24
- 800710c:	33ff      	adds	r3, #255	; 0xff
- 800710e:	18fb      	adds	r3, r7, r3
- 8007110:	781b      	ldrb	r3, [r3, #0]
+ 800710c:	2318      	movs	r3, #24
+ 800710e:	33ff      	adds	r3, #255	; 0xff
+ 8007110:	18fb      	adds	r3, r7, r3
+ 8007112:	781b      	ldrb	r3, [r3, #0]
 }
- 8007112:	0018      	movs	r0, r3
- 8007114:	46bd      	mov	sp, r7
- 8007116:	b047      	add	sp, #284	; 0x11c
- 8007118:	bdf0      	pop	{r4, r5, r6, r7, pc}
- 800711a:	46c0      	nop			; (mov r8, r8)
+ 8007114:	0018      	movs	r0, r3
+ 8007116:	46bd      	mov	sp, r7
+ 8007118:	b047      	add	sp, #284	; 0x11c
+ 800711a:	bdf0      	pop	{r4, r5, r6, r7, pc}
  800711c:	fffffef0 	.word	0xfffffef0
  8007120:	0800fc18 	.word	0x0800fc18
  8007124:	0800fc1c 	.word	0x0800fc1c
