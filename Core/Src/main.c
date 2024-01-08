@@ -148,11 +148,10 @@ int main(void)
   /* USER CODE BEGIN 2 */
   // System hello
   send_debug_logs ( hello ) ;
-  //HAL_UART_Transmit ( &HUART_DBG , (uint8_t*) hello , strlen ( hello ) , UART_TIMEOUT ) ;
 
   my_tim_init () ;
 
-  my_gnss_verbose ( 15 ) ;
+  // my_gnss_verbose ( 15 ) ;
 
   if ( !is_system_initialized () )
   {

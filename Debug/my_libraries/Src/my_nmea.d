@@ -1,6 +1,6 @@
 my_libraries/Src/my_nmea.o: ../my_libraries/Src/my_nmea.c \
  C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_libraries/Inc/my_nmea.h \
- C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_libraries/Inc/my_conversions.h \
+ C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_libraries/Inc/my_global.h \
  ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal.h \
  ../Core/Inc/stm32g0xx_hal_conf.h \
  ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_rcc.h \
@@ -35,9 +35,10 @@ my_libraries/Src/my_nmea.o: ../my_libraries/Src/my_nmea.c \
  ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_tim.h \
  ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_tim_ex.h \
  ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart.h \
- ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart_ex.h
+ ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart_ex.h \
+ C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_libraries/Inc/my_conversions.h
 C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_libraries/Inc/my_nmea.h:
-C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_libraries/Inc/my_conversions.h:
+C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_libraries/Inc/my_global.h:
 ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal.h:
 ../Core/Inc/stm32g0xx_hal_conf.h:
 ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_rcc.h:
@@ -73,3 +74,4 @@ C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_libraries/Inc/my_conversions.
 ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_tim_ex.h:
 ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart.h:
 ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart_ex.h:
+C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_libraries/Inc/my_conversions.h:

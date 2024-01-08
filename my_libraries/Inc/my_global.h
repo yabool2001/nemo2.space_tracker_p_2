@@ -31,6 +31,7 @@ typedef struct
 	int32_t	latitude_astro_geo_wr ;
 	int32_t	longitude_astro_geo_wr ;
 	double 	pdop ;
+	char	fix_mode ;
 } fix_astro ;
 
 // ASTRO

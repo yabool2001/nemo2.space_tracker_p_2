@@ -11,7 +11,7 @@
 #define MY_NMEA_MESSAGE_MAX_SIZE 250
 
 #define NMEA_DELIMETER			','
-#define RMC_DATE_POSITION		9
+#define RMC_DATE_POSITION		9 // Liczona ilość znaków a nie delimeter
 #define RMC_DATE_YY_OFFSET		4
 #define RMC_DATE_MM_OFFSET		2
 #define RMC_DATE_DD_OFFSET		0
@@ -34,6 +34,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <math.h>
+#include "my_global.h"
 #include "my_conversions.h"
 
 int 		my_nmea_message ( uint8_t* , uint8_t* , uint8_t* ) ;
@@ -44,6 +45,7 @@ const char	get_my_nmea_gngsa_fixed_mode_s ( const char* ) ;
 //const char	get_my_nmea_gngsa_pdop_s ( const char* ) ;
 double		get_my_nmea_gngsa_pdop_d ( const char* ) ;
 double 		nmea2decimal ( const char* , char ) ;
+void		my_nmea_get_gngll_coordinates ( const char* , fix_astro* ) ;
 void		get_my_nmea_gngll_coordinates ( const char* , char* , char* , int32_t* , int32_t* ) ;
 uint16_t	my_nmea_get_gsv_tns ( const char* ) ;
 void		my_nmea_get_rmc_date_yy	( const char* , uint8_t* ) ;

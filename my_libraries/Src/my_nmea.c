@@ -79,6 +79,41 @@ double nmea2decimal ( const char *coord , char dir )
     	return deg + min ;
 }
 
+void my_nmea_get_gngll_coordinates ( const char* m , fix_astro* fix3d )
+{
+	char direction ;
+
+	// UTC part
+
+	// Latitude part
+	uint8_t coordinate_position = my_find_char_position ( m , NMEA_DELIMETER , GLL_LATITUDE_POSITION ) + 1 ;
+	uint8_t coordinate_length = my_find_char_position ( m , NMEA_DELIMETER , GLL_LATITUDE_POSITION + 1 ) - coordinate_position ;
+
+	char* latitude_s_temp = (char*) malloc ( ( coordinate_length +1 ) * sizeof ( char ) ) ;
+	strncpy ( latitude_s_temp , m + coordinate_position , coordinate_length ) ; // Kopiowanie fragmentu łańcucha
+	latitude_s_temp[coordinate_length] = '\0';
+	direction = m[coordinate_position + coordinate_length + 1] ;
+	double latitude_d = nmea2decimal ( latitude_s_temp , direction ) ;
+	free ( latitude_s_temp ) ;
+	latitude_d = round ( latitude_d * 1e6 ) / 1e6 ;
+	//snprintf ( latitude_s , 12 , "%.6lf" , latitude_d ) ;
+	fix3d->latitude_astro_geo_wr = (int32_t) ( latitude_d * 10000000 ) ;
+
+	// Longitude part
+	coordinate_position = my_find_char_position ( m , NMEA_DELIMETER , GLL_LATITUDE_POSITION + 2) + 1 ;
+	coordinate_length = my_find_char_position ( m , NMEA_DELIMETER , GLL_LATITUDE_POSITION + 2 + 1 ) - coordinate_position ;
+
+	char* longitude_s_temp = (char*) malloc ( ( coordinate_length +1 ) * sizeof ( char ) ) ;
+	strncpy ( longitude_s_temp , m + coordinate_position , coordinate_length ) ; // Kopiowanie fragmentu łańcucha
+	longitude_s_temp[coordinate_length] = '\0';
+	direction = m[coordinate_position + coordinate_length + 1] ;
+	double longitude_d = nmea2decimal ( longitude_s_temp , direction ) ;
+	free ( longitude_s_temp ) ;
+	longitude_d = round ( longitude_d * 1e6 ) / 1e6 ;
+	//snprintf ( longitude_s , 12 , "%.6lf" , longitude_d ) ;
+	fix3d->longitude_astro_geo_wr = (int32_t) ( longitude_d * 10000000 ) ;
+}
+
 void get_my_nmea_gngll_coordinates ( const char* m , char* latitude_s , char* longitude_s , int32_t* latitude_astro_geo_wr , int32_t* longitude_astro_geo_wr )
 {
 	char direction ;
@@ -137,6 +172,7 @@ void my_nmea_get_rmc_date_yy ( const char* m , uint8_t* yy )
 	*yy = (uint8_t) temp ;
 
 }
+
 void my_nmea_get_rmc_date_mm ( const char* m , uint8_t* mm )
 {
 	uint16_t temp ;
