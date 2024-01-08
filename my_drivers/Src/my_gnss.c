@@ -48,8 +48,8 @@ bool my_gnss_acq_coordinates ( fix_astro* fix3d )
 					{
 						fix3d->fix_mode = get_my_nmea_gngsa_fixed_mode_s ( (char*) nmea_message ) ;
 						fix3d->pdop = get_my_nmea_gngsa_pdop_d ( (char*) nmea_message ) ;
-						if ( tim_seconds > 120 )
-							__NOP() ;
+						//if ( tim_seconds > 10 )
+						//	__NOP() ;
 					}
 					// czas brać z gll a nie z zapamietanej rmc
 					if ( strstr ( (char*) nmea_message , nmea_gngll_label ) )
@@ -62,6 +62,8 @@ bool my_gnss_acq_coordinates ( fix_astro* fix3d )
 							break ;
 						}
 					}
+					if ( tim_seconds > 20 )
+						__NOP() ;
 				}
 			}
 		}
