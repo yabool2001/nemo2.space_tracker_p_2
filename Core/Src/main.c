@@ -64,7 +64,7 @@ char		rtc_dt_s[20] ;
 // ASTRO
 uint16_t		astro_payload_id = 0 ;
 char			payload[ASTRO_PAYLOAD_MAX_LEN] = {0}; // 160 bajtów
-fix_astro fix3d ;
+fix_astro		fix3d ;
 
 
 // GNSS
