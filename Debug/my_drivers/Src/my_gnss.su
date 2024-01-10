@@ -1,4 +1,4 @@
 ../my_drivers/Src/my_gnss.c:10:6:my_gnss_acq_coordinates	552	static,ignoring_inline_asm
-../my_drivers/Src/my_gnss.c:86:6:my_lx6_get_coordinates	856	static
-../my_drivers/Src/my_gnss.c:160:6:my_gnss_get_utc	288	static
-../my_drivers/Src/my_gnss.c:200:6:my_gnss_log	24	static
+../my_drivers/Src/my_gnss.c:89:6:my_lx6_get_coordinates	856	static
+../my_drivers/Src/my_gnss.c:163:6:my_gnss_get_utc	288	static
+../my_drivers/Src/my_gnss.c:203:6:my_gnss_log	24	static

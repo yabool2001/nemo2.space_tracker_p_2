@@ -34,31 +34,35 @@ bool my_gnss_acq_coordinates ( fix_astro* fix3d )
 			{
 				if ( is_my_nmea_checksum_ok ( (char*) nmea_message ) )
 				{
-					/*
-					if ( strstr ( (char*) nmea_message , nmea_rmc_label ) && fix3d->fix_mode == NMEA_3D_FIX && !is_utc_saved )
+					if ( fix3d->fix_mode == NMEA_3D_FIX && !is_utc_saved )
 					{
-						my_rtc_set_dt_from_nmea_rmc ( (char*) nmea_message ) ; // Jeśli masz fix to na pewno czas jest dobry
-						is_utc_saved = true ;
-					}
-					*/
-
-					if ( strstr ( (char*) nmea_message , nmea_gsv_label ) && gsv_tns < MIN_TNS )
-					{
-						if ( tim_seconds > min_tns_time_ths )
+						if ( strstr ( (char*) nmea_message , nmea_rmc_label ) )
 						{
-							//break ;
+							my_rtc_set_dt_from_nmea_rmc ( (char*) nmea_message ) ; // Jeśli masz fix to na pewno czas jest dobry
+							is_utc_saved = true ;
 						}
-						gsv_tns = my_nmea_get_gsv_tns ( (char*) nmea_message ) ;
 					}
-
-					if ( strstr ( (char*) nmea_message , nmea_gngsa_label ) /*&& gsv_tns > MIN_TNS*/ )
+					if ( gsv_tns < MIN_TNS )
 					{
-						fix3d->fix_mode = get_my_nmea_gngsa_fixed_mode_s ( (char*) nmea_message ) ;
-						fix3d->pdop = get_my_nmea_gngsa_pdop_d ( (char*) nmea_message ) ;
-						if ( tim_seconds > 30 ) {
-							__NOP() ; }
+						if ( strstr ( (char*) nmea_message , nmea_gsv_label ) )
+						{
+							if ( tim_seconds > min_tns_time_ths )
+							{
+								//break ;
+							}
+							gsv_tns = my_nmea_get_gsv_tns ( (char*) nmea_message ) ;
+						}
 					}
-
+					if ( gsv_tns > MIN_TNS )
+					{
+						if ( strstr ( (char*) nmea_message , nmea_gngsa_label ) /*&& gsv_tns > MIN_TNS*/ )
+						{
+							fix3d->fix_mode = get_my_nmea_gngsa_fixed_mode_s ( (char*) nmea_message ) ;
+							fix3d->pdop = get_my_nmea_gngsa_pdop_d ( (char*) nmea_message ) ;
+							if ( tim_seconds > 30 ) {
+								__NOP() ; }
+						}
+					}
 					// czas brać z gll a nie z zapamietanej rmc
 					/*
 					if ( strstr ( (char*) nmea_message , nmea_gngll_label ) && is_utc_saved )
