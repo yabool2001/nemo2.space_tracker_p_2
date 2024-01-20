@@ -46,33 +46,26 @@ bool my_gnss_acq_coordinates ( fix_astro* fix3d )
 							}
 						}
 					}
-					//if ( gsv_tns < MIN_TNS )
-					//{
-						if ( strstr ( (char*) nmea_message , nmea_gsv_label ) )
+					if ( strstr ( (char*) nmea_message , nmea_gsv_label ) && gsv_tns < MIN_TNS )
+					{
+						if ( tim_seconds > min_tns_time_ths )
 						{
-							if ( tim_seconds > min_tns_time_ths )
-							{
-								//break ;
-							}
-							gsv_tns = my_nmea_get_gsv_tns ( (char*) nmea_message ) ;
-							sprintf ( s , "%d  %d" , gsv_tns , tim_seconds) ;
-							send_debug_logs ( s ) ;
+							//break ;
 						}
-					//}
-					/*
-					if ( gsv_tns > MIN_TNS )
+						gsv_tns = my_nmea_get_gsv_tns ( (char*) nmea_message ) ;
+//						sprintf ( s , "%d  %d" , gsv_tns , tim_seconds) ;
+//						send_debug_logs ( s ) ;
+					}
+					if ( gsv_tns > MIN_TNS ) // Tutaj cały czas miałem błąd, bo nigdy gsv_tns nie mógł się zwięszyć przy warunku gsv_tns < MIN_TNS powyżej
 					{
 						if ( strstr ( (char*) nmea_message , nmea_gngsa_label ) )
 						{
 							fix3d->fix_mode = get_my_nmea_gngsa_fixed_mode_s ( (char*) nmea_message ) ;
 							fix3d->pdop = get_my_nmea_gngsa_pdop_d ( (char*) nmea_message ) ;
-							if ( tim_seconds > 30 ) {
-								__NOP() ; }
 						}
+						if ( tim_seconds > 60 ) {
+							__NOP () ; }
 					}
-					*/
-					// czas brać z gll a nie z zapamietanej rmc
-					/*
 					if ( strstr ( (char*) nmea_message , nmea_gngll_label ) && is_utc_saved )
 					{
 						memcpy ( gngll_message , nmea_message , UART_TX_MAX_BUFF_SIZE ) ;
@@ -81,11 +74,13 @@ bool my_gnss_acq_coordinates ( fix_astro* fix3d )
 							break ;
 						}
 					}
-					*/
 				}
 			}
 		}
 	}
+
+	// WYŁĄCZYĆ I ZASAVEOWAĆ BRAK GLONASS BO OSTATNIO NIE ZROBIŁEM SAVE TO NVRAM
+
 	if ( gngll_message[0] )
 	{
 		my_nmea_get_gngll_coordinates ( (char*) gngll_message , fix3d ) ;
