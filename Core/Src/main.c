@@ -183,7 +183,7 @@ int main(void)
 	  my_astro_write_coordinates ( fix3d.latitude_astro_geo_wr , fix3d.longitude_astro_geo_wr ) ;
 	  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
 	  send_debug_logs ( dbg_payload ) ;
-	  if ( my_rtc_set_alarm ( MY_RTC_ALARM_10MIN ) )
+	  if ( my_rtc_set_alarm ( MY_RTC_ALARM_1H ) )
 	  {
 		  my_tim_stop () ;
 		  HAL_SuspendTick () ;
@@ -222,7 +222,7 @@ int main(void)
 		  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
 		  send_debug_logs ( dbg_payload ) ;
 	  }
-	  if ( my_rtc_set_alarm ( MY_RTC_ALARM_10MIN ) )
+	  if ( my_rtc_set_alarm ( MY_RTC_ALARM_1H ) )
 	  {
 		  my_tim_stop () ;
 		  HAL_SuspendTick () ;

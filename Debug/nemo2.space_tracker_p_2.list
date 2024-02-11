@@ -4920,9 +4920,9 @@ int main(void)
  80026c4:	4b5b      	ldr	r3, [pc, #364]	; (8002834 <main+0x28c>)
  80026c6:	0018      	movs	r0, r3
  80026c8:	f000 fc5e 	bl	8002f88 <send_debug_logs>
-	  if ( my_rtc_set_alarm ( MY_RTC_ALARM_10MIN ) )
- 80026cc:	2396      	movs	r3, #150	; 0x96
- 80026ce:	009b      	lsls	r3, r3, #2
+	  if ( my_rtc_set_alarm ( MY_RTC_ALARM_1H ) )
+ 80026cc:	23e1      	movs	r3, #225	; 0xe1
+ 80026ce:	011b      	lsls	r3, r3, #4
  80026d0:	0018      	movs	r0, r3
  80026d2:	f006 fecb 	bl	800946c <my_rtc_set_alarm>
  80026d6:	1e03      	subs	r3, r0, #0
@@ -5063,9 +5063,9 @@ int main(void)
  80027ca:	0018      	movs	r0, r3
  80027cc:	f000 fbdc 	bl	8002f88 <send_debug_logs>
 	  }
-	  if ( my_rtc_set_alarm ( MY_RTC_ALARM_10MIN ) )
- 80027d0:	2396      	movs	r3, #150	; 0x96
- 80027d2:	009b      	lsls	r3, r3, #2
+	  if ( my_rtc_set_alarm ( MY_RTC_ALARM_1H ) )
+ 80027d0:	23e1      	movs	r3, #225	; 0xe1
+ 80027d2:	011b      	lsls	r3, r3, #4
  80027d4:	0018      	movs	r0, r3
  80027d6:	f006 fe49 	bl	800946c <my_rtc_set_alarm>
  80027da:	1e03      	subs	r3, r0, #0
