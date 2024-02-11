@@ -1,4 +1,4 @@
 ../my_drivers/Src/my_gnss.c:10:6:my_gnss_acq_coordinates	17
-../my_drivers/Src/my_gnss.c:92:6:my_lx6_get_coordinates	16
-../my_drivers/Src/my_gnss.c:166:6:my_gnss_get_utc	8
-../my_drivers/Src/my_gnss.c:206:6:my_gnss_log	2
+../my_drivers/Src/my_gnss.c:88:6:my_lx6_get_coordinates	16
+../my_drivers/Src/my_gnss.c:162:6:my_gnss_get_utc	8
+../my_drivers/Src/my_gnss.c:202:6:my_gnss_log	2

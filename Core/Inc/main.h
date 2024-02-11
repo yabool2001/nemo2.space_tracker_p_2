@@ -59,19 +59,9 @@ extern "C" {
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-//void send_debug_logs ( char* ) ;
-void send_astronode_request ( uint8_t* , uint32_t ) ;
-uint32_t get_systick ( void ) ;
-bool is_systick_timeout_over ( uint32_t , uint16_t ) ;
-bool is_astronode_character_received ( uint8_t* ) ;
-void my_gnss_receive_byte ( uint8_t* , bool ) ;
 
 // my_astro
-void my_astronode_reset ( void ) ;
-void send_astronode_request ( uint8_t* , uint32_t ) ;
-uint32_t get_systick ( void ) ;
-bool is_systick_timeout_over ( uint32_t , uint16_t ) ;
-bool is_astronode_character_received ( uint8_t* ) ;
+
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -145,6 +135,9 @@ bool is_astronode_character_received ( uint8_t* ) ;
 #define UART_TIMEOUT 					1000
 
 #define ASTRONODE_PAYLOAD_MAX_LEN		160
+
+#define MY_RTC_ALARM_10MIN				600
+#define MY_RTC_ALARM_1H					3600
 
 /* USER CODE END Private defines */
 

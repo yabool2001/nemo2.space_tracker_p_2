@@ -71,6 +71,8 @@ fix_astro		fix3d ;
 
 // TIM
 
+// Flags
+bool my_rtc_alarm_flag = false ;
 
 /* USER CODE END PV */
 
@@ -100,8 +102,7 @@ void my_gnss_verbose ( uint16_t ) ;
 void my_ant_sw_pos ( uint8_t ) ;
 
 void my_tim_init ( void ) ;
-void my_tim_start ( void ) ;
-void my_tim_stop ( void ) ;
+
 
 bool my_astro_evt_pin ( void ) ;
 
@@ -159,12 +160,11 @@ int main(void)
   while ( !is_system_initialized () )
   {
 	  my_gnss_sw_on () ;
-	  //my_tim_start () ;
 	  my_gnss_acq_coordinates ( &fix3d ) ;
-	  //my_tim_stop () ;
 	  my_gnss_sw_off () ;
 	  my_rtc_get_dt_s ( rtc_dt_s ) ;
-	  send_debug_logs ( rtc_dt_s ) ;
+	  sprintf ( dbg_payload , "%s,%d,%s" , __FILE__ , __LINE__ , rtc_dt_s ) ;
+	  send_debug_logs ( dbg_payload ) ;
   }
   if ( !my_astro_init () )
   {
@@ -174,18 +174,26 @@ int main(void)
   {
 	  while ( my_astro_evt_pin () )
 	  {
-		  send_debug_logs ( "main.c,ucb2,is_evt_pin_high" ) ;
+		  sprintf ( dbg_payload , "%s,%d,my_astro_evt_pin" , __FILE__ , __LINE__ ) ;
+		  send_debug_logs ( dbg_payload ) ;
 		  my_astro_handle_evt () ;
 	  }
-	  sprintf ( my_astro_payload , "fv=%s" , fv ) ;
+	  sprintf ( my_astro_payload , "%u,fv=%s" , (uint16_t) fix3d.pdop , fv ) ;
 	  sprintf ( dbg_payload , "%s,%d,payload_id,payload,%u %s" , __FILE__ , __LINE__ , my_astro_payload_id , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
 	  my_astro_write_coordinates ( fix3d.latitude_astro_geo_wr , fix3d.longitude_astro_geo_wr ) ;
 	  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
 	  send_debug_logs ( dbg_payload ) ;
-	  my_tim_stop () ;
-	  HAL_SuspendTick () ; // Jak nie wyłączę to mnie przerwanie SysTick od razu wybudzi!!!
-	  HAL_PWR_EnterSTOPMode ( PWR_LOWPOWERREGULATOR_ON , PWR_STOPENTRY_WFE ) ;
-	  HAL_ResumeTick () ;
+	  if ( my_rtc_set_alarm ( MY_RTC_ALARM_10MIN ) )
+	  {
+		  my_tim_stop () ;
+		  HAL_SuspendTick () ;
+		  my_rtc_alarm_flag = false ;
+		  HAL_PWR_EnterSTOPMode ( PWR_LOWPOWERREGULATOR_ON , PWR_STOPENTRY_WFE ) ;
+		  HAL_ResumeTick () ;
+		  my_rtc_get_dt_s ( rtc_dt_s ) ;
+		  sprintf ( dbg_payload , "%s,%d,%s" , __FILE__ , __LINE__ , rtc_dt_s ) ;
+		  send_debug_logs ( dbg_payload ) ;
+	  }
   }
 
   /* USER CODE END 2 */
@@ -194,7 +202,37 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-
+	  while ( my_astro_evt_pin () )
+	  {
+		  sprintf ( dbg_payload , "%s,%d,my_astro_evt_pin" , __FILE__ , __LINE__ ) ;
+		  send_debug_logs ( dbg_payload ) ;
+		  my_astro_handle_evt () ;
+	  }
+	  if ( my_rtc_alarm_flag )
+	  {
+		  my_rtc_alarm_flag = false ;
+		  my_gnss_sw_on () ;
+		  my_gnss_acq_coordinates ( &fix3d ) ;
+		  my_gnss_sw_off () ;
+		  my_rtc_get_dt_s ( rtc_dt_s ) ;
+		  sprintf ( dbg_payload , "%s,%d,%s" , __FILE__ , __LINE__ , rtc_dt_s ) ;
+		  send_debug_logs ( dbg_payload ) ;
+		  my_astro_write_coordinates ( fix3d.latitude_astro_geo_wr , fix3d.longitude_astro_geo_wr ) ;
+		  sprintf ( my_astro_payload , "%u,%ld,%ld" , (uint16_t) fix3d.pdop , fix3d.latitude_astro_geo_wr , fix3d.longitude_astro_geo_wr ) ;
+		  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+		  send_debug_logs ( dbg_payload ) ;
+	  }
+	  if ( my_rtc_set_alarm ( MY_RTC_ALARM_10MIN ) )
+	  {
+		  my_tim_stop () ;
+		  HAL_SuspendTick () ;
+		  my_rtc_alarm_flag = false ;
+		  HAL_PWR_EnterSTOPMode ( PWR_LOWPOWERREGULATOR_ON , PWR_STOPENTRY_WFE ) ;
+		  HAL_ResumeTick () ;
+		  my_rtc_get_dt_s ( rtc_dt_s ) ;
+		  sprintf ( dbg_payload , "%s,%d,%s" , __FILE__ , __LINE__ , rtc_dt_s ) ;
+		  send_debug_logs ( dbg_payload ) ;
+	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -862,7 +900,6 @@ void my_tim_stop ()
 // *** CALBACKS
 
 // TIM Callback
-
 void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef *htim )
 {
 	if ( htim->Instance == TIM6 )
@@ -875,6 +912,14 @@ void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef *htim )
 			HAL_NVIC_SystemReset () ;
 		}
 	}
+}
+
+// RTC Callbacks
+void HAL_RTC_AlarmAEventCallback ( RTC_HandleTypeDef* hrtc )
+{
+	// is_rtc_alarm_a_flag = true ;
+	//__HAL_RTC_ALARM_CLEAR_FLAG ( hrtc , RTC_FLAG_ALRAF ) ;  // Wyczyść flagę alarmu
+	my_rtc_alarm_flag = true ;
 }
 /* USER CODE END 4 */
 

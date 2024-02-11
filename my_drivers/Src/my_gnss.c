@@ -23,7 +23,7 @@ bool my_gnss_acq_coordinates ( fix_astro* fix3d )
 
 	fix3d->fix_mode = '\0' ;
 	fix3d->pdop = 100 ;
-
+	my_tim_start () ;
 	while ( tim_seconds < fix_acq_ths )
 	// Pierwsze
 	{
@@ -49,11 +49,9 @@ bool my_gnss_acq_coordinates ( fix_astro* fix3d )
 					{
 						if ( tim_seconds > min_tns_time_ths )
 						{
-							//break ;
+							break ;
 						}
 						gsv_tns = my_nmea_get_gsv_tns ( (char*) nmea_message ) ;
-//						sprintf ( s , "%d  %d" , gsv_tns , tim_seconds) ;
-//						send_debug_logs ( s ) ;
 					}
 					if ( gsv_tns > MIN_TNS ) // Tutaj cały czas miałem błąd, bo nigdy gsv_tns nie mógł się zwięszyć przy warunku gsv_tns < MIN_TNS powyżej
 					{
@@ -62,8 +60,6 @@ bool my_gnss_acq_coordinates ( fix_astro* fix3d )
 							fix3d->fix_mode = get_my_nmea_gngsa_fixed_mode_s ( (char*) nmea_message ) ;
 							fix3d->pdop = get_my_nmea_gngsa_pdop_d ( (char*) nmea_message ) ;
 						}
-						if ( tim_seconds > 60 ) {
-							__NOP () ; }
 					}
 					if ( strstr ( (char*) nmea_message , nmea_gngll_label ) && is_utc_saved )
 					{
@@ -77,7 +73,7 @@ bool my_gnss_acq_coordinates ( fix_astro* fix3d )
 			}
 		}
 	}
-
+	my_tim_stop () ;
 	// WYŁĄCZYĆ I ZASAVEOWAĆ BRAK GLONASS BO OSTATNIO NIE ZROBIŁEM SAVE TO NVRAM
 
 	if ( gngll_message[0] )

@@ -38,13 +38,21 @@ typedef struct
 
 
 // TIM
+void my_tim_start ( void ) ;
+void my_tim_stop ( void ) ;
 extern uint16_t		tim_seconds ;
 
 
 void my_gnss_receive_byte ( uint8_t* , bool ) ;
 bool is_fix3d () ;
 
+// Astronode
 void send_debug_logs ( char* ) ;
 void my_astronode_reset ( void ) ;
+void send_astronode_request ( uint8_t* , uint32_t ) ;
+uint32_t get_systick ( void ) ;
+bool is_systick_timeout_over ( uint32_t , uint16_t ) ;
+bool is_astronode_character_received ( uint8_t* ) ;
+
 
 #endif /* MY_GLOBAL_H_ */
