@@ -55,7 +55,7 @@ UART_HandleTypeDef huart5;
 
 // SYSTEM
 char*		hello = "\nHello nemo2.space tracker p 2\n" ;
-const char*	fv = "0.0.1" ;
+const char*	fv = "0.0.2" ;
 uint8_t 	rx_byte = 0 ;
 char		dbg_payload[UART_TX_MAX_BUFF_SIZE] = {0};
 // RTC
