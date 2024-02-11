@@ -32,5 +32,5 @@
 ../Core/Src/main.c:888:6:my_tim_start	1
 ../Core/Src/main.c:894:6:my_tim_stop	1
 ../Core/Src/main.c:903:6:HAL_TIM_PeriodElapsedCallback	3
-../Core/Src/main.c:918:6:HAL_RTC_AlarmAEventCallback	1
-../Core/Src/main.c:930:6:Error_Handler	1
+../Core/Src/main.c:919:6:HAL_RTC_AlarmAEventCallback	1
+../Core/Src/main.c:931:6:Error_Handler	1

@@ -31,6 +31,6 @@
 ../Core/Src/main.c:883:6:my_tim_init	8	static
 ../Core/Src/main.c:888:6:my_tim_start	8	static
 ../Core/Src/main.c:894:6:my_tim_stop	8	static
-../Core/Src/main.c:903:6:HAL_TIM_PeriodElapsedCallback	16	static
-../Core/Src/main.c:918:6:HAL_RTC_AlarmAEventCallback	16	static
-../Core/Src/main.c:930:6:Error_Handler	8	static,ignoring_inline_asm
+../Core/Src/main.c:903:6:HAL_TIM_PeriodElapsedCallback	32	static
+../Core/Src/main.c:919:6:HAL_RTC_AlarmAEventCallback	16	static
+../Core/Src/main.c:931:6:Error_Handler	8	static,ignoring_inline_asm

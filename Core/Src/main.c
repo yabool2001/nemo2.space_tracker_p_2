@@ -907,7 +907,8 @@ void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef *htim )
 		tim_seconds++ ;
 		if ( tim_seconds > TIM_SECONDS_THS_SYSTEM_RESET )
 		{
-			sprintf ( dbg_payload , "%s,%d,HAL_NVIC_SystemReset" , __FILE__ , __LINE__ ) ;
+			my_rtc_get_dt_s ( rtc_dt_s ) ;
+			sprintf ( dbg_payload , "%s,%d,%s,HAL_NVIC_SystemReset" , __FILE__ , __LINE__ , rtc_dt_s ) ;
 			send_debug_logs ( dbg_payload ) ;
 			HAL_NVIC_SystemReset () ;
 		}
