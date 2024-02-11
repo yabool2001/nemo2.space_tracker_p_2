@@ -165,9 +165,25 @@ int main(void)
 	  my_rtc_get_dt_s ( rtc_dt_s ) ;
 	  sprintf ( dbg_payload , "%s,%d,%s" , __FILE__ , __LINE__ , rtc_dt_s ) ;
 	  send_debug_logs ( dbg_payload ) ;
+	  if ( my_rtc_set_alarm ( MY_RTC_ALARM_1H ) )
+	  {
+		  my_rtc_get_dt_s ( rtc_dt_s ) ;
+		  sprintf ( dbg_payload , "%s,%d,%s,PWR_LOWPOWERREGULATOR_ON,PWR_STOPENTRY_WFE" , __FILE__ , __LINE__ , rtc_dt_s ) ;
+		  my_tim_stop () ;
+		  HAL_SuspendTick () ;
+		  my_rtc_alarm_flag = false ;
+		  HAL_PWR_EnterSTOPMode ( PWR_LOWPOWERREGULATOR_ON , PWR_STOPENTRY_WFE ) ;
+		  HAL_ResumeTick () ;
+		  my_rtc_get_dt_s ( rtc_dt_s ) ;
+		  sprintf ( dbg_payload , "%s,%d,%s" , __FILE__ , __LINE__ , rtc_dt_s ) ;
+		  send_debug_logs ( dbg_payload ) ;
+	  }
   }
   if ( !my_astro_init () )
   {
+	  my_rtc_get_dt_s ( rtc_dt_s ) ;
+	  sprintf ( dbg_payload , "%s,%d,%s,HAL_NVIC_SystemReset" , __FILE__ , __LINE__ , rtc_dt_s ) ;
+	  send_debug_logs ( dbg_payload ) ;
 	  HAL_NVIC_SystemReset () ;
   }
   else
@@ -185,6 +201,8 @@ int main(void)
 	  send_debug_logs ( dbg_payload ) ;
 	  if ( my_rtc_set_alarm ( MY_RTC_ALARM_1H ) )
 	  {
+		  my_rtc_get_dt_s ( rtc_dt_s ) ;
+		  sprintf ( dbg_payload , "%s,%d,%s,PWR_LOWPOWERREGULATOR_ON,PWR_STOPENTRY_WFE" , __FILE__ , __LINE__ , rtc_dt_s ) ;
 		  my_tim_stop () ;
 		  HAL_SuspendTick () ;
 		  my_rtc_alarm_flag = false ;
@@ -224,6 +242,8 @@ int main(void)
 	  }
 	  if ( my_rtc_set_alarm ( MY_RTC_ALARM_1H ) )
 	  {
+		  my_rtc_get_dt_s ( rtc_dt_s ) ;
+		  sprintf ( dbg_payload , "%s,%d,%s,PWR_LOWPOWERREGULATOR_ON,PWR_STOPENTRY_WFE" , __FILE__ , __LINE__ , rtc_dt_s ) ;
 		  my_tim_stop () ;
 		  HAL_SuspendTick () ;
 		  my_rtc_alarm_flag = false ;
