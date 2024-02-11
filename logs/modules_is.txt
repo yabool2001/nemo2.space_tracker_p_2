@@ -1,0 +1,14 @@
+Duża bopla
+Module's product number is:	AST50147-01
+Module's Serial Number is:	ANS2206FL000114
+Module GUID is:				37e91959-2b3c-464c-866a-acc75e5f5bb
+
+Mała bopla
+Module's product number is:	AST50147-01
+Module's Serial Number is:	ANS2206FL000164
+Module GUID is:				532a5803-677d-48fb-b410-c396419d590
+
+Takachi
+Module's product number is:	AST50147-01
+Module's Serial Number is:	ANS2206FL000107
+Module GUID is:				0d9841f6-d3fe-4ad6-a325-2d2f7065baa

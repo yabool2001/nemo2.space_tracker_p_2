@@ -40,8 +40,11 @@ typedef struct
 // TIM
 extern uint16_t		tim_seconds ;
 
-void send_debug_logs ( char* ) ;
+
 void my_gnss_receive_byte ( uint8_t* , bool ) ;
 bool is_fix3d () ;
+
+void send_debug_logs ( char* ) ;
+void my_astronode_reset ( void ) ;
 
 #endif /* MY_GLOBAL_H_ */

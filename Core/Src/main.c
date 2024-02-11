@@ -54,16 +54,16 @@ UART_HandleTypeDef huart5;
 /* USER CODE BEGIN PV */
 
 // SYSTEM
-char*	hello = "\nHello nemo2.space tracker p 2\n" ;
+char*		hello = "\nHello nemo2.space tracker p 2\n" ;
 const char*	fv = "0.0.1" ;
 uint8_t 	rx_byte = 0 ;
-
+char		dbg_payload[UART_TX_MAX_BUFF_SIZE] = {0};
 // RTC
 char		rtc_dt_s[20] ;
 
 // ASTRO
-uint16_t		astro_payload_id = 0 ;
-char			payload[ASTRO_PAYLOAD_MAX_LEN] = {0}; // 160 bajtów
+uint16_t		my_astro_payload_id = 0 ;
+char			my_astro_payload[ASTRONODE_PAYLOAD_MAX_LEN] = {0} ;
 fix_astro		fix3d ;
 
 
@@ -102,6 +102,8 @@ void my_ant_sw_pos ( uint8_t ) ;
 void my_tim_init ( void ) ;
 void my_tim_start ( void ) ;
 void my_tim_stop ( void ) ;
+
+bool my_astro_evt_pin ( void ) ;
 
 /* USER CODE END PFP */
 
@@ -146,23 +148,44 @@ int main(void)
   MX_USART3_UART_Init();
   MX_USART5_UART_Init();
   /* USER CODE BEGIN 2 */
-  // System hello
+
   send_debug_logs ( hello ) ;
 
   my_tim_init () ;
+  my_ant_sw_pos ( 2 ) ;
 
   // my_gnss_verbose ( 15 ) ;
 
-  if ( !is_system_initialized () )
+  while ( !is_system_initialized () )
   {
 	  my_gnss_sw_on () ;
-	  my_tim_start () ;
-	  //my_gnss_get_utc () ;
+	  //my_tim_start () ;
 	  my_gnss_acq_coordinates ( &fix3d ) ;
-	  my_tim_stop () ;
-	  //my_gnss_sw_off () ;
+	  //my_tim_stop () ;
+	  my_gnss_sw_off () ;
 	  my_rtc_get_dt_s ( rtc_dt_s ) ;
 	  send_debug_logs ( rtc_dt_s ) ;
+  }
+  if ( !my_astro_init () )
+  {
+	  HAL_NVIC_SystemReset () ;
+  }
+  else
+  {
+	  while ( my_astro_evt_pin () )
+	  {
+		  send_debug_logs ( "main.c,ucb2,is_evt_pin_high" ) ;
+		  my_astro_handle_evt () ;
+	  }
+	  sprintf ( my_astro_payload , "fv=%s" , fv ) ;
+	  sprintf ( dbg_payload , "%s,%d,payload_id,payload,%u %s" , __FILE__ , __LINE__ , my_astro_payload_id , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
+	  my_astro_write_coordinates ( fix3d.latitude_astro_geo_wr , fix3d.longitude_astro_geo_wr ) ;
+	  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+	  send_debug_logs ( dbg_payload ) ;
+	  my_tim_stop () ;
+	  HAL_SuspendTick () ; // Jak nie wyłączę to mnie przerwanie SysTick od razu wybudzi!!!
+	  HAL_PWR_EnterSTOPMode ( PWR_LOWPOWERREGULATOR_ON , PWR_STOPENTRY_WFE ) ;
+	  HAL_ResumeTick () ;
   }
 
   /* USER CODE END 2 */
@@ -788,7 +811,7 @@ void my_gnss_verbose ( uint16_t time_seconds_ths )
 
 
 // ** ASTRO Operations
-void reset_astronode ( void )
+void my_astronode_reset ( void )
 {
     HAL_GPIO_WritePin ( ASTRO_RST_GPIO_Port , ASTRO_RST_Pin , GPIO_PIN_SET ) ;
     HAL_Delay ( 1 ) ;
@@ -812,6 +835,10 @@ bool is_systick_timeout_over ( uint32_t starting_value , uint16_t duration )
 bool is_astronode_character_received ( uint8_t* p_rx_char )
 {
     return ( HAL_UART_Receive ( &HUART_ASTRO , p_rx_char , 1 , 100 ) == HAL_OK ? true : false ) ;
+}
+bool my_astro_evt_pin ()
+{
+	return ( HAL_GPIO_ReadPin ( ASTRO_EVT_GPIO_Port , ASTRO_EVT_Pin ) == GPIO_PIN_SET ? true : false);
 }
 
 // TIM operations
@@ -843,7 +870,8 @@ void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef *htim )
 		tim_seconds++ ;
 		if ( tim_seconds > TIM_SECONDS_THS_SYSTEM_RESET )
 		{
-			send_debug_logs ( "main.c,HAL_TIM_PeriodElapsedCallback,HAL_NVIC_SystemReset" ) ;
+			sprintf ( dbg_payload , "%s,%d,HAL_NVIC_SystemReset" , __FILE__ , __LINE__ ) ;
+			send_debug_logs ( dbg_payload ) ;
 			HAL_NVIC_SystemReset () ;
 		}
 	}

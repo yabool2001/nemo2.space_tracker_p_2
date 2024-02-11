@@ -20,7 +20,6 @@ bool my_gnss_acq_coordinates ( fix_astro* fix3d )
 	char* 		nmea_rmc_label = "GNRMC" ;
 	char* 		nmea_gngsa_label = "GNGSA" ;
 	char* 		nmea_gngll_label = "GNGLL" ;
-	char		s[10] = { 0 } ;
 
 	fix3d->fix_mode = '\0' ;
 	fix3d->pdop = 100 ;

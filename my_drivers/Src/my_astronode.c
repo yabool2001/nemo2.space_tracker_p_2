@@ -6,6 +6,39 @@
  */
 #include "my_astronode.h"
 
+bool my_astro_init ()
+{
+	bool cfg_wr = false ;
+
+	while ( !cfg_wr )
+	{
+		my_astronode_reset () ;
+		// Satellite Acknowledgement (true): Asset informed of ACK to satellite (default)
+		// Add Geolocation (true)
+		// Enable_ephemeris (true)
+		// Deep Sleep Mode (false) NOT used
+		// Satellite Ack Event Pin Mask (true): EVT pin shows EVT register Payload Ack bit state
+		// Reset Notification Event Pin Mask (true):  EVT pin shows EVT register Reset Event Notification bit state
+		// Command Available Event Pin Mask (true): EVT pin shows EVT register Command Available bit state
+		// Message Transmission (Tx) Pending Event Pin Mask (false):  EVT pin does not show EVT register Msg Tx Pending bit state
+		cfg_wr = astronode_send_cfg_wr ( true , true , true , false , true , true , true , false  ) ;
+	}
+
+	if ( cfg_wr )
+	{
+		astronode_send_rtc_rr () ;
+		astronode_send_cfg_sr () ;
+		astronode_send_mpn_rr () ;
+		astronode_send_msn_rr () ;
+		astronode_send_mgi_rr () ;
+		astronode_send_pld_fr () ;
+		return true ;
+	}
+	else
+	{
+		return false ;
+	}
+}
 
 bool my_astro_add_payload_2_queue ( uint16_t id , char* payload )
 {
@@ -23,25 +56,25 @@ bool my_astro_add_payload_2_queue ( uint16_t id , char* payload )
 	}
 	return false ;
 }
-bool my_astro_read_evt_reg ( void )
+bool my_astro_handle_evt ( void )
 {
-	send_debug_logs ( "my_astronode.c,my_astro_read_evt_reg,evt pin is high." ) ;
+	send_debug_logs ( "my_astronode.c,my_astro_handle_evt,evt pin is high." ) ;
 	astronode_send_evt_rr () ;
 	if (is_sak_available () )
 	{
 	  astronode_send_sak_rr () ;
 	  astronode_send_sak_cr () ;
-	  send_debug_logs ( "my_astronode.c,my_astro_read_evt_reg,message has been acknowledged." ) ;
+	  send_debug_logs ( "my_astronode.c,my_astro_handle_evt,message has been acknowledged." ) ;
 	  //astronode_send_per_rr () ;
 	}
 	if ( is_astronode_reset () )
 	{
-	  send_debug_logs ( "my_astronode.c,my_astro_read_evt_reg,terminal has been reset." ) ;
+	  send_debug_logs ( "my_astronode.c,my_astro_handle_evt,terminal has been reset." ) ;
 	  astronode_send_res_cr () ;
 	}
 	if ( is_command_available () )
 	{
-	  send_debug_logs ( "my_astronode.c,my_astro_read_evt_reg,unicast command is available" ) ;
+	  send_debug_logs ( "my_astronode.c,my_astro_handle_evt,unicast command is available" ) ;
 	  astronode_send_cmd_rr () ;
 	  astronode_send_cmd_cr () ;
 	}
