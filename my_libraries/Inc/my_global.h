@@ -18,7 +18,7 @@
 #define UTC_ACQ_THS					30
 #define FIX_ACQ_THS					240 // produkcyjnie ustawić na 120
 #define MIN_TNS						3 // Minimalna ilość satelitów
-#define MIN_TNS_TIME_THS			10 // Czas w jakim powinno być co najmniej MY_GNSS_NMEA_GSV_MIN_TNS satelitów
+#define MIN_TNS_TIME_THS			30 // Czas w jakim powinno być co najmniej MY_GNSS_NMEA_GSV_MIN_TNS satelitów
 
 // GNSS
 extern uint16_t		utc_acq_ths ;
