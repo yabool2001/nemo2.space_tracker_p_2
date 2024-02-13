@@ -160,7 +160,16 @@ int main(void)
   while ( !is_system_initialized () )
   {
 	  my_gnss_sw_on () ;
-	  my_gnss_acq_coordinates ( &fix3d ) ;
+	  if ( my_gnss_acq_coordinates ( &fix3d ) )
+	  {
+		  sprintf ( dbg_payload , "%s,%d,3D Fix" , __FILE__ , __LINE__ ) ;
+		  send_debug_logs ( dbg_payload ) ;
+	  }
+	  else
+	  {
+		  sprintf ( dbg_payload , "%s,%d,No 3D Fix" , __FILE__ , __LINE__ ) ;
+		  send_debug_logs ( dbg_payload ) ;
+	  }
 	  my_gnss_sw_off () ;
 	  my_rtc_get_dt_s ( rtc_dt_s ) ;
 	  sprintf ( dbg_payload , "%s,%d,%s" , __FILE__ , __LINE__ , rtc_dt_s ) ;
@@ -230,7 +239,16 @@ int main(void)
 	  {
 		  my_rtc_alarm_flag = false ;
 		  my_gnss_sw_on () ;
-		  my_gnss_acq_coordinates ( &fix3d ) ;
+		  if ( my_gnss_acq_coordinates ( &fix3d ) )
+		  {
+			  sprintf ( dbg_payload , "%s,%d,No 3D Fix" , __FILE__ , __LINE__ ) ;
+			  send_debug_logs ( dbg_payload ) ;
+		  }
+		  else
+		  {
+			  sprintf ( dbg_payload , "%s,%d,3D Fix" , __FILE__ , __LINE__ ) ;
+			  send_debug_logs ( dbg_payload ) ;
+		  }
 		  my_gnss_sw_off () ;
 		  my_rtc_get_dt_s ( rtc_dt_s ) ;
 		  sprintf ( dbg_payload , "%s,%d,%s" , __FILE__ , __LINE__ , rtc_dt_s ) ;
