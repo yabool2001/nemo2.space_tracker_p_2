@@ -27,7 +27,7 @@ bool my_gnss_acq_coordinates ( fix_astro* fix3d )
 	while ( tim_seconds < fix_acq_ths )
 	// Pierwsze
 	{
-		my_gnss_receive_byte ( &rx_byte, false ) ;
+		my_gnss_receive_byte ( &rx_byte, true ) ;
 		if ( rx_byte )
 		{
 			if ( my_nmea_message ( &rx_byte , nmea_message , &i_nmea ) == 2 )

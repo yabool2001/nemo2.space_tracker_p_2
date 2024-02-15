@@ -41,7 +41,7 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  18 .debug_line   0001e4e4  00000000  00000000  00071b26  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    000cad43  00000000  00000000  0009000a  2**0
+ 19 .debug_str    000cad44  00000000  00000000  0009000a  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  20 .debug_frame  000071b4  00000000  00000000  0015ad50  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
@@ -23908,10 +23908,10 @@ bool my_gnss_acq_coordinates ( fix_astro* fix3d )
  80092ca:	e0c5      	b.n	8009458 <my_gnss_acq_coordinates+0x22c>
 	// Pierwsze
 	{
-		my_gnss_receive_byte ( &rx_byte, false ) ;
+		my_gnss_receive_byte ( &rx_byte, true ) ;
  80092cc:	4c7a      	ldr	r4, [pc, #488]	; (80094b8 <my_gnss_acq_coordinates+0x28c>)
  80092ce:	193b      	adds	r3, r7, r4
- 80092d0:	2100      	movs	r1, #0
+ 80092d0:	2101      	movs	r1, #1
  80092d2:	0018      	movs	r0, r3
  80092d4:	f7f9 ffa2 	bl	800321c <my_gnss_receive_byte>
 		if ( rx_byte )
