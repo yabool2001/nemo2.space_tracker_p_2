@@ -73,6 +73,7 @@ fix_astro		fix3d ;
 
 // Flags
 bool my_rtc_alarm_flag = false ;
+bool my_gnss_3dfix_flag = false ;
 
 /* USER CODE END PV */
 
@@ -157,37 +158,29 @@ int main(void)
 
   // my_gnss_verbose ( 15 ) ;
 
-  while ( !is_system_initialized () )
+  my_gnss_sw_on () ;
+  my_gnss_3dfix_flag = my_gnss_acq_coordinates ( &fix3d ) ;
+  my_gnss_sw_off () ;
+  sprintf ( dbg_payload , "%s,%d,fix_mode=%h,pdop=%f,acq_time=%u" , __FILE__ , __LINE__ , fix3d.fix_mode , fix3d.pdop , fix3d.acq_time ) ;
+  send_debug_logs ( dbg_payload ) ;
+  my_rtc_get_dt_s ( rtc_dt_s ) ;
+  sprintf ( dbg_payload , "%s,%d,%s" , __FILE__ , __LINE__ , rtc_dt_s ) ;
+  send_debug_logs ( dbg_payload ) ;
+  if ( !my_gnss_3dfix_flag )
   {
-	  my_gnss_sw_on () ;
-	  if ( my_gnss_acq_coordinates ( &fix3d ) )
-	  {
-		  sprintf ( dbg_payload , "%s,%d,3D Fix" , __FILE__ , __LINE__ ) ;
-		  send_debug_logs ( dbg_payload ) ;
-	  }
-	  else
-	  {
-		  sprintf ( dbg_payload , "%s,%d,No 3D Fix" , __FILE__ , __LINE__ ) ;
-		  send_debug_logs ( dbg_payload ) ;
-	  }
-	  my_gnss_sw_off () ;
-	  my_rtc_get_dt_s ( rtc_dt_s ) ;
-	  sprintf ( dbg_payload , "%s,%d,%s" , __FILE__ , __LINE__ , rtc_dt_s ) ;
-	  send_debug_logs ( dbg_payload ) ;
 	  if ( my_rtc_set_alarm ( MY_RTC_ALARM_1H ) )
 	  {
-		  my_rtc_get_dt_s ( rtc_dt_s ) ;
-		  sprintf ( dbg_payload , "%s,%d,%s,PWR_LOWPOWERREGULATOR_ON,PWR_STOPENTRY_WFE" , __FILE__ , __LINE__ , rtc_dt_s ) ;
+		  sprintf ( dbg_payload , "%s,%d,HAL_PWR_EnterSTANDBYMode" , __FILE__ , __LINE__ ) ;
+		  send_debug_logs ( dbg_payload ) ;
 		  my_tim_stop () ;
-		  HAL_SuspendTick () ;
 		  my_rtc_alarm_flag = false ;
-		  HAL_PWR_EnterSTOPMode ( PWR_LOWPOWERREGULATOR_ON , PWR_STOPENTRY_WFE ) ;
-		  HAL_ResumeTick () ;
+		  HAL_PWR_EnterSTANDBYMode () ;
 		  my_rtc_get_dt_s ( rtc_dt_s ) ;
 		  sprintf ( dbg_payload , "%s,%d,%s" , __FILE__ , __LINE__ , rtc_dt_s ) ;
 		  send_debug_logs ( dbg_payload ) ;
 	  }
   }
+
   if ( !my_astro_init () )
   {
 	  my_rtc_get_dt_s ( rtc_dt_s ) ;
@@ -203,8 +196,8 @@ int main(void)
 		  send_debug_logs ( dbg_payload ) ;
 		  my_astro_handle_evt () ;
 	  }
-	  sprintf ( my_astro_payload , "%u,fv=%s" , (uint16_t) fix3d.pdop , fv ) ;
-	  sprintf ( dbg_payload , "%s,%d,payload_id,payload,%u %s" , __FILE__ , __LINE__ , my_astro_payload_id , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
+	  sprintf ( my_astro_payload , "%u,%u,%s" , (uint16_t) fix3d.pdop , fix3d.acq_time , fv ) ;
+	  sprintf ( dbg_payload , "%s,%d,payload_id: %u, %s" , __FILE__ , __LINE__ , my_astro_payload_id , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
 	  my_astro_write_coordinates ( fix3d.latitude_astro_geo_wr , fix3d.longitude_astro_geo_wr ) ;
 	  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
 	  send_debug_logs ( dbg_payload ) ;
@@ -222,7 +215,19 @@ int main(void)
 		  send_debug_logs ( dbg_payload ) ;
 	  }
   }
-
+  if ( my_rtc_set_alarm ( MY_RTC_ALARM_1H ) )
+  {
+	  my_rtc_get_dt_s ( rtc_dt_s ) ;
+	  sprintf ( dbg_payload , "%s,%d,%s,PWR_LOWPOWERREGULATOR_ON,PWR_STOPENTRY_WFE" , __FILE__ , __LINE__ , rtc_dt_s ) ;
+	  my_tim_stop () ;
+	  HAL_SuspendTick () ;
+	  my_rtc_alarm_flag = false ;
+	  HAL_PWR_EnterSTOPMode ( PWR_LOWPOWERREGULATOR_ON , PWR_STOPENTRY_WFE ) ;
+	  HAL_ResumeTick () ;
+	  my_rtc_get_dt_s ( rtc_dt_s ) ;
+	  sprintf ( dbg_payload , "%s,%d,%s" , __FILE__ , __LINE__ , rtc_dt_s ) ;
+	  send_debug_logs ( dbg_payload ) ;
+  }
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -254,7 +259,7 @@ int main(void)
 		  sprintf ( dbg_payload , "%s,%d,%s" , __FILE__ , __LINE__ , rtc_dt_s ) ;
 		  send_debug_logs ( dbg_payload ) ;
 		  my_astro_write_coordinates ( fix3d.latitude_astro_geo_wr , fix3d.longitude_astro_geo_wr ) ;
-		  sprintf ( my_astro_payload , "%u,%ld,%ld" , (uint16_t) fix3d.pdop , fix3d.latitude_astro_geo_wr , fix3d.longitude_astro_geo_wr ) ;
+		  sprintf ( my_astro_payload , "%u,%u,%ld,%ld" , (uint16_t) fix3d.pdop , fix3d.acq_time , fix3d.latitude_astro_geo_wr , fix3d.longitude_astro_geo_wr ) ;
 		  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
 		  send_debug_logs ( dbg_payload ) ;
 	  }

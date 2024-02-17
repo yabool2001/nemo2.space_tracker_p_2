@@ -136,6 +136,7 @@ void Error_Handler(void);
 
 #define ASTRONODE_PAYLOAD_MAX_LEN		160
 
+#define MY_RTC_ALARM_5MIN				300
 #define MY_RTC_ALARM_10MIN				600
 #define MY_RTC_ALARM_1H					3600
 

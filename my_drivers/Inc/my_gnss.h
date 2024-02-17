@@ -24,5 +24,6 @@ extern void my_rtc_set_dt_from_nmea_gll ( const char* ) ;
 extern void my_rtc_set_dt_from_nmea_rmc ( const char* ) ;
 bool my_gnss_get_utc () ;
 void my_gnss_log ( uint16_t ) ;
+bool my_gnss_get_pair ( char pair_response[2][250] ) ;
 
 #endif /* MY_LX6_GNSS_H_ */

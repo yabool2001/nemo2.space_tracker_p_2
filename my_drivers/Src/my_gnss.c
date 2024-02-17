@@ -79,6 +79,7 @@ bool my_gnss_acq_coordinates ( fix_astro* fix3d )
 	if ( gngll_message[0] )
 	{
 		my_nmea_get_gngll_coordinates ( (char*) gngll_message , fix3d ) ;
+		fix3d->acq_time = tim_seconds ;
 		r = true ;
 	}
 	return r ;
@@ -204,4 +205,38 @@ void my_gnss_log ( uint16_t time_seconds_ths )
 	uint8_t rx_byte = 0 ;
 	while ( tim_seconds < time_seconds_ths  )
 		my_gnss_receive_byte ( &rx_byte, true ) ;
+}
+
+bool my_gnss_get_pair ( char pair_response[2][250] )
+{
+	char* 		nmea_pair_label = "$PAIR" ;
+	uint8_t		i = 0 ;
+	uint8_t		rx_byte = 0 ;
+	uint8_t		i_nmea = 0 ;
+	uint8_t		nmea_message[UART_TX_MAX_BUFF_SIZE] = {0} ;
+
+	my_tim_start () ;
+	while ( tim_seconds < 10 )
+	{
+		my_gnss_receive_byte ( &rx_byte, false ) ;
+		if ( rx_byte )
+		{
+			if ( my_nmea_message ( &rx_byte , nmea_message , &i_nmea ) == 2 )
+			{
+				if ( is_my_nmea_checksum_ok ( (char*) nmea_message ) )
+				{
+					if ( strstr ( (char*) nmea_message , nmea_pair_label ) )
+					{
+						memcpy ( pair_response[i++] , nmea_message , UART_TX_MAX_BUFF_SIZE ) ;
+						if (i == 2 )
+						{
+							break ;
+						}
+					}
+				}
+			}
+		}
+	}
+	my_tim_stop () ;
+	return i > 0 ? true : false ;
 }
