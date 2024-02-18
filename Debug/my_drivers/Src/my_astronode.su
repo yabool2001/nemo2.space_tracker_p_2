@@ -1,5 +1,5 @@
 ../my_drivers/Src/my_astronode.c:9:6:my_astro_init	40	static
 ../my_drivers/Src/my_astronode.c:43:6:my_astro_add_payload_2_queue	24	static
 ../my_drivers/Src/my_astronode.c:59:6:my_astro_handle_evt	8	static
-../my_drivers/Src/my_astronode.c:83:6:my_astro_log	8	static
-../my_drivers/Src/my_astronode.c:93:6:my_astro_write_coordinates	16	static
+../my_drivers/Src/my_astronode.c:86:6:my_astro_log	8	static
+../my_drivers/Src/my_astronode.c:96:6:my_astro_write_coordinates	16	static

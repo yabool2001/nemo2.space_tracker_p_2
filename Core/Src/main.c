@@ -239,6 +239,10 @@ int main(void)
 		  send_debug_logs ( dbg_payload ) ;
 		  my_astro_handle_evt () ;
 	  }
+	  if ( astro_rcv_cmd_flag )
+	  {
+		  astro_rcv_cmd_flag = false ;
+	  }
 	  if ( my_rtc_alarm_flag )
 	  {
 		  my_rtc_alarm_flag = false ;
@@ -757,6 +761,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI2_3_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI2_3_IRQn);
+
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
 }
@@ -994,6 +1002,12 @@ void HAL_RTC_AlarmAEventCallback ( RTC_HandleTypeDef* hrtc )
 	// is_rtc_alarm_a_flag = true ;
 	//__HAL_RTC_ALARM_CLEAR_FLAG ( hrtc , RTC_FLAG_ALRAF ) ;  // Wyczyść flagę alarmu
 	my_rtc_alarm_flag = true ;
+}
+
+// ASTRO EVT Callbacks
+void HAL_GPIO_EXTI_Rising_Callback ( uint16_t GPIO_Pin )
+{
+
 }
 /* USER CODE END 4 */
 

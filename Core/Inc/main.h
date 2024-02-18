@@ -87,6 +87,7 @@ void Error_Handler(void);
 #define ASTRO_RST_GPIO_Port GPIOB
 #define ASTRO_EVT_Pin GPIO_PIN_2
 #define ASTRO_EVT_GPIO_Port GPIOB
+#define ASTRO_EVT_EXTI_IRQn EXTI2_3_IRQn
 #define RF_SW_CTL2_Pin GPIO_PIN_10
 #define RF_SW_CTL2_GPIO_Port GPIOB
 #define RF_SW_CTL1_Pin GPIO_PIN_11

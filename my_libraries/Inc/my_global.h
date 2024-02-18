@@ -31,7 +31,7 @@ extern uint16_t		fix_acq_ths ;
 extern uint16_t		min_tns_time_ths ;
 extern double		pdop_ths ;
 extern uint8_t		fix3d_flag ;
-extern bool			rcv_cmd_flag ;
+extern bool			astro_rcv_cmd_flag ;
 typedef struct
 {
 	int32_t		latitude_astro_geo_wr ;

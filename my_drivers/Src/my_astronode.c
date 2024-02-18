@@ -75,7 +75,10 @@ bool my_astro_handle_evt ( void )
 	if ( is_command_available () )
 	{
 	  send_debug_logs ( "my_astronode.c,my_astro_handle_evt,unicast command is available" ) ;
-	  astronode_send_cmd_rr ( my_astro_rcv_cmd ) ;
+	  if ( astronode_send_cmd_rr ( my_astro_rcv_cmd ) )
+	  {
+		  astro_rcv_cmd_flag = true ;
+	  }
 	  astronode_send_cmd_cr () ;
 	}
 	return true ;
