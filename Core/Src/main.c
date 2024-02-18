@@ -205,7 +205,7 @@ int main(void)
 		  my_astro_handle_evt () ;
 	  }
 	  sprintf ( my_astro_payload , "%u,%.1f,%u,%lu,%s\0" , my_astro_payload_id , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) , fv ) ;
-	  sprintf ( dbg_payload , "%s,%d,payload_id:%u, %s\0" , __FILE__ , __LINE__ , my_astro_payload_id , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
+	  sprintf ( dbg_payload , "%s,%d,payload: %s\0" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
 	  send_debug_logs ( dbg_payload ) ;
 	  my_astro_write_coordinates ( fix3d.latitude_astro_geo_wr , fix3d.longitude_astro_geo_wr ) ;
 	  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
@@ -250,7 +250,7 @@ int main(void)
 			  my_astro_write_coordinates ( fix3d.latitude_astro_geo_wr , fix3d.longitude_astro_geo_wr ) ;
 			  sprintf ( my_astro_payload , "%u,%.1f,%u,%lu,%ld,%ld\0" , my_astro_payload_id , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) , fix3d.latitude_astro_geo_wr , fix3d.longitude_astro_geo_wr ) ;
 			  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
-			  sprintf ( dbg_payload , "%s,%d,payload:%u, %s\0" , __FILE__ , __LINE__ , my_astro_payload_id , my_astro_payload ) ;
+			  sprintf ( dbg_payload , "%s,%d,payload: %s\0" , __FILE__ , __LINE__ , my_astro_payload ) ;
 			  send_debug_logs ( dbg_payload ) ;
 		  }
 	  }

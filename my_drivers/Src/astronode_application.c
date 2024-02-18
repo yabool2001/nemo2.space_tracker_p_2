@@ -486,7 +486,7 @@ bool astronode_send_pld_er ( uint16_t payload_id , char *p_payload , uint16_t pa
     {
         if (answer.op_code == ASTRONODE_OP_CODE_PLD_EA)
         {
-        	sprintf ( s , "astronode_application: payload %d queued." , payload_id ) ;
+        	sprintf ( s , "%s,%d,payload_id:%d queued." , __FILE__ , __LINE__ , payload_id ) ;
             send_debug_logs ( s ) ;
             return true ;
         }

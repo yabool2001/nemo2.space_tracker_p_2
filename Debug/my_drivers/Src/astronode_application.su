@@ -9,7 +9,7 @@
 ../my_drivers/Src/astronode_application.c:383:6:astronode_send_evt_rr	416	static
 ../my_drivers/Src/astronode_application.c:419:6:astronode_send_geo_wr	432	static
 ../my_drivers/Src/astronode_application.c:449:6:astronode_send_pld_dr	496	static
-../my_drivers/Src/astronode_application.c:472:6:astronode_send_pld_er	512	static
+../my_drivers/Src/astronode_application.c:472:6:astronode_send_pld_er	520	static
 ../my_drivers/Src/astronode_application.c:502:6:astronode_send_pld_fr	416	static
 ../my_drivers/Src/astronode_application.c:522:6:astronode_send_res_cr	416	static
 ../my_drivers/Src/astronode_application.c:543:10:astronode_send_rtc_rr	504	static
