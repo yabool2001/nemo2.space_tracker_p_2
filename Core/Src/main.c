@@ -60,6 +60,7 @@ uint8_t 	rx_byte = 0 ;
 char		dbg_payload[UART_TX_MAX_BUFF_SIZE] = {0} ;
 bool sw1 , sw2 ;
 uint8_t sys_mode = 0 ; // 0 - Production, 1 - Simulation, 2 - Test , 3 - Reserved (maybe Development)
+uint8_t sys_mission = 0 ; // 0: Active, 1: Sustainable
 
 // RTC
 char		rtc_dt_s[20] ;
@@ -171,7 +172,7 @@ int main(void)
   my_gnss_3dfix_flag = my_gnss_acq_coordinates ( &fix3d ) ;
   my_gnss_sw_off () ;
   my_rtc_get_dt_s ( rtc_dt_s ) ;
-  sprintf ( dbg_payload , "%s,%d,%s,fix_mode=%c,pdop=%.1f,acq_time=%u" , __FILE__ , __LINE__ , rtc_dt_s , fix3d.fix_mode , fix3d.pdop , fix3d.acq_time ) ;
+  sprintf ( dbg_payload , "%s,%d,%s,fix_mode=%c,pdop=%.1f,acq_time=%u,acq_total_time=%lu" , __FILE__ , __LINE__ , rtc_dt_s , fix3d.fix_mode , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) ) ;
   send_debug_logs ( dbg_payload ) ;
   if ( !my_gnss_3dfix_flag )
   {
@@ -203,25 +204,26 @@ int main(void)
 		  send_debug_logs ( dbg_payload ) ;
 		  my_astro_handle_evt () ;
 	  }
-	  sprintf ( my_astro_payload , "%u,%.1f,%u,%s" , my_astro_payload_id , fix3d.pdop , fix3d.acq_time , fv ) ;
-	  sprintf ( dbg_payload , "%s,%d,payload_id: %u, %s" , __FILE__ , __LINE__ , my_astro_payload_id , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
+	  sprintf ( my_astro_payload , "%u,%.1f,%u,%lu,%s" , my_astro_payload_id , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) , fv ) ;
+	  sprintf ( dbg_payload , "%s,%d,payload_id:%u, %s" , __FILE__ , __LINE__ , my_astro_payload_id , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
+	  send_debug_logs ( dbg_payload ) ;
 	  my_astro_write_coordinates ( fix3d.latitude_astro_geo_wr , fix3d.longitude_astro_geo_wr ) ;
 	  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
-	  send_debug_logs ( dbg_payload ) ;
 	  if ( my_rtc_set_alarm ( my_rtc_alarmA_time ) )
 	  {
-		  my_rtc_get_dt_s ( rtc_dt_s ) ;
-		  sprintf ( dbg_payload , "%s,%d,%s,PWR_LOWPOWERREGULATOR_ON,PWR_STOPENTRY_WFE" , __FILE__ , __LINE__ , rtc_dt_s ) ;
+		  sprintf ( dbg_payload , "%s,%d,PWR_LOWPOWERREGULATOR_ON,PWR_STOPENTRY_WFE" , __FILE__ , __LINE__ ) ;
+		  send_debug_logs ( dbg_payload ) ;
 		  my_tim_stop () ;
 		  HAL_SuspendTick () ;
 		  my_rtc_alarm_flag = false ;
 		  HAL_PWR_EnterSTOPMode ( PWR_LOWPOWERREGULATOR_ON , PWR_STOPENTRY_WFE ) ;
 		  HAL_ResumeTick () ;
 		  my_rtc_get_dt_s ( rtc_dt_s ) ;
-		  sprintf ( dbg_payload , "%s,%d,%s" , __FILE__ , __LINE__ , rtc_dt_s ) ;
+		  sprintf ( dbg_payload , "%s,%d,%s, Wake-up" , __FILE__ , __LINE__ , rtc_dt_s ) ;
 		  send_debug_logs ( dbg_payload ) ;
 	  }
   }
+  /*
   if ( my_rtc_set_alarm ( my_rtc_alarmA_time ) )
   {
 	  my_rtc_get_dt_s ( rtc_dt_s ) ;
@@ -235,6 +237,7 @@ int main(void)
 	  sprintf ( dbg_payload , "%s,%d,%s" , __FILE__ , __LINE__ , rtc_dt_s ) ;
 	  send_debug_logs ( dbg_payload ) ;
   }
+  */
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -254,16 +257,16 @@ int main(void)
 		  my_gnss_3dfix_flag = my_gnss_acq_coordinates ( &fix3d ) ;
 		  my_gnss_sw_off () ;
 		  my_rtc_get_dt_s ( rtc_dt_s ) ;
-		  sprintf ( dbg_payload , "%s,%d,%s,fix_mode=%c,pdop=%.1f,acq_time=%u" , __FILE__ , __LINE__ , rtc_dt_s , fix3d.fix_mode , fix3d.pdop , fix3d.acq_time ) ;
+		  sprintf ( dbg_payload , "%s,%d,%s,fix_mode=%c,pdop=%.1f,acq_time=%u,acq_total_time=%lu" , __FILE__ , __LINE__ , rtc_dt_s , fix3d.fix_mode , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) ) ;
 		  send_debug_logs ( dbg_payload ) ;
-		  sprintf ( my_astro_payload , "%u,%u,%u,%ld,%ld" , my_astro_payload_id , (uint16_t) fix3d.pdop , fix3d.acq_time ) ;
 		  if ( my_gnss_3dfix_flag )
 		  {
 			  my_astro_write_coordinates ( fix3d.latitude_astro_geo_wr , fix3d.longitude_astro_geo_wr ) ;
-			  sprintf ( my_astro_payload , "%s,%ld,%ld" , my_astro_payload , fix3d.latitude_astro_geo_wr , fix3d.longitude_astro_geo_wr ) ;
+			  sprintf ( my_astro_payload , "%u,%.1f,%u,%lu,%ld,%ld" , my_astro_payload_id , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) , fix3d.latitude_astro_geo_wr , fix3d.longitude_astro_geo_wr ) ;
+			  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+			  sprintf ( my_astro_payload , "%s,%d,payload:%u, %s" , __FILE__ , __LINE__ , my_astro_payload_id , my_astro_payload ) ;
+			  send_debug_logs ( my_astro_payload ) ;
 		  }
-		  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
-		  send_debug_logs ( my_astro_payload ) ;
 	  }
 	  if ( my_rtc_set_alarm ( my_rtc_alarmA_time ) )
 	  {
@@ -761,7 +764,7 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pins : SW1_Pin SW2_Pin */
   GPIO_InitStruct.Pin = SW1_Pin|SW2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
@@ -789,22 +792,27 @@ void send_debug_logs ( char* p_tx_buffer )
 // System functions
 void my_sys_init ( void )
 {
-	sw1 = ( HAL_GPIO_ReadPin ( SW1_GPIO_Port , SW1_Pin ) ) ? true : false ;
-	sw2 = ( HAL_GPIO_ReadPin ( SW2_GPIO_Port , SW2_Pin ) ) ? true : false ;
+	fix3d.acq_time = 0 ;
+	fix3d.acq_total_time = 0 ;
+	sw1 = HAL_GPIO_ReadPin ( SW1_GPIO_Port , SW1_Pin ) ;
+	sw2 = HAL_GPIO_ReadPin ( SW2_GPIO_Port , SW2_Pin ) ;
 	if ( !sw1 && !sw2 )
 	{
 		sys_mode = 0 ;
 		my_rtc_alarmA_time = MY_RTC_ALARM_1H ;
+		fix_acq_ths = FIX_ACQ_THS_2MIN ;
 	}
 	if ( sw1 && !sw2 )
 	{
 		sys_mode = 1 ;
-		my_rtc_alarmA_time = MY_RTC_ALARM_5MIN ;
+		my_rtc_alarmA_time = MY_RTC_ALARM_1H ;
+		fix_acq_ths = FIX_ACQ_THS_2MIN ;
 	}
 	if ( !sw1 && sw2 )
 	{
 		sys_mode = 2 ;
 		my_rtc_alarmA_time = MY_RTC_ALARM_5MIN ;
+		fix_acq_ths = FIX_ACQ_THS_10MIN ;
 	}
 	if ( sw1 && sw2 )
 	{
@@ -887,7 +895,7 @@ void my_gnss_sw_on ( void )
 void my_gnss_sw_off ( void )
 {
 	my_ant_sw_pos ( 2 ) ;
-	if ( sys_mode != 2 )
+	if ( sys_mode < 2 )
 	{
 		HAL_GPIO_WritePin ( GNSS_PWR_SW_GPIO_Port , GNSS_PWR_SW_Pin , GPIO_PIN_RESET ) ;
 		HAL_GPIO_WritePin ( GNSS_PWR_SW_GPIO_Port , GNSS_RST_Pin , GPIO_PIN_RESET ) ;

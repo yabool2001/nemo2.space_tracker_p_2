@@ -9,7 +9,7 @@
 
 // GNSS
 uint16_t	utc_acq_ths = FIX_ACQ_THS ;
-uint16_t	fix_acq_ths = FIX_ACQ_THS ;
+uint16_t	fix_acq_ths = FIX_ACQ_THS_2MIN ;
 uint16_t	min_tns_time_ths = MIN_TNS_TIME_THS ;
 double		pdop_ths = PDOP_THS ;
 uint8_t		fix3d_flag = false ;

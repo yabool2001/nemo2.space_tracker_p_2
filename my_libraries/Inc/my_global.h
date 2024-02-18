@@ -15,6 +15,8 @@
 
 #define UART_TX_MAX_BUFF_SIZE		250
 #define PDOP_THS					2
+#define FIX_ACQ_THS_2MIN			120 // produkcyjnie ustawić na 120
+#define FIX_ACQ_THS_10MIN			600 // produkcyjnie ustawić na 120
 #define FIX_ACQ_THS					600 // produkcyjnie ustawić na 120
 #define MIN_TNS						3 // Minimalna ilość satelitów
 #define MIN_TNS_TIME_THS			30 // Czas w jakim powinno być co najmniej MY_GNSS_NMEA_GSV_MIN_TNS satelitów Default = 30 s
@@ -32,6 +34,7 @@ typedef struct
 	double 		pdop ;
 	char		fix_mode ;
 	uint16_t	acq_time ;
+	uint32_t	acq_total_time ;
 } fix_astro ;
 
 // ASTRO

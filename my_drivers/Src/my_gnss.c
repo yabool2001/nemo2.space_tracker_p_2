@@ -83,6 +83,7 @@ bool my_gnss_acq_coordinates ( fix_astro* fix3d )
 		r = true ;
 	}
 	fix3d->acq_time = tim_seconds ;
+	fix3d->acq_total_time += tim_seconds ; // UWAGA: Tutaj nie mogę zaokrąglać, bo będę tracił za każdym razem resztę co się uzbiera w duży błąd
 	return r ;
 }
 
