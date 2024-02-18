@@ -35,7 +35,7 @@ Sustainable mission acquire fix under 2 conditions: A certain MIN period has pas
 
 
 Message payload_id = 0 format:
-[%u]	my_astro_payload_id,
+`[%u]	my_astro_payload_id,`
 [%.1f]	fix3d.pdop,
 [%d]	fix3d.acq_time,
 [%lu]	(uint32_t) ( fix3d.acq_total_time / 60 ),
