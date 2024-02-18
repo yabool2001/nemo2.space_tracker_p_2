@@ -1009,6 +1009,7 @@ bool astronode_send_cmd_rr ( char* my_astro_rcv_cmd )
                 }
             	my_astro_rcv_cmd[index] = command_content[index] ;
             }
+            result = true ;
             my_astro_rcv_cmd[command_content_size] = 0 ;
             send_debug_logs("Command content is: ");
             sprintf(command_content, "%s ", &answer.p_payload[4]);
