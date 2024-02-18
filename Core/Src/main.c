@@ -242,6 +242,14 @@ int main(void)
 	  if ( astro_rcv_cmd_flag )
 	  {
 		  astro_rcv_cmd_flag = false ;
+		  if ( strstr ( my_astro_rcv_cmd , (char*) SYS_RESET_CMD ) )
+		  {
+			  my_rtc_get_dt_s ( rtc_dt_s ) ;
+			  sprintf ( dbg_payload , "%s,%d,%s,HAL_NVIC_SystemReset" , __FILE__ , __LINE__ , rtc_dt_s ) ;
+			  send_debug_logs ( dbg_payload ) ;
+			  HAL_NVIC_SystemReset () ;
+		  }
+		  my_astro_rcv_cmd[0] = 0 ;
 	  }
 	  if ( my_rtc_alarm_flag )
 	  {

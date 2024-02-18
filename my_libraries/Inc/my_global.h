@@ -12,6 +12,9 @@
 
 #include "stm32g0xx_hal.h"
 
+// ASTRO COMMANDS
+#define SYS_RESET_CMD "9,9"
+
 #define TIME_THS_30_SEC				30
 #define TIME_THS_1_MIN				60
 #define TIME_THS_2_MIN				120
