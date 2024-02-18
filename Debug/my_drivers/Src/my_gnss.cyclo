@@ -1,5 +1,5 @@
 ../my_drivers/Src/my_gnss.c:10:6:my_gnss_acq_coordinates	17
-../my_drivers/Src/my_gnss.c:89:6:my_lx6_get_coordinates	16
-../my_drivers/Src/my_gnss.c:163:6:my_gnss_get_utc	8
-../my_drivers/Src/my_gnss.c:203:6:my_gnss_log	2
-../my_drivers/Src/my_gnss.c:210:6:my_gnss_get_pair	7
+../my_drivers/Src/my_gnss.c:90:6:my_lx6_get_coordinates	16
+../my_drivers/Src/my_gnss.c:164:6:my_gnss_get_utc	8
+../my_drivers/Src/my_gnss.c:204:6:my_gnss_log	2
+../my_drivers/Src/my_gnss.c:211:6:my_gnss_get_pair	7

@@ -21,8 +21,8 @@ bool my_gnss_acq_coordinates ( fix_astro* fix3d )
 	char* 		nmea_gngsa_label = "GNGSA" ;
 	char* 		nmea_gngll_label = "GNGLL" ;
 
-	fix3d->fix_mode = '\0' ;
-	fix3d->pdop = 100 ;
+	fix3d->fix_mode = '0' ;
+	fix3d->pdop = 1000 ;
 	my_tim_start () ;
 	while ( tim_seconds < fix_acq_ths )
 	// Pierwsze
@@ -45,7 +45,7 @@ bool my_gnss_acq_coordinates ( fix_astro* fix3d )
 							}
 						}
 					}
-					if ( strstr ( (char*) nmea_message , nmea_gsv_label ) && gsv_tns < MIN_TNS )
+					if ( strstr ( (char*) nmea_message , nmea_gsv_label ) && gsv_tns < MIN_TNS ) // Nie ma co tego później monitorować, bo jest cała kaskada wiadomości
 					{
 						if ( tim_seconds > min_tns_time_ths )
 						{
@@ -53,16 +53,17 @@ bool my_gnss_acq_coordinates ( fix_astro* fix3d )
 						}
 						gsv_tns = my_nmea_get_gsv_tns ( (char*) nmea_message ) ;
 					}
-					if ( gsv_tns > MIN_TNS ) // Tutaj cały czas miałem błąd, bo nigdy gsv_tns nie mógł się zwięszyć przy warunku gsv_tns < MIN_TNS powyżej
+					if ( strstr ( (char*) nmea_message , nmea_gngsa_label ) ) // Koniecznie monitorować cały czas
 					{
-						if ( strstr ( (char*) nmea_message , nmea_gngsa_label ) )
-						{
-							fix3d->fix_mode = get_my_nmea_gngsa_fixed_mode_s ( (char*) nmea_message ) ;
-							fix3d->pdop = get_my_nmea_gngsa_pdop_d ( (char*) nmea_message ) ;
-						}
+						fix3d->fix_mode = get_my_nmea_gngsa_fixed_mode_s ( (char*) nmea_message ) ;
+						fix3d->pdop = get_my_nmea_gngsa_pdop_d ( (char*) nmea_message ) ;
 					}
 					if ( strstr ( (char*) nmea_message , nmea_gngll_label ) && is_utc_saved )
 					{
+						if ( fix3d->fix_mode != NMEA_3D_FIX ) // Solution for Issue #3 Handle a lost of fix during acquisition.
+						{
+							break ;
+						}
 						memcpy ( gngll_message , nmea_message , UART_TX_MAX_BUFF_SIZE ) ;
 						if ( fix3d->pdop <= pdop_ths )
 						{
@@ -79,9 +80,9 @@ bool my_gnss_acq_coordinates ( fix_astro* fix3d )
 	if ( gngll_message[0] )
 	{
 		my_nmea_get_gngll_coordinates ( (char*) gngll_message , fix3d ) ;
-		fix3d->acq_time = tim_seconds ;
 		r = true ;
 	}
+	fix3d->acq_time = tim_seconds ;
 	return r ;
 }
 
