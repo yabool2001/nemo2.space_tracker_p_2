@@ -1,21 +1,20 @@
-SYSTEM MODES
+# SYSTEM MODES
 System modes can be change by 2-position hardware switch SW1-2:
 
-Production mode
-
+## Production mode.
 Position `SW1=0` `SW2=0`  
-Accelometer enabled
-GNSS verbose OFF
+- Accelometer enabled
+- GNSS verbose OFF
 
 
-Simulation mode
+## Simulation mode
 
 Position `SW1=1` `SW2=0`  
 Accelometer disabled
 GNSS verbose ON
 STOP time short
 
-Test mode
+## Test mode
 
 Position `SW1=0` `SW2=1`  
 Accelometer disabled
