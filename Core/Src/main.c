@@ -792,7 +792,7 @@ void my_sys_init ( void )
 	if ( !sw1 && sw2 )
 	{
 		sys_mode = 2 ;
-
+		my_rtc_alarmA_time = MY_RTC_ALARM_5MIN ;
 	}
 
 }
@@ -872,15 +872,17 @@ void my_gnss_sw_on ( void )
 void my_gnss_sw_off ( void )
 {
 	my_ant_sw_pos ( 2 ) ;
-	HAL_GPIO_WritePin ( GNSS_PWR_SW_GPIO_Port , GNSS_PWR_SW_Pin , GPIO_PIN_RESET ) ;
-	HAL_GPIO_WritePin ( GNSS_PWR_SW_GPIO_Port , GNSS_RST_Pin , GPIO_PIN_RESET ) ;
-	HAL_UART_DeInit ( &HUART_GNSS ) ;
-
+	if ( sys_mode != 2 )
+	{
+		HAL_GPIO_WritePin ( GNSS_PWR_SW_GPIO_Port , GNSS_PWR_SW_Pin , GPIO_PIN_RESET ) ;
+		HAL_GPIO_WritePin ( GNSS_PWR_SW_GPIO_Port , GNSS_RST_Pin , GPIO_PIN_RESET ) ;
+		HAL_UART_DeInit ( &HUART_GNSS ) ;
+	}
 }
 void my_gnss_receive_byte ( uint8_t* rx_byte , bool verbose )
 {
 	HAL_UART_Receive ( &HUART_GNSS , rx_byte , 1 , UART_TIMEOUT ) ;
-	if ( verbose )
+	if ( sys_mode > 0 )
 		HAL_UART_Transmit ( &HUART_DBG , rx_byte , 1 , UART_TIMEOUT ) ;
 }
 bool is_fix3d ()
