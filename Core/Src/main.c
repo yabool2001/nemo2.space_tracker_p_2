@@ -54,7 +54,7 @@ UART_HandleTypeDef huart5;
 /* USER CODE BEGIN PV */
 
 // SYSTEM
-char*		hello = "\nHello nemo2.space tracker p 2\n" ;
+char*		hello = "\nHello nemo2.space tracker p 2\r\n\0" ;
 const char*	fv = "0.0.2" ;
 uint8_t 	rx_byte = 0 ;
 char		dbg_payload[UART_TX_MAX_BUFF_SIZE] = {0} ;
@@ -160,7 +160,7 @@ int main(void)
   send_debug_logs ( hello ) ;
 
   my_sys_init () ;
-  sprintf ( dbg_payload , "System mode: %u" , sys_mode ) ;
+  sprintf ( dbg_payload , "System mode: %u\0" , sys_mode ) ;
   send_debug_logs ( dbg_payload ) ;
 
   my_tim_init () ;
@@ -172,13 +172,13 @@ int main(void)
   my_gnss_3dfix_flag = my_gnss_acq_coordinates ( &fix3d ) ;
   my_gnss_sw_off () ;
   my_rtc_get_dt_s ( rtc_dt_s ) ;
-  sprintf ( dbg_payload , "%s,%d,%s,fix_mode=%c,pdop=%.1f,acq_time=%u,acq_total_time=%lu" , __FILE__ , __LINE__ , rtc_dt_s , fix3d.fix_mode , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) ) ;
+  sprintf ( dbg_payload , "%s,%d,%s,fix_mode=%c,pdop=%.1f,acq_time=%u,acq_total_time=%lu\0" , __FILE__ , __LINE__ , rtc_dt_s , fix3d.fix_mode , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) ) ;
   send_debug_logs ( dbg_payload ) ;
   if ( !my_gnss_3dfix_flag )
   {
 	  if ( my_rtc_set_alarm ( my_rtc_alarmA_time ) )
 	  {
-		  sprintf ( dbg_payload , "%s,%d,HAL_PWR_EnterSTANDBYMode" , __FILE__ , __LINE__ ) ;
+		  sprintf ( dbg_payload , "%s,%d,HAL_PWR_EnterSTANDBYMode\0" , __FILE__ , __LINE__ ) ;
 		  send_debug_logs ( dbg_payload ) ;
 		  my_tim_stop () ;
 		  my_rtc_alarm_flag = false ;
@@ -192,7 +192,7 @@ int main(void)
   if ( !my_astro_init () )
   {
 	  my_rtc_get_dt_s ( rtc_dt_s ) ;
-	  sprintf ( dbg_payload , "%s,%d,%s,HAL_NVIC_SystemReset" , __FILE__ , __LINE__ , rtc_dt_s ) ;
+	  sprintf ( dbg_payload , "%s,%d,%s,HAL_NVIC_SystemReset\0" , __FILE__ , __LINE__ , rtc_dt_s ) ;
 	  send_debug_logs ( dbg_payload ) ;
 	  HAL_NVIC_SystemReset () ;
   }
@@ -200,18 +200,18 @@ int main(void)
   {
 	  while ( my_astro_evt_pin () )
 	  {
-		  sprintf ( dbg_payload , "%s,%d,my_astro_evt_pin" , __FILE__ , __LINE__ ) ;
+		  sprintf ( dbg_payload , "%s,%d,my_astro_evt_pin\0" , __FILE__ , __LINE__ ) ;
 		  send_debug_logs ( dbg_payload ) ;
 		  my_astro_handle_evt () ;
 	  }
-	  sprintf ( my_astro_payload , "%u,%.1f,%u,%lu,%s" , my_astro_payload_id , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) , fv ) ;
-	  sprintf ( dbg_payload , "%s,%d,payload_id:%u, %s" , __FILE__ , __LINE__ , my_astro_payload_id , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
+	  sprintf ( my_astro_payload , "%u,%.1f,%u,%lu,%s\0" , my_astro_payload_id , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) , fv ) ;
+	  sprintf ( dbg_payload , "%s,%d,payload_id:%u, %s\0" , __FILE__ , __LINE__ , my_astro_payload_id , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
 	  send_debug_logs ( dbg_payload ) ;
 	  my_astro_write_coordinates ( fix3d.latitude_astro_geo_wr , fix3d.longitude_astro_geo_wr ) ;
 	  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
 	  if ( my_rtc_set_alarm ( my_rtc_alarmA_time ) )
 	  {
-		  sprintf ( dbg_payload , "%s,%d,PWR_LOWPOWERREGULATOR_ON,PWR_STOPENTRY_WFE" , __FILE__ , __LINE__ ) ;
+		  sprintf ( dbg_payload , "%s,%d,PWR_LOWPOWERREGULATOR_ON,PWR_STOPENTRY_WFE\0" , __FILE__ , __LINE__ ) ;
 		  send_debug_logs ( dbg_payload ) ;
 		  my_tim_stop () ;
 		  HAL_SuspendTick () ;
@@ -219,25 +219,11 @@ int main(void)
 		  HAL_PWR_EnterSTOPMode ( PWR_LOWPOWERREGULATOR_ON , PWR_STOPENTRY_WFE ) ;
 		  HAL_ResumeTick () ;
 		  my_rtc_get_dt_s ( rtc_dt_s ) ;
-		  sprintf ( dbg_payload , "%s,%d,%s, Wake-up" , __FILE__ , __LINE__ , rtc_dt_s ) ;
+		  sprintf ( dbg_payload , "%s,%d,%s, Wake-up\0" , __FILE__ , __LINE__ , rtc_dt_s ) ;
 		  send_debug_logs ( dbg_payload ) ;
 	  }
   }
-  /*
-  if ( my_rtc_set_alarm ( my_rtc_alarmA_time ) )
-  {
-	  my_rtc_get_dt_s ( rtc_dt_s ) ;
-	  sprintf ( dbg_payload , "%s,%d,%s,PWR_LOWPOWERREGULATOR_ON,PWR_STOPENTRY_WFE" , __FILE__ , __LINE__ , rtc_dt_s ) ;
-	  my_tim_stop () ;
-	  HAL_SuspendTick () ;
-	  my_rtc_alarm_flag = false ;
-	  HAL_PWR_EnterSTOPMode ( PWR_LOWPOWERREGULATOR_ON , PWR_STOPENTRY_WFE ) ;
-	  HAL_ResumeTick () ;
-	  my_rtc_get_dt_s ( rtc_dt_s ) ;
-	  sprintf ( dbg_payload , "%s,%d,%s" , __FILE__ , __LINE__ , rtc_dt_s ) ;
-	  send_debug_logs ( dbg_payload ) ;
-  }
-  */
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -246,7 +232,7 @@ int main(void)
   {
 	  while ( my_astro_evt_pin () )
 	  {
-		  sprintf ( dbg_payload , "%s,%d,my_astro_evt_pin" , __FILE__ , __LINE__ ) ;
+		  sprintf ( dbg_payload , "%s,%d,my_astro_evt_pin\0" , __FILE__ , __LINE__ ) ;
 		  send_debug_logs ( dbg_payload ) ;
 		  my_astro_handle_evt () ;
 	  }
@@ -257,28 +243,29 @@ int main(void)
 		  my_gnss_3dfix_flag = my_gnss_acq_coordinates ( &fix3d ) ;
 		  my_gnss_sw_off () ;
 		  my_rtc_get_dt_s ( rtc_dt_s ) ;
-		  sprintf ( dbg_payload , "%s,%d,%s,fix_mode=%c,pdop=%.1f,acq_time=%u,acq_total_time=%lu" , __FILE__ , __LINE__ , rtc_dt_s , fix3d.fix_mode , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) ) ;
+		  sprintf ( dbg_payload , "%s,%d,%s,fix_mode=%c,pdop=%.1f,acq_time=%u,acq_total_time=%lu\0" , __FILE__ , __LINE__ , rtc_dt_s , fix3d.fix_mode , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) ) ;
 		  send_debug_logs ( dbg_payload ) ;
 		  if ( my_gnss_3dfix_flag )
 		  {
 			  my_astro_write_coordinates ( fix3d.latitude_astro_geo_wr , fix3d.longitude_astro_geo_wr ) ;
-			  sprintf ( my_astro_payload , "%u,%.1f,%u,%lu,%ld,%ld" , my_astro_payload_id , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) , fix3d.latitude_astro_geo_wr , fix3d.longitude_astro_geo_wr ) ;
+			  sprintf ( my_astro_payload , "%u,%.1f,%u,%lu,%ld,%ld\0" , my_astro_payload_id , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) , fix3d.latitude_astro_geo_wr , fix3d.longitude_astro_geo_wr ) ;
 			  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
-			  sprintf ( my_astro_payload , "%s,%d,payload:%u, %s" , __FILE__ , __LINE__ , my_astro_payload_id , my_astro_payload ) ;
-			  send_debug_logs ( my_astro_payload ) ;
+			  sprintf ( dbg_payload , "%s,%d,payload:%u, %s\0" , __FILE__ , __LINE__ , my_astro_payload_id , my_astro_payload ) ;
+			  send_debug_logs ( dbg_payload ) ;
 		  }
 	  }
 	  if ( my_rtc_set_alarm ( my_rtc_alarmA_time ) )
 	  {
 		  my_rtc_get_dt_s ( rtc_dt_s ) ;
-		  sprintf ( dbg_payload , "%s,%d,%s,PWR_LOWPOWERREGULATOR_ON,PWR_STOPENTRY_WFE" , __FILE__ , __LINE__ , rtc_dt_s ) ;
+		  sprintf ( dbg_payload , "%s,%d,%s,PWR_LOWPOWERREGULATOR_ON,PWR_STOPENTRY_WFE\0" , __FILE__ , __LINE__ , rtc_dt_s ) ;
+		  send_debug_logs ( dbg_payload ) ;
 		  my_tim_stop () ;
 		  HAL_SuspendTick () ;
 		  my_rtc_alarm_flag = false ;
 		  HAL_PWR_EnterSTOPMode ( PWR_LOWPOWERREGULATOR_ON , PWR_STOPENTRY_WFE ) ;
 		  HAL_ResumeTick () ;
 		  my_rtc_get_dt_s ( rtc_dt_s ) ;
-		  sprintf ( dbg_payload , "%s,%d,%s" , __FILE__ , __LINE__ , rtc_dt_s ) ;
+		  sprintf ( dbg_payload , "%s,%d,%s\0" , __FILE__ , __LINE__ , rtc_dt_s ) ;
 		  send_debug_logs ( dbg_payload ) ;
 	  }
     /* USER CODE END WHILE */

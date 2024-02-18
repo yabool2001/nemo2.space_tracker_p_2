@@ -3,21 +3,21 @@ System modes can be change by 2-position hardware switch SW1-2:
 
 Production mode
 
-Position SW1=0 SW2=0
+Position `SW1=0` `SW2=0`
 Accelometer enabled
 GNSS verbose OFF
 
 
 Simulation mode
 
-Position SW1=1 SW2=0
+Position `SW1=1` `SW2=0`
 Accelometer disabled
 GNSS verbose ON
 STOP time short
 
 Test mode
 
-Position SW1=0 SW2=1
+Position `SW1=0` `SW2=1`
 Accelometer disabled
 GNSS verbose ON
 GNSS never power_off
