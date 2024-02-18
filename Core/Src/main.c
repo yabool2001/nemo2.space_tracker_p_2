@@ -159,6 +159,8 @@ int main(void)
   send_debug_logs ( hello ) ;
 
   my_sys_init () ;
+  sprintf ( dbg_payload , "System mode: %u" , sys_mode ) ;
+  send_debug_logs ( dbg_payload ) ;
 
   my_tim_init () ;
   my_ant_sw_pos ( 2 ) ;
@@ -789,12 +791,25 @@ void my_sys_init ( void )
 {
 	sw1 = ( HAL_GPIO_ReadPin ( SW1_GPIO_Port , SW1_Pin ) ) ? true : false ;
 	sw2 = ( HAL_GPIO_ReadPin ( SW2_GPIO_Port , SW2_Pin ) ) ? true : false ;
+	if ( !sw1 && !sw2 )
+	{
+		sys_mode = 0 ;
+		my_rtc_alarmA_time = MY_RTC_ALARM_1H ;
+	}
+	if ( sw1 && !sw2 )
+	{
+		sys_mode = 1 ;
+		my_rtc_alarmA_time = MY_RTC_ALARM_5MIN ;
+	}
 	if ( !sw1 && sw2 )
 	{
 		sys_mode = 2 ;
 		my_rtc_alarmA_time = MY_RTC_ALARM_5MIN ;
 	}
-
+	if ( sw1 && sw2 )
+	{
+		sys_mode = 3 ;
+	}
 }
 
 bool is_system_initialized ( void )
