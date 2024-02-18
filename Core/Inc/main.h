@@ -130,15 +130,10 @@ void Error_Handler(void);
 #define HUART_GNSS						huart5 // BR = 115200 8N1
 #define SPI_ACC							hspi1
 #define TIM								htim6
-#define TIM_SECONDS_THS_SYSTEM_RESET	600
 
 #define UART_TIMEOUT 					1000
 
 #define ASTRONODE_PAYLOAD_MAX_LEN		160
-
-#define MY_RTC_ALARM_5MIN				300
-#define MY_RTC_ALARM_10MIN				600
-#define MY_RTC_ALARM_1H					3600
 
 /* USER CODE END Private defines */
 

@@ -971,10 +971,11 @@ void astronode_send_cmd_cr(void)
     }
 }
 
-void astronode_send_cmd_rr(void)
+bool astronode_send_cmd_rr ( char* my_astro_rcv_cmd )
 {
     astronode_app_msg_t request = {0};
     astronode_app_msg_t answer = {0};
+    bool result = false ;
 
     request.op_code = ASTRONODE_OP_CODE_CMD_RR;
 
@@ -1006,7 +1007,9 @@ void astronode_send_cmd_rr(void)
                     send_debug_logs("Command contains non printable characters");
                     return;
                 }
+            	my_astro_rcv_cmd[index] = command_content[index] ;
             }
+            my_astro_rcv_cmd[command_content_size] = 0 ;
             send_debug_logs("Command content is: ");
             sprintf(command_content, "%s ", &answer.p_payload[4]);
             send_debug_logs(command_content);
@@ -1016,6 +1019,7 @@ void astronode_send_cmd_rr(void)
             send_debug_logs("No command available.");
         }
     }
+    return result ;
 }
 
 // Added by yabool2001 2023.09.10:

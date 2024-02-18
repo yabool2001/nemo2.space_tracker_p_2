@@ -12,14 +12,18 @@
 
 #include "stm32g0xx_hal.h"
 
+#define TIME_THS_30_SEC				30
+#define TIME_THS_1_MIN				60
+#define TIME_THS_2_MIN				120
+#define TIME_THS_5_MIN				300
+#define TIME_THS_10_MIN				600
+#define TIME_THS_15_MIN				900 // Nic nie powinno tego przekraczać, bo to jest okres watchdog
+#define TIME_THS_1_H				3600
 
 #define UART_TX_MAX_BUFF_SIZE		250
 #define PDOP_THS					2
-#define FIX_ACQ_THS_2MIN			120 // produkcyjnie ustawić na 120
-#define FIX_ACQ_THS_10MIN			600 // produkcyjnie ustawić na 120
 #define FIX_ACQ_THS					600 // produkcyjnie ustawić na 120
 #define MIN_TNS						3 // Minimalna ilość satelitów
-#define MIN_TNS_TIME_THS			30 // Czas w jakim powinno być co najmniej MY_GNSS_NMEA_GSV_MIN_TNS satelitów Default = 30 s
 
 // GNSS
 extern uint16_t		utc_acq_ths ;
@@ -27,6 +31,7 @@ extern uint16_t		fix_acq_ths ;
 extern uint16_t		min_tns_time_ths ;
 extern double		pdop_ths ;
 extern uint8_t		fix3d_flag ;
+extern bool			rcv_cmd_flag ;
 typedef struct
 {
 	int32_t		latitude_astro_geo_wr ;
@@ -38,13 +43,12 @@ typedef struct
 } fix_astro ;
 
 // ASTRO
-
+extern char my_astro_rcv_cmd[40] ;
 
 // TIM
 void my_tim_start ( void ) ;
 void my_tim_stop ( void ) ;
 extern uint16_t		tim_seconds ;
-
 
 void my_gnss_receive_byte ( uint8_t* , bool ) ;
 bool is_fix3d () ;

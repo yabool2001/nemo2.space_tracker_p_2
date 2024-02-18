@@ -15,6 +15,9 @@
   *
   ******************************************************************************
   */
+  /*
+   * Breakpoint ustawiony w linii 1050 w pliku astronode_application.c żeby debugować rcv_cmd
+   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -64,7 +67,7 @@ uint8_t sys_mission = 0 ; // 0: Active, 1: Sustainable
 
 // RTC
 char		rtc_dt_s[20] ;
-uint16_t 	my_rtc_alarmA_time = MY_RTC_ALARM_1H ;
+uint16_t 	my_rtc_alarmA_time = TIME_THS_1_H ;
 
 // ASTRO
 uint16_t		my_astro_payload_id = 0 ;
@@ -786,20 +789,23 @@ void my_sys_init ( void )
 	if ( !sw1 && !sw2 )
 	{
 		sys_mode = 0 ;
-		my_rtc_alarmA_time = MY_RTC_ALARM_1H ;
-		fix_acq_ths = FIX_ACQ_THS_2MIN ;
+		my_rtc_alarmA_time = TIME_THS_1_H ;
+		fix_acq_ths = TIME_THS_2_MIN ;
+		min_tns_time_ths = TIME_THS_30_SEC ;
 	}
 	if ( sw1 && !sw2 )
 	{
 		sys_mode = 1 ;
-		my_rtc_alarmA_time = MY_RTC_ALARM_1H ;
-		fix_acq_ths = FIX_ACQ_THS_2MIN ;
+		my_rtc_alarmA_time = TIME_THS_1_H ;
+		fix_acq_ths = TIME_THS_2_MIN ;
+		min_tns_time_ths = TIME_THS_30_SEC ;
 	}
 	if ( !sw1 && sw2 )
 	{
 		sys_mode = 2 ;
-		my_rtc_alarmA_time = MY_RTC_ALARM_5MIN ;
-		fix_acq_ths = FIX_ACQ_THS_10MIN ;
+		my_rtc_alarmA_time = TIME_THS_5_MIN ;
+		fix_acq_ths = TIME_THS_10_MIN ;
+		min_tns_time_ths = TIME_THS_1_MIN ;
 	}
 	if ( sw1 && sw2 )
 	{
@@ -972,7 +978,7 @@ void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef *htim )
 	if ( htim->Instance == TIM6 )
 	{
 		tim_seconds++ ;
-		if ( tim_seconds > TIM_SECONDS_THS_SYSTEM_RESET )
+		if ( tim_seconds > TIME_THS_15_MIN )
 		{
 			my_rtc_get_dt_s ( rtc_dt_s ) ;
 			sprintf ( dbg_payload , "%s,%d,%s,HAL_NVIC_SystemReset" , __FILE__ , __LINE__ , rtc_dt_s ) ;

@@ -26,9 +26,9 @@
 ../my_drivers/Src/astronode_application.c:907:6:astronode_send_end_rr	8
 ../my_drivers/Src/astronode_application.c:953:6:astronode_send_cmd_cr	3
 ../my_drivers/Src/astronode_application.c:974:6:astronode_send_cmd_rr	7
-../my_drivers/Src/astronode_application.c:1022:6:astronode_send_val_wr	3
-../my_drivers/Src/astronode_application.c:1045:6:astronode_send_adc_rr	3
-../my_drivers/Src/astronode_application.c:1069:6:is_sak_available	1
-../my_drivers/Src/astronode_application.c:1074:6:is_astronode_reset	1
-../my_drivers/Src/astronode_application.c:1079:6:is_command_available	1
-../my_drivers/Src/astronode_application.c:1084:6:is_tx_msg_pending	1
+../my_drivers/Src/astronode_application.c:1026:6:astronode_send_val_wr	3
+../my_drivers/Src/astronode_application.c:1049:6:astronode_send_adc_rr	3
+../my_drivers/Src/astronode_application.c:1073:6:is_sak_available	1
+../my_drivers/Src/astronode_application.c:1078:6:is_astronode_reset	1
+../my_drivers/Src/astronode_application.c:1083:6:is_command_available	1
+../my_drivers/Src/astronode_application.c:1088:6:is_tx_msg_pending	1

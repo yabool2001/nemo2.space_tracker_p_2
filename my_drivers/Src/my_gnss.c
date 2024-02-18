@@ -120,7 +120,7 @@ bool my_lx6_get_coordinates ( uint16_t timer , uint16_t active_time_ths , double
 					}
 					if ( strstr ( (char*) nmea_message , nmea_gsv_label ) && gsv_tns < MIN_TNS )
 					{
-						if ( timer > MIN_TNS_TIME_THS )
+						if ( timer > TIME_THS_2_MIN )
 						{
 							break ;
 						}

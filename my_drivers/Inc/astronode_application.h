@@ -94,7 +94,7 @@ void astronode_send_end_rr(void);
 
 void astronode_send_cmd_cr(void);
 
-void astronode_send_cmd_rr(void);
+bool astronode_send_cmd_rr( char* );
 
 // Added by yabool2001 2023.09.10:
 void astronode_send_val_wr ( void ) ;
