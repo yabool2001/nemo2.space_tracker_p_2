@@ -32,3 +32,19 @@ Production Mode has 2 missions: Active and Sustainable
 Active mission acquire fix under 2 conditions: Movement is detected & A certain MIN period has passed. 
 
 Sustainable mission acquire fix under 2 conditions: A certain MIN period has passed & Movement has been detected within the certain MIN period .
+
+
+Message payload_id = 0 format:
+[%u]	my_astro_payload_id,
+[%.1f]	fix3d.pdop,
+[%d]	fix3d.acq_time,
+[%lu]	(uint32_t) ( fix3d.acq_total_time / 60 ),
+[%s]	fv
+
+Message payload_id > 0 format:
+[%u]	my_astro_payload_id,
+[%.1f]	fix3d.pdop,
+[%d]	fix3d.acq_time,
+[%lu]	(uint32_t) ( fix3d.acq_total_time / 60 ),
+[%ld]	fix3d.latitude_astro_geo_wr,
+[%ld]	fix3d.longitude_astro_geo_wr
