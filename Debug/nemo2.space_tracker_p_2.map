@@ -7054,9 +7054,8 @@ LOAD C:/ST/STM32CubeIDE_1.13.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .data.fv       0x0000000020000004        0x4 ./Core/Src/main.o
                 0x0000000020000004                fv
  .data.my_rtc_alarmA_time
-                0x0000000020000008        0x2 ./Core/Src/main.o
+                0x0000000020000008        0x4 ./Core/Src/main.o
                 0x0000000020000008                my_rtc_alarmA_time
- *fill*         0x000000002000000a        0x2 
  .data.SystemCoreClock
                 0x000000002000000c        0x4 ./Core/Src/system_stm32g0xx.o
                 0x000000002000000c                SystemCoreClock

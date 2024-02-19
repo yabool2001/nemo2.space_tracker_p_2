@@ -67,7 +67,7 @@ uint8_t sys_mission = 0 ; // 0: Active, 1: Sustainable
 
 // RTC
 char		rtc_dt_s[20] ;
-uint16_t 	my_rtc_alarmA_time = TIME_THS_1_H ;
+uint32_t 	my_rtc_alarmA_time = TIME_THS_1_H ;
 
 // ASTRO
 uint16_t		my_astro_payload_id = 0 ;

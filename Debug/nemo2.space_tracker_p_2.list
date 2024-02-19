@@ -4876,7 +4876,7 @@ int main(void)
   {
 	  if ( my_rtc_set_alarm ( my_rtc_alarmA_time ) )
  800267e:	4b69      	ldr	r3, [pc, #420]	; (8002824 <main+0x27c>)
- 8002680:	881b      	ldrh	r3, [r3, #0]
+ 8002680:	681b      	ldr	r3, [r3, #0]
  8002682:	0018      	movs	r0, r3
  8002684:	f007 f946 	bl	8009914 <my_rtc_set_alarm>
  8002688:	1e03      	subs	r3, r0, #0
@@ -5031,7 +5031,7 @@ int main(void)
  800279a:	f006 fe79 	bl	8009490 <my_astro_add_payload_2_queue>
 	  if ( my_rtc_set_alarm ( my_rtc_alarmA_time ) )
  800279e:	4b21      	ldr	r3, [pc, #132]	; (8002824 <main+0x27c>)
- 80027a0:	881b      	ldrh	r3, [r3, #0]
+ 80027a0:	681b      	ldr	r3, [r3, #0]
  80027a2:	0018      	movs	r0, r3
  80027a4:	f007 f8b6 	bl	8009914 <my_rtc_set_alarm>
  80027a8:	1e03      	subs	r3, r0, #0
@@ -5310,7 +5310,7 @@ int main(void)
 	  }
 	  if ( my_rtc_set_alarm ( my_rtc_alarmA_time ) )
  80029cc:	4b2e      	ldr	r3, [pc, #184]	; (8002a88 <main+0x4e0>)
- 80029ce:	881b      	ldrh	r3, [r3, #0]
+ 80029ce:	681b      	ldr	r3, [r3, #0]
  80029d0:	0018      	movs	r0, r3
  80029d2:	f006 ff9f 	bl	8009914 <my_rtc_set_alarm>
  80029d6:	1e03      	subs	r3, r0, #0
@@ -6818,7 +6818,7 @@ void my_sys_init ( void )
  8003292:	4b29      	ldr	r3, [pc, #164]	; (8003338 <my_sys_init+0x104>)
  8003294:	22e1      	movs	r2, #225	; 0xe1
  8003296:	0112      	lsls	r2, r2, #4
- 8003298:	801a      	strh	r2, [r3, #0]
+ 8003298:	601a      	str	r2, [r3, #0]
 		fix_acq_ths = TIME_THS_2_MIN ;
  800329a:	4b28      	ldr	r3, [pc, #160]	; (800333c <my_sys_init+0x108>)
  800329c:	2278      	movs	r2, #120	; 0x78
@@ -6849,7 +6849,7 @@ void my_sys_init ( void )
  80032c2:	4b1d      	ldr	r3, [pc, #116]	; (8003338 <my_sys_init+0x104>)
  80032c4:	22e1      	movs	r2, #225	; 0xe1
  80032c6:	0112      	lsls	r2, r2, #4
- 80032c8:	801a      	strh	r2, [r3, #0]
+ 80032c8:	601a      	str	r2, [r3, #0]
 		fix_acq_ths = TIME_THS_2_MIN ;
  80032ca:	4b1c      	ldr	r3, [pc, #112]	; (800333c <my_sys_init+0x108>)
  80032cc:	2278      	movs	r2, #120	; 0x78
@@ -6880,7 +6880,7 @@ void my_sys_init ( void )
  80032f2:	4b11      	ldr	r3, [pc, #68]	; (8003338 <my_sys_init+0x104>)
  80032f4:	2296      	movs	r2, #150	; 0x96
  80032f6:	0052      	lsls	r2, r2, #1
- 80032f8:	801a      	strh	r2, [r3, #0]
+ 80032f8:	601a      	str	r2, [r3, #0]
 		fix_acq_ths = TIME_THS_10_MIN ;
  80032fa:	4b10      	ldr	r3, [pc, #64]	; (800333c <my_sys_init+0x108>)
  80032fc:	2296      	movs	r2, #150	; 0x96
