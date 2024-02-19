@@ -7,6 +7,9 @@
 
 #include "my_global.h"
 
+//SYS
+char		dbg_payload[UART_TX_MAX_BUFF_SIZE] = {0} ;
+
 // GNSS
 uint16_t	utc_acq_ths = FIX_ACQ_THS ;
 uint16_t	fix_acq_ths = TIME_THS_2_MIN ;
@@ -16,7 +19,7 @@ uint8_t		fix3d_flag = false ;
 bool		astro_rcv_cmd_flag = false ;
 
 //ASTRO
-char my_astro_rcv_cmd[40] = {0} ;
+char 		my_astro_rcv_cmd[40] = {0} ;
 
 // TIM
 uint16_t	tim_seconds = 0 ;

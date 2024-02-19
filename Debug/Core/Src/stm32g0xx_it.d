@@ -46,6 +46,7 @@ Core/Src/stm32g0xx_it.o: ../Core/Src/stm32g0xx_it.c ../Core/Inc/main.h \
  C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_libraries/Inc/my_conversions.h \
  C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_drivers/Inc/my_gnss.h \
  C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_drivers/Inc/my_rtc.h \
+ C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_libraries/Inc/my_tracker_api.h \
  ../Core/Inc/stm32g0xx_it.h
 ../Core/Inc/main.h:
 ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal.h:
@@ -95,4 +96,5 @@ C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_libraries/Inc/my_global.h:
 C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_libraries/Inc/my_conversions.h:
 C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_drivers/Inc/my_gnss.h:
 C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_drivers/Inc/my_rtc.h:
+C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_libraries/Inc/my_tracker_api.h:
 ../Core/Inc/stm32g0xx_it.h:

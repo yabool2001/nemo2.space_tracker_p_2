@@ -60,10 +60,12 @@ UART_HandleTypeDef huart5;
 char*		hello = "\nHello nemo2.space tracker p 2\r\n\0" ;
 const char*	fv = "0.0.2" ;
 uint8_t 	rx_byte = 0 ;
-char		dbg_payload[UART_TX_MAX_BUFF_SIZE] = {0} ;
 bool sw1 , sw2 ;
 uint8_t sys_mode = 0 ; // 0 - Production, 1 - Simulation, 2 - Test , 3 - Reserved (maybe Development)
 uint8_t sys_mission = 0 ; // 0: Active, 1: Sustainable
+
+uint8_t sys_cmd_code = 0 ;
+uint32_t sys_cmd_value = 0 ;
 
 // RTC
 char		rtc_dt_s[20] ;
@@ -160,6 +162,15 @@ int main(void)
   MX_USART5_UART_Init();
   /* USER CODE BEGIN 2 */
 
+  // Kod testowy do usunięcia
+  char test[] = "3,35678\0" ;
+  if ( my_tracker_api_is_cmd ( test ) )
+  {
+	  sys_cmd_code = my_tracker_api_get_cmd_code ( test ) ;
+  }
+
+
+
   send_debug_logs ( hello ) ;
 
   my_sys_init () ;
@@ -242,12 +253,15 @@ int main(void)
 	  if ( astro_rcv_cmd_flag )
 	  {
 		  astro_rcv_cmd_flag = false ;
-		  if ( strstr ( my_astro_rcv_cmd , (char*) SYS_RESET_CMD ) )
+		  if ( my_tracker_api_is_cmd ( test ) )
 		  {
-			  my_rtc_get_dt_s ( rtc_dt_s ) ;
-			  sprintf ( dbg_payload , "%s,%d,%s,HAL_NVIC_SystemReset" , __FILE__ , __LINE__ , rtc_dt_s ) ;
-			  send_debug_logs ( dbg_payload ) ;
-			  HAL_NVIC_SystemReset () ;
+			  if ( strstr ( my_astro_rcv_cmd , (char*) SYS_RESET_CMD ) )
+			  {
+				  my_rtc_get_dt_s ( rtc_dt_s ) ;
+				  sprintf ( dbg_payload , "%s,%d,%s,HAL_NVIC_SystemReset" , __FILE__ , __LINE__ , rtc_dt_s ) ;
+				  send_debug_logs ( dbg_payload ) ;
+				  HAL_NVIC_SystemReset () ;
+			  }
 		  }
 		  my_astro_rcv_cmd[0] = 0 ;
 	  }

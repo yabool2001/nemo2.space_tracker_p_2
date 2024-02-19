@@ -9,6 +9,8 @@
 #define MY_GLOBAL_H_
 
 #include <stdbool.h>
+#include <stdio.h>
+#include <string.h>
 
 #include "stm32g0xx_hal.h"
 
@@ -42,8 +44,9 @@ typedef struct
 	uint32_t	acq_total_time ;
 } fix_astro ;
 
-// ASTRO
-extern char my_astro_rcv_cmd[40] ;
+// SYS
+extern char		dbg_payload[UART_TX_MAX_BUFF_SIZE] ;
+
 
 // TIM
 void my_tim_start ( void ) ;
@@ -54,6 +57,8 @@ void my_gnss_receive_byte ( uint8_t* , bool ) ;
 bool is_fix3d () ;
 
 // Astronode
+extern char my_astro_rcv_cmd[40] ;
+
 void send_debug_logs ( char* ) ;
 void my_astronode_reset ( void ) ;
 void send_astronode_request ( uint8_t* , uint32_t ) ;

@@ -36,3 +36,4 @@
 "./my_libraries/Src/my_global.o"
 "./my_libraries/Src/my_nmea.o"
 "./my_libraries/Src/my_rand.o"
+"./my_libraries/Src/my_tracker_api.o"

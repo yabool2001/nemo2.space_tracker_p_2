@@ -31,13 +31,11 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <stdio.h>
-#include <string.h>
-#include <stdbool.h>
 #include "my_global.h"
 #include "my_astronode.h"
 #include "my_rtc.h"
 #include "my_gnss.h"
+#include "my_tracker_api.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
