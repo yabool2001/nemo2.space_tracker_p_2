@@ -5,3 +5,4 @@
 ../my_libraries/Src/my_conversions.c:66:6:my_conv_timestamp2rtc	56	static
 ../my_libraries/Src/my_conversions.c:101:5:my_conv_is_leap_year	16	static
 ../my_libraries/Src/my_conversions.c:106:6:my_conv_dt_2_dts	56	static
+../my_libraries/Src/my_conversions.c:111:10:my_conv_string_2_uint32_t	24	static

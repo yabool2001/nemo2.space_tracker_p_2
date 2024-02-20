@@ -253,9 +253,3 @@ void my_nmea_get_rmc_utc_sss ( const char* m , uint32_t* sss )
 	free ( s ) ;
 }
 
-/*
-void get_my_nmea_longitude_s ( const char* m , char* coor )
-{
-	__NOP () ;
-}
-*/

@@ -7,7 +7,7 @@
 
 #include <my_tracker_api.h>
 
-bool my_tracker_api_is_cmd ( char* c )
+bool my_tracker_api_is_cmd ( const char* c )
 {
 	size_t l = strlen ( c ) ;
 	uint8_t i = 0 ; // Znaków nie może być więcej niż max. cmd payload czyli 80
@@ -16,34 +16,49 @@ bool my_tracker_api_is_cmd ( char* c )
 	if ( l < 3 || l > 8 )
 		return false ;
 
-
-
 	for ( i = 0 ; i < l ; i++ )
 	{
 		if ( c[i] == ',' )
-		{
 			liczba_przecinkow++ ;
-		}
 		else if ( c[i] < '0' || c[i] > '9' )
-		{
 			return false;
-	    }
 	}
 
-	if ( c[0] == ',' || c[l-1] == ',' || liczba_przecinkow > 1 )
-	{
+	if ( /*c[0] == ',' || c[l-1] == ',' ||*/ liczba_przecinkow > 1 )
 		return false ;
-	}
+
+	const char* comma_p = strchr ( c , ',' ) ;
+	size_t cmd_code_length = comma_p - c ;
+	if ( cmd_code_length > 2 || cmd_code_length < 1 )
+		return false ;
 
 	return true ;
 }
 
-uint8_t my_tracker_api_get_cmd_code ( char* c )
+uint8_t my_tracker_api_get_cmd_code ( const char* c )
 {
-	char* tmp ;
-	uint8_t cmd = 0 ;
+	const char* comma_p = strchr ( c , ',' ) ;
+	size_t cmd_code_length = comma_p - c ;
 
-	tmp = strtok_r ( c , "," , &c ) ;
+	char* cmd_code_s = (char*) malloc ( ( cmd_code_length + 1 ) * sizeof ( char ) ) ;
+	strncpy ( cmd_code_s , c , cmd_code_length ) ; // Kopiowanie fragmentu łańcucha
+	cmd_code_s[cmd_code_length] = '\0';
+	uint8_t cmd_code = (uint8_t) my_conv_string_2_uint32_t ( cmd_code_s ) ;
+	free ( cmd_code_s ) ;
 
-	return cmd ;
+	return cmd_code ;
+}
+
+uint32_t my_tracker_api_get_cmd_value ( const char* c )
+{
+	const char* comma_p = strchr ( c , ',' ) ;
+	size_t cmd_value_length = strlen ( comma_p + 1 ) ;
+
+	char* cmd_value_s = (char*) malloc ( ( cmd_value_length + 1 ) * sizeof ( char ) ) ;
+	strncpy ( cmd_value_s , comma_p + 1 , cmd_value_length ) ; // Kopiowanie fragmentu łańcucha
+	cmd_value_s[cmd_value_length] = '\0';
+	uint32_t cmd_value = my_conv_string_2_uint32_t ( cmd_value_s ) ;
+	free ( cmd_value_s ) ;
+
+	return cmd_value ;
 }

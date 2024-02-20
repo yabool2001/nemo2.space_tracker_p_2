@@ -107,3 +107,9 @@ void my_conv_dt_2_dts ( RTC_DateTypeDef* d , RTC_TimeTypeDef* t , char* dt_s )
 {
 	sprintf ( dt_s , "%4d.%02d.%02d %02d:%02d:%02d" , 2000 + d->Year , d->Month , d->Date , t->Hours , t->Minutes , t->Seconds ) ;
 }
+
+uint32_t my_conv_string_2_uint32_t ( const char* c )
+{
+	char* end_p ;
+	return (uint32_t) strtoul ( c , &end_p , 10 ) ;
+}

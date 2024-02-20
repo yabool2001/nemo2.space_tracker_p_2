@@ -163,10 +163,11 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   // Kod testowy do usunięcia
-  char test[] = "3,35678\0" ;
+  char test[] = "32,35678" ;
   if ( my_tracker_api_is_cmd ( test ) )
   {
 	  sys_cmd_code = my_tracker_api_get_cmd_code ( test ) ;
+	  sys_cmd_value = my_tracker_api_get_cmd_value ( test ) ;
   }
 
 
