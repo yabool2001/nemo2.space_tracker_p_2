@@ -12,6 +12,7 @@ Position `SW1=0` `SW2=0`
 Position `SW1=1` `SW2=0`  
 Accelometer disabled
 GNSS verbose ON
+GNSS power off
 STOP time short
 
 ## Test mode
@@ -19,7 +20,7 @@ STOP time short
 Position `SW1=0` `SW2=1`  
 Accelometer disabled
 GNSS verbose ON
-GNSS never power_off
+GNSS never power off
 STOP time short
 FIX_ACQ_THS 600
 MIN_TNS 3
@@ -33,7 +34,7 @@ Active mission acquire fix under 2 conditions: Movement is detected & A certain 
 Sustainable mission acquire fix under 2 conditions: A certain MIN period has passed & Movement has been detected within the certain MIN period .
 
 
-Message payload_id = 0 format:
+Uplink Message payload_id = 0 format:
 
 `[%u] my_astro_payload_id`,
 `[%.1f] fix3d.pdop`,
@@ -41,7 +42,16 @@ Message payload_id = 0 format:
 `[%lu] (uint32_t) ( fix3d.acq_total_time / 60 )`,
 `[%s] fv`
 
-Message payload_id > 0 format:
+Uplink Message payload_id > 0 format:
+
+`[%u] my_astro_payload_id,`
+`[%.1f] fix3d.pdop,`
+`[%d] fix3d.acq_time,`
+`[%lu] (uint32_t) ( fix3d.acq_total_time / 60 ),`
+`[%ld] fix3d.latitude_astro_geo_wr,`
+`[%ld] fix3d.longitude_astro_geo_wr`
+
+Downlink Command format:
 
 `[%u] my_astro_payload_id,`
 `[%.1f] fix3d.pdop,`

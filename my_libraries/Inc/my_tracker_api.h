@@ -9,6 +9,7 @@
 #define MY_TRACKER_H_
 
 #include "my_global.h"
+#include "my_conversions.h"
 
 // ASTRO COMMANDS
 
@@ -19,8 +20,9 @@
 // 9,X Sensitive command regarding contingency situations
 #define SYS_RESET_CMD 				"9,9"	//HAL_NVIC_SystemReset
 
-bool my_tracker_api_is_cmd ( const char* ) ;
-uint8_t my_tracker_api_get_cmd_code ( const char* ) ;
-uint32_t my_tracker_api_get_cmd_value ( const char* ) ;
+bool		my_tracker_api_is_cmd ( const char* ) ;
+uint8_t		my_tracker_api_get_cmd_code ( const char* ) ;
+uint32_t	my_tracker_api_get_cmd_value ( const char* ) ;
+bool		my_tracker_api_parse_cmd ( cmd_astro* , char* ) ;
 
 #endif /* MY_TRACKER_H_ */

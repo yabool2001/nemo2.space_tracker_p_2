@@ -67,5 +67,10 @@ uint32_t get_systick ( void ) ;
 bool is_systick_timeout_over ( uint32_t , uint16_t ) ;
 bool is_astronode_character_received ( uint8_t* ) ;
 
+typedef struct
+{
+	uint8_t		code ;
+	uint32_t	value ;
+} cmd_astro ;
 
 #endif /* MY_GLOBAL_H_ */

@@ -995,7 +995,7 @@ bool astronode_send_cmd_rr ( char* my_astro_rcv_cmd )
             if (((answer.payload_len - 4) != 40) && ((answer.payload_len - 4) != 8))
             {
                 send_debug_logs("Command size error");
-                return;
+                return result ;
             }
 
             char command_content[answer.payload_len];
@@ -1005,7 +1005,7 @@ bool astronode_send_cmd_rr ( char* my_astro_rcv_cmd )
             	if (isprint((unsigned char)command_content[index]) == 0)
                 {
                     send_debug_logs("Command contains non printable characters");
-                    return;
+                    return false;
                 }
             	my_astro_rcv_cmd[index] = command_content[index] ;
             }
