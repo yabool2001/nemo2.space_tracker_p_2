@@ -63,6 +63,7 @@ uint8_t 	rx_byte = 0 ;
 bool sw1 , sw2 ;
 uint8_t sys_mode = 0 ; // 0 - Production, 1 - Simulation, 2 - Test , 3 - Reserved (maybe Development)
 uint8_t sys_mission = 0 ; // 0: Active, 1: Sustainable
+uint16_t sys_watchdog_time_ths = TIME_THS_15_MIN ;
 
 // RTC
 char		rtc_dt_s[20] ;
@@ -103,7 +104,14 @@ void my_ldg_blink ( uint8_t , uint16_t ) ; // number of blinks, period of blink
 void my_ldb_blink ( uint8_t , uint16_t ) ; // number of blinks, period of blink
 void my_sys_init ( void ) ;
 bool is_system_initialized ( void ) ;
+void my_sys_restart ( void ) ;
+void my_sys_standby ( void ) ;
 void my_sys_deepsleep ( void ) ;
+void my_sys_change_watchdog_time_ths ( uint32_t ) ;
+void my_sys_change_AlarmA_time ( uint32_t ) ;
+void my_sys_change_fix_acq_ths ( uint32_t ) ;
+void my_sys_change_min_tns_time_ths ( uint32_t ) ;
+void my_sys_change_pdop_ths ( uint32_t ) ;
 
 void my_gnss_sw_on ( void ) ;
 void my_gnss_sw_off ( void ) ;
@@ -160,12 +168,55 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   // Kod testowy do usunięcia
-  char test[] = "32,35678" ;
+  char test[] = "1,300,A" ;
   if ( my_tracker_api_is_cmd ( test ) )
   {
-	  my_tracker_api_parse_cmd ( &my_astro_cmd , test ) ;
-	  /*my_astro_cmd.code = my_tracker_api_get_cmd_code ( test ) ;
-	  my_astro_cmd.value = my_tracker_api_get_cmd_value ( test ) ;*/
+	  if ( my_tracker_api_parse_cmd ( &my_astro_cmd , test ) )
+	  {
+		  switch ( my_astro_cmd.code )
+		  {
+		  	  case 1:
+		  		  my_sys_change_watchdog_time_ths ( my_astro_cmd.value ) ;
+		  		  sprintf ( my_astro_payload , "%u,%u,%u,%lu" , my_astro_payload_id , (uint16_t) my_astro_cmd.is_executed , my_astro_cmd.code , my_astro_cmd.value ) ;
+		  		  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
+		  		  send_debug_logs ( dbg_payload ) ;
+		  		  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+		  		  break ;
+		  	  case 2:
+		  		  my_sys_change_AlarmA_time ( my_astro_cmd.value ) ;
+		  		  sprintf ( my_astro_payload , "%u,%u,%u,%lu" , my_astro_payload_id , (uint16_t) my_astro_cmd.is_executed , my_astro_cmd.code , my_astro_cmd.value ) ;
+		  		  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
+				  send_debug_logs ( dbg_payload ) ;
+				  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+				  break ;
+		  	  case 3:
+		  		  my_sys_change_fix_acq_ths ( my_astro_cmd.value ) ;
+				  sprintf ( my_astro_payload , "%u,%u,%u,%lu" , my_astro_payload_id , (uint16_t) my_astro_cmd.is_executed , my_astro_cmd.code , my_astro_cmd.value ) ;
+				  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
+				  send_debug_logs ( dbg_payload ) ;
+				  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+				  break ;
+		  	  case 4:
+		  		  my_sys_change_min_tns_time_ths ( my_astro_cmd.value ) ;
+				  sprintf ( my_astro_payload , "%u,%u,%u,%lu" , my_astro_payload_id , (uint16_t) my_astro_cmd.is_executed , my_astro_cmd.code , my_astro_cmd.value ) ;
+				  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
+				  send_debug_logs ( dbg_payload ) ;
+				  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+				  break ;
+		  	  case 5:
+		  		  my_sys_change_pdop_ths ( my_astro_cmd.value ) ;
+				  sprintf ( my_astro_payload , "%u,%u,%u,%lu" , my_astro_payload_id , (uint16_t) my_astro_cmd.is_executed , my_astro_cmd.code , my_astro_cmd.value ) ;
+				  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
+				  send_debug_logs ( dbg_payload ) ;
+				  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+				  break ;
+		  	  default:
+		  		  sprintf ( my_astro_payload , "%u,%u,%u,%lu" , my_astro_payload_id , (uint16_t) my_astro_cmd.is_executed , my_astro_cmd.code , my_astro_cmd.value ) ;
+		  		  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
+		  		  send_debug_logs ( dbg_payload ) ;
+		  		  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+		  }
+	  }
   }
 
 
@@ -203,12 +254,7 @@ int main(void)
   }
 
   if ( !my_astro_init () )
-  {
-	  my_rtc_get_dt_s ( rtc_dt_s ) ;
-	  sprintf ( dbg_payload , "%s,%d,%s,HAL_NVIC_SystemReset" , __FILE__ , __LINE__ , rtc_dt_s ) ;
-	  send_debug_logs ( dbg_payload ) ;
-	  HAL_NVIC_SystemReset () ;
-  }
+	  my_sys_restart () ;
   else
   {
 	  while ( my_astro_evt_pin () )
@@ -830,6 +876,27 @@ bool is_system_initialized ( void )
 	send_debug_logs ( rtc_dt_s ) ;
 	return ( yyyy >= FIRMWARE_RELEASE_YEAR ) ? true : false ;
 }
+
+void my_sys_restart ( void )
+{
+	my_rtc_get_dt_s ( rtc_dt_s ) ;
+	sprintf ( dbg_payload , "%s,%d,%s,HAL_NVIC_SystemReset" , __FILE__ , __LINE__ , rtc_dt_s ) ;
+	send_debug_logs ( dbg_payload ) ;
+	HAL_NVIC_SystemReset () ;
+}
+
+void my_sys_standby ( void )
+{
+	sprintf ( dbg_payload , "%s,%d,HAL_PWR_EnterSTANDBYMode" , __FILE__ , __LINE__ ) ;
+	send_debug_logs ( dbg_payload ) ;
+	my_tim_stop () ;
+	my_rtc_alarm_flag = false ;
+	HAL_PWR_EnterSTANDBYMode () ;
+	my_rtc_get_dt_s ( rtc_dt_s ) ;
+	sprintf ( dbg_payload , "%s,%d,%s, Wake-up after Standby" , __FILE__ , __LINE__ , rtc_dt_s ) ;
+	send_debug_logs ( dbg_payload ) ;
+}
+
 void my_sys_deepsleep ( void )
 {
 	sprintf ( dbg_payload , "%s,%d,PWR_LOWPOWERREGULATOR_ON,PWR_STOPENTRY_WFE" , __FILE__ , __LINE__ ) ;
@@ -840,10 +907,50 @@ void my_sys_deepsleep ( void )
 	HAL_PWR_EnterSTOPMode ( PWR_LOWPOWERREGULATOR_ON , PWR_STOPENTRY_WFE ) ;
 	HAL_ResumeTick () ;
 	my_rtc_get_dt_s ( rtc_dt_s ) ;
-	sprintf ( dbg_payload , "%s,%d,%s,Wake-up" , __FILE__ , __LINE__ , rtc_dt_s ) ;
+	sprintf ( dbg_payload , "%s,%d,%s,Wake-up after deepsleep" , __FILE__ , __LINE__ , rtc_dt_s ) ;
 	send_debug_logs ( dbg_payload ) ;
 }
 
+void my_sys_change_watchdog_time_ths ( uint32_t t )
+{
+	if ( t >= TIME_THS_5_MIN && t <= TIME_THS_1_H )
+	{
+		sys_watchdog_time_ths = t ;
+		my_astro_cmd.is_executed = true ;
+	}
+}
+void my_sys_change_AlarmA_time ( uint32_t t )
+{
+	if ( t >= TIME_THS_5_MIN && t <= TIME_THS_100_D )
+	{
+		my_rtc_alarmA_time = t ;
+		my_astro_cmd.is_executed = true ;
+	}
+}
+void my_sys_change_fix_acq_ths ( uint32_t t )
+{
+	if ( t >= TIME_THS_45_SEC && t <= TIME_THS_10_MIN )
+	{
+		fix_acq_ths = t ;
+		my_astro_cmd.is_executed = true ;
+	}
+}
+void my_sys_change_min_tns_time_ths ( uint32_t t )
+{
+	if ( t >= TIME_THS_15_SEC && t <= TIME_THS_10_MIN )
+	{
+		min_tns_time_ths = t ;
+		my_astro_cmd.is_executed = true ;
+	}
+}
+void my_sys_change_pdop_ths ( uint32_t p )
+{
+	if ( p >= 0.01 && p <= 100 )
+	{
+		pdop_ths = p ;
+		my_astro_cmd.is_executed = true ;
+	}
+}
 // ** LED OPERATION
 void my_ldg_sw_on ( void )
 {
@@ -1001,13 +1108,8 @@ void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef *htim )
 	if ( htim->Instance == TIM6 )
 	{
 		tim_seconds++ ;
-		if ( tim_seconds > TIME_THS_15_MIN )
-		{
-			my_rtc_get_dt_s ( rtc_dt_s ) ;
-			sprintf ( dbg_payload , "%s,%d,%s,HAL_NVIC_SystemReset" , __FILE__ , __LINE__ , rtc_dt_s ) ;
-			send_debug_logs ( dbg_payload ) ;
-			HAL_NVIC_SystemReset () ;
-		}
+		if ( tim_seconds > sys_watchdog_time_ths )
+			my_sys_restart () ;
 	}
 }
 

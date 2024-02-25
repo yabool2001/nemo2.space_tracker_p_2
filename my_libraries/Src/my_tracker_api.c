@@ -13,7 +13,7 @@ bool my_tracker_api_is_cmd ( const char* c )
 	uint8_t i = 0 ; // Znaków nie może być więcej niż max. cmd payload czyli 80
 	uint8_t liczba_przecinkow = 0 ;
 
-	if ( l < 3 || l > 8 )
+	if ( l < 3 || l > 9 )
 		return false ;
 
 	for ( i = 0 ; i < l ; i++ )
@@ -67,16 +67,13 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
 {
 	cmd->code = 0 ;
 	cmd->value = 0 ;
+	cmd->is_executed = false ;
 
 	char* tok = strtok ( s , "," ) ;
 	cmd->code = (uint8_t) my_conv_string_2_uint32_t ( tok ) ;
 	tok = strtok ( NULL , "," ) ;
 	cmd->value = my_conv_string_2_uint32_t ( tok ) ;
 	tok = strtok ( NULL , "," ) ;
-	/*while ( tok != NULL )
-	{
-		tok = strtok ( NULL , "," ) ;
-	}*/
 
 	if ( cmd->code == 0 || cmd->value == 0 || tok != NULL )
 		return false ;
