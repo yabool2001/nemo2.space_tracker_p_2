@@ -91,3 +91,7 @@ PDOP Expected fix precion
 precision = maximum number of seconds for findind 3 satellites 
 min precision = 0.01 meters (10 centimeter)
 max precision = 100 meters
+
+SYSTEM Software Reset
+9,9
+

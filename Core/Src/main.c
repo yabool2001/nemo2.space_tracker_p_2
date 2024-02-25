@@ -210,6 +210,11 @@ int main(void)
 				  send_debug_logs ( dbg_payload ) ;
 				  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
 				  break ;
+		  	  case 9:
+		  		  // Tutaj wyjątkowo nie musi być uplink confimration, bo kolejny pakiet będzie miał id = 0, a logi będą wysłane w funkcji
+		  		  if ( my_astro_cmd.value == 9 )
+		  			  my_sys_restart () ;
+				  break ;
 		  	  default:
 		  		  sprintf ( my_astro_payload , "%u,%u,%u,%lu" , my_astro_payload_id , (uint16_t) my_astro_cmd.is_executed , my_astro_cmd.code , my_astro_cmd.value ) ;
 		  		  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony

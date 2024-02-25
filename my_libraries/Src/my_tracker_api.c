@@ -75,7 +75,7 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
 	cmd->value = my_conv_string_2_uint32_t ( tok ) ;
 	tok = strtok ( NULL , "," ) ;
 
-	if ( cmd->code == 0 || cmd->value == 0 || tok != NULL )
+	if ( cmd->code == 0 || tok != NULL )
 		return false ;
 	else
 		return true ;
