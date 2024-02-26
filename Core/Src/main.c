@@ -58,7 +58,7 @@ UART_HandleTypeDef huart5;
 
 // SYSTEM
 char*		hello = "\nHello nemo2.space tracker p 2\r\n\0" ;
-const char*	fv = "0.0.2" ;
+const char*	fv = "0.0.3" ;
 uint8_t 	rx_byte = 0 ;
 bool sw1 , sw2 ;
 uint8_t sys_mode = 0 ; // 0 - Production, 1 - Simulation, 2 - Test , 3 - Reserved (maybe Development)
