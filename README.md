@@ -42,6 +42,7 @@ Uplink Message payload_id = 0 format:
 `[%d] fix3d.acq_time`,
 `[%lu] (uint32_t) ( fix3d.acq_total_time / 60 )`,
 `[%s] fv`
+`[%u] sys_mode`
 
 Uplink Message payload_id > 0 format:
 

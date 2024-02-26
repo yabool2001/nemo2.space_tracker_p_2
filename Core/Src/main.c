@@ -171,7 +171,7 @@ int main(void)
   send_debug_logs ( hello ) ;
 
   my_sys_init () ;
-  sprintf ( dbg_payload , "System mode: %u" , sys_mode ) ;
+  sprintf ( dbg_payload , "System mode: %u" , (uint16_t) sys_mode ) ;
   send_debug_logs ( dbg_payload ) ;
 
   my_tim_init () ;
@@ -210,7 +210,7 @@ int main(void)
 		  send_debug_logs ( dbg_payload ) ;
 		  my_astro_handle_evt () ;
 	  }
-	  sprintf ( my_astro_payload , "%u,%.1f,%u,%lu,%s" , my_astro_payload_id , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) , fv ) ;
+	  sprintf ( my_astro_payload , "%u,%.1f,%u,%lu,%s,%u" , my_astro_payload_id , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) , fv , (uint16_t) sys_mode ) ;
 	  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
 	  send_debug_logs ( dbg_payload ) ;
 	  my_astro_write_coordinates ( fix3d.latitude_astro_geo_wr , fix3d.longitude_astro_geo_wr ) ;
