@@ -253,6 +253,8 @@ int main(void)
 			  my_astro_write_coordinates ( fix3d.latitude_astro_geo_wr , fix3d.longitude_astro_geo_wr ) ;
 			  sprintf ( my_astro_payload , "%u,%.1f,%u,%lu,%ld,%ld" , my_astro_payload_id , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) , fix3d.latitude_astro_geo_wr , fix3d.longitude_astro_geo_wr ) ;
 			  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+			  if ( my_astro_payload_id == 0 )
+				  my_astro_payload_id++ ;
 			  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ;
 			  send_debug_logs ( dbg_payload ) ;
 		  }
@@ -906,6 +908,8 @@ bool my_tracker_handle_cmd ( void )
 				  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
 				  send_debug_logs ( dbg_payload ) ;
 				  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+				  if ( my_astro_payload_id == 0 )
+					  my_astro_payload_id++ ;
 				  break ;
 			  case 2:
 				  my_sys_change_AlarmA_time ( my_astro_cmd.value ) ;
@@ -913,6 +917,8 @@ bool my_tracker_handle_cmd ( void )
 				  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
 				  send_debug_logs ( dbg_payload ) ;
 				  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+				  if ( my_astro_payload_id == 0 )
+					  my_astro_payload_id++ ;
 				  break ;
 			  case 3:
 				  my_sys_change_fix_acq_ths ( my_astro_cmd.value ) ;
@@ -920,6 +926,8 @@ bool my_tracker_handle_cmd ( void )
 				  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
 				  send_debug_logs ( dbg_payload ) ;
 				  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+				  if ( my_astro_payload_id == 0 )
+					  my_astro_payload_id++ ;
 				  break ;
 			  case 4:
 				  my_sys_change_min_tns_time_ths ( my_astro_cmd.value ) ;
@@ -927,6 +935,8 @@ bool my_tracker_handle_cmd ( void )
 				  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
 				  send_debug_logs ( dbg_payload ) ;
 				  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+				  if ( my_astro_payload_id == 0 )
+					  my_astro_payload_id++ ;
 				  break ;
 			  case 5:
 				  my_sys_change_pdop_ths ( my_astro_cmd.value ) ;
@@ -934,6 +944,8 @@ bool my_tracker_handle_cmd ( void )
 				  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
 				  send_debug_logs ( dbg_payload ) ;
 				  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+				  if ( my_astro_payload_id == 0 )
+					  my_astro_payload_id++ ;
 				  break ;
 			  case 9:
 				  // Tutaj wyjątkowo nie musi być uplink confimration, bo kolejny pakiet będzie miał id = 0, a logi będą wysłane w funkcji
@@ -945,6 +957,8 @@ bool my_tracker_handle_cmd ( void )
 				  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
 				  send_debug_logs ( dbg_payload ) ;
 				  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+				  if ( my_astro_payload_id == 0 )
+					  my_astro_payload_id++ ;
 				  return false ;
 			}
 		}
