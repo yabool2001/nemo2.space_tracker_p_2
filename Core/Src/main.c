@@ -786,6 +786,7 @@ void my_sys_init ( void )
 		my_rtc_alarmA_time = TIME_THS_1_H ;
 		fix_acq_ths = TIME_THS_2_MIN ;
 		min_tns_time_ths = TIME_THS_30_SEC ;
+		pdop_ths = PDOP_THS ;
 	}
 	if ( sw1 && !sw2 )
 	{
@@ -793,6 +794,7 @@ void my_sys_init ( void )
 		my_rtc_alarmA_time = TIME_THS_1_H ;
 		fix_acq_ths = TIME_THS_2_MIN ;
 		min_tns_time_ths = TIME_THS_30_SEC ;
+		pdop_ths = PDOP_THS ;
 	}
 	if ( !sw1 && sw2 )
 	{
@@ -800,6 +802,7 @@ void my_sys_init ( void )
 		my_rtc_alarmA_time = TIME_THS_5_MIN ;
 		fix_acq_ths = TIME_THS_10_MIN ;
 		min_tns_time_ths = TIME_THS_1_MIN ;
+		pdop_ths = 10 ;
 	}
 	if ( sw1 && sw2 )
 	{

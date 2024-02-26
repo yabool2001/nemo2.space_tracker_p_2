@@ -5,27 +5,28 @@ System modes can be change by 2-position hardware switch SW1-2:
 Position `SW1=0` `SW2=0`  
 - Accelometer enabled
 - GNSS verbose OFF
-
+- PDOP 2 m
 
 ## Simulation mode
 
 Position `SW1=1` `SW2=0`  
-Accelometer disabled
-GNSS verbose ON
-GNSS power off
-STOP time short
+- Accelometer disabled
+- GNSS verbose ON
+- GNSS power off
+- STOP time short
+- PDOP 2 m
 
 ## Test mode
 
 Position `SW1=0` `SW2=1`  
-Accelometer disabled
-GNSS verbose ON
-GNSS never power off
-STOP time short
-FIX_ACQ_THS 600
-MIN_TNS 3
-MIN_TNS_TIME_THS
-
+- Accelometer disabled
+- GNSS verbose ON
+- GNSS never power off
+- STOP time short
+- FIX_ACQ_THS 600
+- MIN_TNS 3
+- MIN_TNS_TIME_THS
+- PDOP 10 m
 
 Production Mode has 2 missions: Active and Sustainable
 

@@ -36,7 +36,6 @@ extern uint16_t		utc_acq_ths ;
 extern uint16_t		fix_acq_ths ;
 extern uint16_t		min_tns_time_ths ;
 extern double		pdop_ths ;
-extern uint8_t		fix3d_flag ;
 extern bool			astro_rcv_cmd_flag ;
 typedef struct
 {
