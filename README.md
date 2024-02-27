@@ -64,35 +64,38 @@ Downlink Command format:
 
 Downlink Commands:
 
-Maximum time of one cycle of tracker 
+Set Maximum time of one cycle of tracker (sys_watchdog_time_ths)
 1,<time>
 time = number of seconds for watchdog timer. One cycle of tracker can not last longer than this threshold for watchdog
 min time = 300 seconds (5 minutes)
 max time = 3600 seconds (1 hour)
 
-Time of keepalive
+Set Time of keepalive (my_rtc_alarmA_time)
 2,<time>
 time = number of seconds for deep sleep time (alarmA). Deep sleep can not last longer than this threshold. 
 min time = 300 seconds (5 minutes)
 max time = 8 640 000 seconds (100 days)
 
-Time of fix acquisition threshold
+Set Time of fix acquisition threshold (fix_acq_ths)
 3,<time>
 time = maximum number of seconds for fix acquisition. 
 min time = 45 seconds (5 minutes)
 max time = 600 seconds (10 minutes)
 
-Time threshold for finding 3 satellites
+Set Time threshold for finding 3 satellites (min_tns_time_ths)
 4,<time>
 time = maximum number of seconds for findind 3 satellites 
 min time = 15 seconds (5 minutes)
 max time = 600 seconds (10 minutes)
 
-PDOP Expected fix precion
+Set PDOP Expected fix precion (pdop_ths)
 5,<time>
 precision = maximum number of seconds for findind 3 satellites 
 min precision = 0.01 meters (10 centimeter)
 max precision = 100 meters
+
+Get System configuration
+fv , sys_mode , sys_watchdog_time_ths , my_rtc_alarmA_time , fix_acq_ths , min_tns_time_ths , pdop_ths ,
 
 SYSTEM Software Reset
 9,9

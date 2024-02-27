@@ -210,7 +210,10 @@ int main(void)
 		  send_debug_logs ( dbg_payload ) ;
 		  my_astro_handle_evt () ;
 	  }
-	  sprintf ( my_astro_payload , "%u,%.1f,%u,%lu,%s,%u" , my_astro_payload_id , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) , fv , (uint16_t) sys_mode ) ;
+	  if ( sys_mode == 0 ) // Present sys_mode if other than production
+		  sprintf ( my_astro_payload , "%u,%.1f,%u,%lu,%s" , my_astro_payload_id , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) , fv ) ;
+	  else
+		  sprintf ( my_astro_payload , "%u,%.1f,%u,%lu,%s,%u" , my_astro_payload_id , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) , fv , (uint16_t) sys_mode ) ;
 	  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
 	  send_debug_logs ( dbg_payload ) ;
 	  my_astro_write_coordinates ( fix3d.latitude_astro_geo_wr , fix3d.longitude_astro_geo_wr ) ;
@@ -947,9 +950,20 @@ bool my_tracker_handle_cmd ( void )
 				  if ( my_astro_payload_id == 0 )
 					  my_astro_payload_id++ ;
 				  break ;
+			  case 8:
+				  if ( my_astro_cmd.value == (uint32_t) GET_SYS_CFG )
+				  {
+					  sprintf ( my_astro_payload , "%u,%s,%u,%u,%lu,%u,%u,%.1f" , my_astro_payload_id , fv , (uint16_t) sys_mode , sys_watchdog_time_ths , my_rtc_alarmA_time , fix_acq_ths , min_tns_time_ths , pdop_ths ) ;
+					  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
+					  send_debug_logs ( dbg_payload ) ;
+					  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+					  if ( my_astro_payload_id == 0 )
+						  my_astro_payload_id++ ;
+				  }
+				  break ;
 			  case 9:
 				  // Tutaj wyjątkowo nie musi być uplink confimration, bo kolejny pakiet będzie miał id = 0, a logi będą wysłane w funkcji
-				  if ( my_astro_cmd.value == (uint32_t) SYS_RESET_CMD_VALUE )
+				  if ( my_astro_cmd.value == (uint32_t) RESET_SYS_CMD_VALUE )
 					  my_sys_restart () ;
 				  break ;
 			  default:

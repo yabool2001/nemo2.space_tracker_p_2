@@ -18,7 +18,8 @@
 // 1,X Command to set my_rtc_alarmA_time variable
 
 // 9,X Sensitive command regarding contingency situations
-#define SYS_RESET_CMD_VALUE 				9	//HAL_NVIC_SystemReset
+#define 	GET_SYS_CFG 					1
+#define 	RESET_SYS_CMD_VALUE 			1	//HAL_NVIC_SystemReset
 
 bool		my_tracker_api_is_cmd ( const char* ) ;
 uint8_t		my_tracker_api_get_cmd_code ( const char* ) ;
