@@ -69,6 +69,11 @@ uint32_t get_systick ( void ) ;
 bool is_systick_timeout_over ( uint32_t , uint16_t ) ;
 bool is_astronode_character_received ( uint8_t* ) ;
 
+// ACC
+int32_t my_lis2dw12_platform_write ( void* , uint8_t , const uint8_t , uint16_t ) ;
+int32_t my_lis2dw12_platform_read ( void* , uint8_t , uint8_t , uint16_t ) ;
+
+
 typedef struct
 {
 	uint8_t		code ;

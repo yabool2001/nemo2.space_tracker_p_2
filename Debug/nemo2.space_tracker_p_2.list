@@ -7,23 +7,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
   1 .text         00012ce8  080000bc  080000bc  000100bc  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .rodata       000020e4  08012da8  08012da8  00022da8  2**3
+  2 .rodata       000020ec  08012da8  08012da8  00022da8  2**3
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  3 .ARM.extab    00000000  08014e8c  08014e8c  000306d8  2**0
+  3 .ARM.extab    00000000  08014e94  08014e94  000306d8  2**0
                   CONTENTS
-  4 .ARM          00000008  08014e8c  08014e8c  00024e8c  2**2
+  4 .ARM          00000008  08014e94  08014e94  00024e94  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  5 .preinit_array 00000000  08014e94  08014e94  000306d8  2**0
+  5 .preinit_array 00000000  08014e9c  08014e9c  000306d8  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  6 .init_array   00000008  08014e94  08014e94  00024e94  2**2
+  6 .init_array   00000008  08014e9c  08014e9c  00024e9c  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  7 .fini_array   00000004  08014e9c  08014e9c  00024e9c  2**2
+  7 .fini_array   00000004  08014ea4  08014ea4  00024ea4  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  8 .data         000006d8  20000000  08014ea0  00030000  2**3
+  8 .data         000006d8  20000000  08014ea8  00030000  2**3
                   CONTENTS, ALLOC, LOAD, DATA
-  9 .bss          0000086c  200006d8  08015578  000306d8  2**3
+  9 .bss          0000086c  200006d8  08015580  000306d8  2**3
                   ALLOC
- 10 ._user_heap_stack 00000604  20000f44  08015578  00030f44  2**0
+ 10 ._user_heap_stack 00000604  20000f44  08015580  00030f44  2**0
                   ALLOC
  11 .ARM.attributes 00000028  00000000  00000000  000306d8  2**0
                   CONTENTS, READONLY
@@ -39,9 +39,9 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  17 .debug_macro  00021fd3  00000000  00000000  00050f3c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   0001f611  00000000  00000000  00072f0f  2**0
+ 18 .debug_line   0001f60f  00000000  00000000  00072f0f  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    000cb54a  00000000  00000000  00092520  2**0
+ 19 .debug_str    000cb54b  00000000  00000000  0009251e  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  20 .debug_frame  000074cc  00000000  00000000  0015da6c  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
@@ -2249,7 +2249,7 @@ Disassembly of section .text:
  80011e6:	46c0      	nop			; (mov r8, r8)
  80011e8:	000007ff 	.word	0x000007ff
  80011ec:	fffffc01 	.word	0xfffffc01
- 80011f0:	08014900 	.word	0x08014900
+ 80011f0:	08014904 	.word	0x08014904
  80011f4:	000003ff 	.word	0x000003ff
  80011f8:	feffffff 	.word	0xfeffffff
  80011fc:	000007fe 	.word	0x000007fe
@@ -4956,7 +4956,7 @@ int main(void)
  8002706:	781b      	ldrb	r3, [r3, #0]
  8002708:	2b00      	cmp	r3, #0
  800270a:	d11d      	bne.n	8002748 <main+0x1a0>
-		  sprintf ( my_astro_payload , "%u,%.1f,%u,%lu,%s" , my_astro_payload_id , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) , fv ) ;
+		  sprintf ( my_astro_payload , "%u,%.1f,%u,%lu,%s" , uplink_id , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) , fv ) ;
  800270c:	4b96      	ldr	r3, [pc, #600]	; (8002968 <main+0x3c0>)
  800270e:	881b      	ldrh	r3, [r3, #0]
  8002710:	4698      	mov	r8, r3
@@ -4986,7 +4986,7 @@ int main(void)
  8002742:	f009 fd49 	bl	800c1d8 <sprintf>
  8002746:	e020      	b.n	800278a <main+0x1e2>
 	  else
-		  sprintf ( my_astro_payload , "%u,%.1f,%u,%lu,%s,%u" , my_astro_payload_id , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) , fv , (uint16_t) sys_mode ) ;
+		  sprintf ( my_astro_payload , "%u,%.1f,%u,%lu,%s,%u" , uplink_id , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) , fv , (uint16_t) sys_mode ) ;
  8002748:	4b87      	ldr	r3, [pc, #540]	; (8002968 <main+0x3c0>)
  800274a:	881b      	ldrh	r3, [r3, #0]
  800274c:	4698      	mov	r8, r3
@@ -5038,7 +5038,7 @@ int main(void)
  80027aa:	0019      	movs	r1, r3
  80027ac:	0010      	movs	r0, r2
  80027ae:	f007 f92f 	bl	8009a10 <my_astro_write_coordinates>
-	  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+	  my_astro_add_payload_2_queue ( uplink_id++ , my_astro_payload ) ;
  80027b2:	4b6d      	ldr	r3, [pc, #436]	; (8002968 <main+0x3c0>)
  80027b4:	881b      	ldrh	r3, [r3, #0]
  80027b6:	1c5a      	adds	r2, r3, #1
@@ -5175,7 +5175,7 @@ int main(void)
  8002898:	0019      	movs	r1, r3
  800289a:	0010      	movs	r0, r2
  800289c:	f007 f8b8 	bl	8009a10 <my_astro_write_coordinates>
-			  sprintf ( my_astro_payload , "%u,%.1f,%u,%lu,%ld,%ld" , my_astro_payload_id , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) , fix3d.latitude_astro_geo_wr , fix3d.longitude_astro_geo_wr ) ;
+			  sprintf ( my_astro_payload , "%u,%.1f,%u,%lu,%ld,%ld" , uplink_id , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) , fix3d.latitude_astro_geo_wr , fix3d.longitude_astro_geo_wr ) ;
  80028a0:	4b31      	ldr	r3, [pc, #196]	; (8002968 <main+0x3c0>)
  80028a2:	881b      	ldrh	r3, [r3, #0]
  80028a4:	4698      	mov	r8, r3
@@ -5207,7 +5207,7 @@ int main(void)
  80028da:	9501      	str	r5, [sp, #4]
  80028dc:	4642      	mov	r2, r8
  80028de:	f009 fc7b 	bl	800c1d8 <sprintf>
-			  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+			  my_astro_add_payload_2_queue ( uplink_id++ , my_astro_payload ) ;
  80028e2:	4b21      	ldr	r3, [pc, #132]	; (8002968 <main+0x3c0>)
  80028e4:	881b      	ldrh	r3, [r3, #0]
  80028e6:	1c5a      	adds	r2, r3, #1
@@ -5252,27 +5252,27 @@ int main(void)
  800292e:	e761      	b.n	80027f4 <main+0x24c>
  8002930:	20000000 	.word	0x20000000
  8002934:	20000a22 	.word	0x20000a22
- 8002938:	08012dd4 	.word	0x08012dd4
+ 8002938:	08012dd8 	.word	0x08012dd8
  800293c:	20000b10 	.word	0x20000b10
  8002940:	20000ae8 	.word	0x20000ae8
  8002944:	20000b01 	.word	0x20000b01
  8002948:	20000a24 	.word	0x20000a24
- 800294c:	08012de4 	.word	0x08012de4
- 8002950:	08012df8 	.word	0x08012df8
+ 800294c:	08012de8 	.word	0x08012de8
+ 8002950:	08012dfc 	.word	0x08012dfc
  8002954:	2000000c 	.word	0x2000000c
- 8002958:	08012e38 	.word	0x08012e38
+ 8002958:	08012e3c 	.word	0x08012e3c
  800295c:	20000b00 	.word	0x20000b00
- 8002960:	08012e58 	.word	0x08012e58
- 8002964:	08012e64 	.word	0x08012e64
- 8002968:	20000a38 	.word	0x20000a38
+ 8002960:	08012e5c 	.word	0x08012e5c
+ 8002964:	08012e68 	.word	0x08012e68
+ 8002968:	20000ae4 	.word	0x20000ae4
  800296c:	20000004 	.word	0x20000004
- 8002970:	08012e7c 	.word	0x08012e7c
- 8002974:	20000a3c 	.word	0x20000a3c
- 8002978:	08012e90 	.word	0x08012e90
- 800297c:	08012ea8 	.word	0x08012ea8
+ 8002970:	08012e80 	.word	0x08012e80
+ 8002974:	20000a38 	.word	0x20000a38
+ 8002978:	08012e94 	.word	0x08012e94
+ 800297c:	08012eac 	.word	0x08012eac
  8002980:	20000c0a 	.word	0x20000c0a
  8002984:	20000c0c 	.word	0x20000c0c
- 8002988:	08012ebc 	.word	0x08012ebc
+ 8002988:	08012ec0 	.word	0x08012ec0
 
 0800298c <SystemClock_Config>:
 /**
@@ -6635,9 +6635,9 @@ void send_debug_logs ( char* p_tx_buffer )
  800311a:	b004      	add	sp, #16
  800311c:	bd80      	pop	{r7, pc}
  800311e:	46c0      	nop			; (mov r8, r8)
- 8003120:	08012ed4 	.word	0x08012ed4
+ 8003120:	08012ed8 	.word	0x08012ed8
  8003124:	20000864 	.word	0x20000864
- 8003128:	08012f00 	.word	0x08012f00
+ 8003128:	08012f04 	.word	0x08012f04
 
 0800312c <my_sys_init>:
 // SYS functions
@@ -6859,8 +6859,8 @@ void my_sys_restart ( void )
  800329a:	bd90      	pop	{r4, r7, pc}
  800329c:	20000a24 	.word	0x20000a24
  80032a0:	0000033d 	.word	0x0000033d
- 80032a4:	08012de4 	.word	0x08012de4
- 80032a8:	08012f04 	.word	0x08012f04
+ 80032a4:	08012de8 	.word	0x08012de8
+ 80032a8:	08012f08 	.word	0x08012f08
  80032ac:	20000b10 	.word	0x20000b10
 
 080032b0 <my_sys_deepsleep>:
@@ -6924,12 +6924,12 @@ void my_sys_deepsleep ( void )
  8003312:	b001      	add	sp, #4
  8003314:	bd90      	pop	{r4, r7, pc}
  8003316:	46c0      	nop			; (mov r8, r8)
- 8003318:	08012de4 	.word	0x08012de4
- 800331c:	08012f44 	.word	0x08012f44
+ 8003318:	08012de8 	.word	0x08012de8
+ 800331c:	08012f48 	.word	0x08012f48
  8003320:	20000b10 	.word	0x20000b10
  8003324:	20000b00 	.word	0x20000b00
  8003328:	20000a24 	.word	0x20000a24
- 800332c:	08012f78 	.word	0x08012f78
+ 800332c:	08012f7c 	.word	0x08012f7c
 
 08003330 <my_sys_change_watchdog_time_ths>:
 
@@ -6968,7 +6968,7 @@ void my_sys_change_watchdog_time_ths ( uint32_t t )
  8003360:	bd80      	pop	{r7, pc}
  8003362:	46c0      	nop			; (mov r8, r8)
  8003364:	20000008 	.word	0x20000008
- 8003368:	20000adc 	.word	0x20000adc
+ 8003368:	20000ad8 	.word	0x20000ad8
 
 0800336c <my_sys_change_AlarmA_time>:
 void my_sys_change_AlarmA_time ( uint32_t t )
@@ -7005,7 +7005,7 @@ void my_sys_change_AlarmA_time ( uint32_t t )
  800339a:	46c0      	nop			; (mov r8, r8)
  800339c:	0083d600 	.word	0x0083d600
  80033a0:	2000000c 	.word	0x2000000c
- 80033a4:	20000adc 	.word	0x20000adc
+ 80033a4:	20000ad8 	.word	0x20000ad8
 
 080033a8 <my_sys_change_fix_acq_ths>:
 void my_sys_change_fix_acq_ths ( uint32_t t )
@@ -7041,7 +7041,7 @@ void my_sys_change_fix_acq_ths ( uint32_t t )
  80033d4:	bd80      	pop	{r7, pc}
  80033d6:	46c0      	nop			; (mov r8, r8)
  80033d8:	2000001a 	.word	0x2000001a
- 80033dc:	20000adc 	.word	0x20000adc
+ 80033dc:	20000ad8 	.word	0x20000ad8
 
 080033e0 <my_sys_change_min_tns_time_ths>:
 void my_sys_change_min_tns_time_ths ( uint32_t t )
@@ -7077,7 +7077,7 @@ void my_sys_change_min_tns_time_ths ( uint32_t t )
  800340c:	bd80      	pop	{r7, pc}
  800340e:	46c0      	nop			; (mov r8, r8)
  8003410:	2000001c 	.word	0x2000001c
- 8003414:	20000adc 	.word	0x20000adc
+ 8003414:	20000ad8 	.word	0x20000ad8
 
 08003418 <my_sys_change_pdop_ths>:
 void my_sys_change_pdop_ths ( uint32_t p )
@@ -7114,7 +7114,7 @@ void my_sys_change_pdop_ths ( uint32_t p )
  8003448:	bd80      	pop	{r7, pc}
  800344a:	46c0      	nop			; (mov r8, r8)
  800344c:	20000020 	.word	0x20000020
- 8003450:	20000adc 	.word	0x20000adc
+ 8003450:	20000ad8 	.word	0x20000ad8
 
 08003454 <my_tracker_handle_cmd>:
 bool my_tracker_handle_cmd ( void )
@@ -7162,7 +7162,7 @@ bool my_tracker_handle_cmd ( void )
  8003498:	685b      	ldr	r3, [r3, #4]
  800349a:	0018      	movs	r0, r3
  800349c:	f7ff ff48 	bl	8003330 <my_sys_change_watchdog_time_ths>
-				  sprintf ( my_astro_payload , "%u,%u,%u,%lu" , my_astro_payload_id , (uint16_t) my_astro_cmd.is_executed , my_astro_cmd.code , my_astro_cmd.value ) ;
+				  sprintf ( my_astro_payload , "%u,%u,%u,%lu" , uplink_id , (uint16_t) my_astro_cmd.is_executed , my_astro_cmd.code , my_astro_cmd.value ) ;
  80034a0:	4bc4      	ldr	r3, [pc, #784]	; (80037b4 <my_tracker_handle_cmd+0x360>)
  80034a2:	881b      	ldrh	r3, [r3, #0]
  80034a4:	001c      	movs	r4, r3
@@ -7194,7 +7194,7 @@ bool my_tracker_handle_cmd ( void )
  80034d8:	4bbc      	ldr	r3, [pc, #752]	; (80037cc <my_tracker_handle_cmd+0x378>)
  80034da:	0018      	movs	r0, r3
  80034dc:	f7ff fdf6 	bl	80030cc <send_debug_logs>
-				  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+				  my_astro_add_payload_2_queue ( uplink_id++ , my_astro_payload ) ;
  80034e0:	4bb4      	ldr	r3, [pc, #720]	; (80037b4 <my_tracker_handle_cmd+0x360>)
  80034e2:	881b      	ldrh	r3, [r3, #0]
  80034e4:	1c5a      	adds	r2, r3, #1
@@ -7215,7 +7215,7 @@ bool my_tracker_handle_cmd ( void )
  80034fe:	685b      	ldr	r3, [r3, #4]
  8003500:	0018      	movs	r0, r3
  8003502:	f7ff ff33 	bl	800336c <my_sys_change_AlarmA_time>
-				  sprintf ( my_astro_payload , "%u,%u,%u,%lu" , my_astro_payload_id , (uint16_t) my_astro_cmd.is_executed , my_astro_cmd.code , my_astro_cmd.value ) ;
+				  sprintf ( my_astro_payload , "%u,%u,%u,%lu" , uplink_id , (uint16_t) my_astro_cmd.is_executed , my_astro_cmd.code , my_astro_cmd.value ) ;
  8003506:	4bab      	ldr	r3, [pc, #684]	; (80037b4 <my_tracker_handle_cmd+0x360>)
  8003508:	881b      	ldrh	r3, [r3, #0]
  800350a:	001c      	movs	r4, r3
@@ -7247,7 +7247,7 @@ bool my_tracker_handle_cmd ( void )
  800353e:	4ba3      	ldr	r3, [pc, #652]	; (80037cc <my_tracker_handle_cmd+0x378>)
  8003540:	0018      	movs	r0, r3
  8003542:	f7ff fdc3 	bl	80030cc <send_debug_logs>
-				  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+				  my_astro_add_payload_2_queue ( uplink_id++ , my_astro_payload ) ;
  8003546:	4b9b      	ldr	r3, [pc, #620]	; (80037b4 <my_tracker_handle_cmd+0x360>)
  8003548:	881b      	ldrh	r3, [r3, #0]
  800354a:	1c5a      	adds	r2, r3, #1
@@ -7268,7 +7268,7 @@ bool my_tracker_handle_cmd ( void )
  8003564:	685b      	ldr	r3, [r3, #4]
  8003566:	0018      	movs	r0, r3
  8003568:	f7ff ff1e 	bl	80033a8 <my_sys_change_fix_acq_ths>
-				  sprintf ( my_astro_payload , "%u,%u,%u,%lu" , my_astro_payload_id , (uint16_t) my_astro_cmd.is_executed , my_astro_cmd.code , my_astro_cmd.value ) ;
+				  sprintf ( my_astro_payload , "%u,%u,%u,%lu" , uplink_id , (uint16_t) my_astro_cmd.is_executed , my_astro_cmd.code , my_astro_cmd.value ) ;
  800356c:	4b91      	ldr	r3, [pc, #580]	; (80037b4 <my_tracker_handle_cmd+0x360>)
  800356e:	881b      	ldrh	r3, [r3, #0]
  8003570:	001c      	movs	r4, r3
@@ -7300,7 +7300,7 @@ bool my_tracker_handle_cmd ( void )
  80035a4:	4b89      	ldr	r3, [pc, #548]	; (80037cc <my_tracker_handle_cmd+0x378>)
  80035a6:	0018      	movs	r0, r3
  80035a8:	f7ff fd90 	bl	80030cc <send_debug_logs>
-				  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+				  my_astro_add_payload_2_queue ( uplink_id++ , my_astro_payload ) ;
  80035ac:	4b81      	ldr	r3, [pc, #516]	; (80037b4 <my_tracker_handle_cmd+0x360>)
  80035ae:	881b      	ldrh	r3, [r3, #0]
  80035b0:	1c5a      	adds	r2, r3, #1
@@ -7321,7 +7321,7 @@ bool my_tracker_handle_cmd ( void )
  80035ca:	685b      	ldr	r3, [r3, #4]
  80035cc:	0018      	movs	r0, r3
  80035ce:	f7ff ff07 	bl	80033e0 <my_sys_change_min_tns_time_ths>
-				  sprintf ( my_astro_payload , "%u,%u,%u,%lu" , my_astro_payload_id , (uint16_t) my_astro_cmd.is_executed , my_astro_cmd.code , my_astro_cmd.value ) ;
+				  sprintf ( my_astro_payload , "%u,%u,%u,%lu" , uplink_id , (uint16_t) my_astro_cmd.is_executed , my_astro_cmd.code , my_astro_cmd.value ) ;
  80035d2:	4b78      	ldr	r3, [pc, #480]	; (80037b4 <my_tracker_handle_cmd+0x360>)
  80035d4:	881b      	ldrh	r3, [r3, #0]
  80035d6:	001c      	movs	r4, r3
@@ -7353,7 +7353,7 @@ bool my_tracker_handle_cmd ( void )
  800360a:	4b70      	ldr	r3, [pc, #448]	; (80037cc <my_tracker_handle_cmd+0x378>)
  800360c:	0018      	movs	r0, r3
  800360e:	f7ff fd5d 	bl	80030cc <send_debug_logs>
-				  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+				  my_astro_add_payload_2_queue ( uplink_id++ , my_astro_payload ) ;
  8003612:	4b68      	ldr	r3, [pc, #416]	; (80037b4 <my_tracker_handle_cmd+0x360>)
  8003614:	881b      	ldrh	r3, [r3, #0]
  8003616:	1c5a      	adds	r2, r3, #1
@@ -7374,7 +7374,7 @@ bool my_tracker_handle_cmd ( void )
  8003630:	685b      	ldr	r3, [r3, #4]
  8003632:	0018      	movs	r0, r3
  8003634:	f7ff fef0 	bl	8003418 <my_sys_change_pdop_ths>
-				  sprintf ( my_astro_payload , "%u,%u,%u,%lu" , my_astro_payload_id , (uint16_t) my_astro_cmd.is_executed , my_astro_cmd.code , my_astro_cmd.value ) ;
+				  sprintf ( my_astro_payload , "%u,%u,%u,%lu" , uplink_id , (uint16_t) my_astro_cmd.is_executed , my_astro_cmd.code , my_astro_cmd.value ) ;
  8003638:	4b5e      	ldr	r3, [pc, #376]	; (80037b4 <my_tracker_handle_cmd+0x360>)
  800363a:	881b      	ldrh	r3, [r3, #0]
  800363c:	001c      	movs	r4, r3
@@ -7406,7 +7406,7 @@ bool my_tracker_handle_cmd ( void )
  8003670:	4b56      	ldr	r3, [pc, #344]	; (80037cc <my_tracker_handle_cmd+0x378>)
  8003672:	0018      	movs	r0, r3
  8003674:	f7ff fd2a 	bl	80030cc <send_debug_logs>
-				  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+				  my_astro_add_payload_2_queue ( uplink_id++ , my_astro_payload ) ;
  8003678:	4b4e      	ldr	r3, [pc, #312]	; (80037b4 <my_tracker_handle_cmd+0x360>)
  800367a:	881b      	ldrh	r3, [r3, #0]
  800367c:	1c5a      	adds	r2, r3, #1
@@ -7429,7 +7429,7 @@ bool my_tracker_handle_cmd ( void )
  800369a:	d000      	beq.n	800369e <my_tracker_handle_cmd+0x24a>
  800369c:	e078      	b.n	8003790 <my_tracker_handle_cmd+0x33c>
 				  {
-					  sprintf ( my_astro_payload , "%u,%s,%u,%u,%lu,%u,%u,%.1f" , my_astro_payload_id , fv , (uint16_t) sys_mode , sys_watchdog_time_ths , my_rtc_alarmA_time , fix_acq_ths , min_tns_time_ths , pdop_ths ) ;
+					  sprintf ( my_astro_payload , "%u,%s,%u,%u,%lu,%u,%u,%.1f" , uplink_id , fv , (uint16_t) sys_mode , sys_watchdog_time_ths , my_rtc_alarmA_time , fix_acq_ths , min_tns_time_ths , pdop_ths ) ;
  800369e:	4b45      	ldr	r3, [pc, #276]	; (80037b4 <my_tracker_handle_cmd+0x360>)
  80036a0:	881b      	ldrh	r3, [r3, #0]
  80036a2:	469a      	mov	sl, r3
@@ -7482,7 +7482,7 @@ bool my_tracker_handle_cmd ( void )
  8003700:	4b32      	ldr	r3, [pc, #200]	; (80037cc <my_tracker_handle_cmd+0x378>)
  8003702:	0018      	movs	r0, r3
  8003704:	f7ff fce2 	bl	80030cc <send_debug_logs>
-					  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+					  my_astro_add_payload_2_queue ( uplink_id++ , my_astro_payload ) ;
  8003708:	4b2a      	ldr	r3, [pc, #168]	; (80037b4 <my_tracker_handle_cmd+0x360>)
  800370a:	881b      	ldrh	r3, [r3, #0]
  800370c:	1c5a      	adds	r2, r3, #1
@@ -7510,7 +7510,7 @@ bool my_tracker_handle_cmd ( void )
 				  break ;
  8003730:	e030      	b.n	8003794 <my_tracker_handle_cmd+0x340>
 			  default:
-				  sprintf ( my_astro_payload , "%u,%u,%u,%lu" , my_astro_payload_id , (uint16_t) my_astro_cmd.is_executed , my_astro_cmd.code , my_astro_cmd.value ) ;
+				  sprintf ( my_astro_payload , "%u,%u,%u,%lu" , uplink_id , (uint16_t) my_astro_cmd.is_executed , my_astro_cmd.code , my_astro_cmd.value ) ;
  8003732:	4b20      	ldr	r3, [pc, #128]	; (80037b4 <my_tracker_handle_cmd+0x360>)
  8003734:	881b      	ldrh	r3, [r3, #0]
  8003736:	001c      	movs	r4, r3
@@ -7542,7 +7542,7 @@ bool my_tracker_handle_cmd ( void )
  800376a:	4b18      	ldr	r3, [pc, #96]	; (80037cc <my_tracker_handle_cmd+0x378>)
  800376c:	0018      	movs	r0, r3
  800376e:	f7ff fcad 	bl	80030cc <send_debug_logs>
-				  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+				  my_astro_add_payload_2_queue ( uplink_id++ , my_astro_payload ) ;
  8003772:	4b10      	ldr	r3, [pc, #64]	; (80037b4 <my_tracker_handle_cmd+0x360>)
  8003774:	881b      	ldrh	r3, [r3, #0]
  8003776:	1c5a      	adds	r2, r3, #1
@@ -7578,14 +7578,14 @@ bool my_tracker_handle_cmd ( void )
  80037a4:	bdf0      	pop	{r4, r5, r6, r7, pc}
  80037a6:	46c0      	nop			; (mov r8, r8)
  80037a8:	20000c0c 	.word	0x20000c0c
- 80037ac:	20000adc 	.word	0x20000adc
- 80037b0:	08014940 	.word	0x08014940
- 80037b4:	20000a38 	.word	0x20000a38
- 80037b8:	08012f9c 	.word	0x08012f9c
- 80037bc:	20000a3c 	.word	0x20000a3c
+ 80037ac:	20000ad8 	.word	0x20000ad8
+ 80037b0:	08014944 	.word	0x08014944
+ 80037b4:	20000ae4 	.word	0x20000ae4
+ 80037b8:	08012fa0 	.word	0x08012fa0
+ 80037bc:	20000a38 	.word	0x20000a38
  80037c0:	0000038f 	.word	0x0000038f
- 80037c4:	08012de4 	.word	0x08012de4
- 80037c8:	08012ea8 	.word	0x08012ea8
+ 80037c4:	08012de8 	.word	0x08012de8
+ 80037c8:	08012eac 	.word	0x08012eac
  80037cc:	20000b10 	.word	0x20000b10
  80037d0:	00000397 	.word	0x00000397
  80037d4:	0000039f 	.word	0x0000039f
@@ -7598,7 +7598,7 @@ bool my_tracker_handle_cmd ( void )
  80037f0:	2000001a 	.word	0x2000001a
  80037f4:	2000001c 	.word	0x2000001c
  80037f8:	20000020 	.word	0x20000020
- 80037fc:	08012fac 	.word	0x08012fac
+ 80037fc:	08012fb0 	.word	0x08012fb0
  8003800:	000003c5 	.word	0x000003c5
 
 08003804 <my_ant_sw_pos>:
@@ -7845,7 +7845,7 @@ void send_astronode_request ( uint8_t* p_tx_buffer , uint32_t length )
  800398e:	b002      	add	sp, #8
  8003990:	bd80      	pop	{r7, pc}
  8003992:	46c0      	nop			; (mov r8, r8)
- 8003994:	08012fd0 	.word	0x08012fd0
+ 8003994:	08012fd4 	.word	0x08012fd4
  8003998:	200008f8 	.word	0x200008f8
 
 0800399c <get_systick>:
@@ -7939,12 +7939,12 @@ void my_astro_turn_payload_id_counter ( void )
 {
  8003a24:	b580      	push	{r7, lr}
  8003a26:	af00      	add	r7, sp, #0
-	if ( my_astro_payload_id > 99 )
+	if ( uplink_id > 99 )
  8003a28:	4b04      	ldr	r3, [pc, #16]	; (8003a3c <my_astro_turn_payload_id_counter+0x18>)
  8003a2a:	881b      	ldrh	r3, [r3, #0]
  8003a2c:	2b63      	cmp	r3, #99	; 0x63
  8003a2e:	d902      	bls.n	8003a36 <my_astro_turn_payload_id_counter+0x12>
-		my_astro_payload_id = 1 ;
+		uplink_id = 1 ;
  8003a30:	4b02      	ldr	r3, [pc, #8]	; (8003a3c <my_astro_turn_payload_id_counter+0x18>)
  8003a32:	2201      	movs	r2, #1
  8003a34:	801a      	strh	r2, [r3, #0]
@@ -7952,7 +7952,7 @@ void my_astro_turn_payload_id_counter ( void )
  8003a36:	46c0      	nop			; (mov r8, r8)
  8003a38:	46bd      	mov	sp, r7
  8003a3a:	bd80      	pop	{r7, pc}
- 8003a3c:	20000a38 	.word	0x20000a38
+ 8003a3c:	20000ae4 	.word	0x20000ae4
 
 08003a40 <my_tim_init>:
 
@@ -9524,7 +9524,7 @@ LoopForever:
   ldr r1, =_edata
  8004228:	200006d8 	.word	0x200006d8
   ldr r2, =_sidata
- 800422c:	08014ea0 	.word	0x08014ea0
+ 800422c:	08014ea8 	.word	0x08014ea8
   ldr r2, =_sbss
  8004230:	200006d8 	.word	0x200006d8
   ldr r4, =_ebss
@@ -13132,7 +13132,7 @@ HAL_StatusTypeDef HAL_RCC_ClockConfig(RCC_ClkInitTypeDef  *RCC_ClkInitStruct, ui
  8005550:	40021000 	.word	0x40021000
  8005554:	fffff0ff 	.word	0xfffff0ff
  8005558:	ffff8fff 	.word	0xffff8fff
- 800555c:	08014968 	.word	0x08014968
+ 800555c:	0801496c 	.word	0x0801496c
  8005560:	20000010 	.word	0x20000010
  8005564:	20000014 	.word	0x20000014
 
@@ -13370,7 +13370,7 @@ uint32_t HAL_RCC_GetPCLK1Freq(void)
  80056a2:	46bd      	mov	sp, r7
  80056a4:	bdb0      	pop	{r4, r5, r7, pc}
  80056a6:	46c0      	nop			; (mov r8, r8)
- 80056a8:	080149a8 	.word	0x080149a8
+ 80056a8:	080149ac 	.word	0x080149ac
 
 080056ac <HAL_RCCEx_PeriphCLKConfig>:
   *         the RTC clock source: in this case the access to Backup domain is enabled.
@@ -19740,7 +19740,7 @@ HAL_StatusTypeDef UART_SetConfig(UART_HandleTypeDef *huart)
  80078a8:	40008000 	.word	0x40008000
  80078ac:	40008400 	.word	0x40008400
  80078b0:	00f42400 	.word	0x00f42400
- 80078b4:	080149c8 	.word	0x080149c8
+ 80078b4:	080149cc 	.word	0x080149cc
 
 080078b8 <UART_AdvFeatureConfig>:
   * @brief Configure the UART peripheral advanced features.
@@ -20950,8 +20950,8 @@ static void UARTEx_SetNbDataToProcess(UART_HandleTypeDef *huart)
  8007f46:	b005      	add	sp, #20
  8007f48:	bdf0      	pop	{r4, r5, r6, r7, pc}
  8007f4a:	46c0      	nop			; (mov r8, r8)
- 8007f4c:	080149e0 	.word	0x080149e0
- 8007f50:	080149e8 	.word	0x080149e8
+ 8007f4c:	080149e4 	.word	0x080149e4
+ 8007f50:	080149ec 	.word	0x080149ec
 
 08007f54 <astronode_send_cfg_sr>:
         }
@@ -21024,8 +21024,8 @@ void astronode_send_cfg_sr(void)
  8007fb4:	b064      	add	sp, #400	; 0x190
  8007fb6:	bdb0      	pop	{r4, r5, r7, pc}
  8007fb8:	fffffe70 	.word	0xfffffe70
- 8007fbc:	08013404 	.word	0x08013404
- 8007fc0:	08013438 	.word	0x08013438
+ 8007fbc:	08013408 	.word	0x08013408
+ 8007fc0:	0801343c 	.word	0x0801343c
 
 08007fc4 <astronode_send_cfg_wr>:
                             bool deep_sleep_mode,
@@ -21225,8 +21225,8 @@ void astronode_send_cfg_sr(void)
  8008108:	fffffe6d 	.word	0xfffffe6d
  800810c:	fffffe6c 	.word	0xfffffe6c
  8008110:	fffffe70 	.word	0xfffffe70
- 8008114:	0801346c 	.word	0x0801346c
- 8008118:	08013498 	.word	0x08013498
+ 8008114:	08013470 	.word	0x08013470
+ 8008118:	0801349c 	.word	0x0801349c
 
 0800811c <astronode_send_mgi_rr>:
         send_debug_logs("Failed to save the Astronode context in NVM.");
@@ -21412,9 +21412,9 @@ void astronode_send_mgi_rr(void)
  800825c:	bdf0      	pop	{r4, r5, r6, r7, pc}
  800825e:	46c0      	nop			; (mov r8, r8)
  8008260:	fffffe68 	.word	0xfffffe68
- 8008264:	08013524 	.word	0x08013524
- 8008268:	08013534 	.word	0x08013534
- 800826c:	08013538 	.word	0x08013538
+ 8008264:	08013528 	.word	0x08013528
+ 8008268:	08013538 	.word	0x08013538
+ 800826c:	0801353c 	.word	0x0801353c
 
 08008270 <astronode_send_msn_rr>:
 
@@ -21597,9 +21597,9 @@ void astronode_send_msn_rr(void)
  80083b0:	bdf0      	pop	{r4, r5, r6, r7, pc}
  80083b2:	46c0      	nop			; (mov r8, r8)
  80083b4:	fffffe68 	.word	0xfffffe68
- 80083b8:	08013554 	.word	0x08013554
- 80083bc:	08013534 	.word	0x08013534
- 80083c0:	08013570 	.word	0x08013570
+ 80083b8:	08013558 	.word	0x08013558
+ 80083bc:	08013538 	.word	0x08013538
+ 80083c0:	08013574 	.word	0x08013574
 
 080083c4 <astronode_send_evt_rr>:
     }
@@ -21746,13 +21746,13 @@ void astronode_send_evt_rr(void)
  800849e:	bdb0      	pop	{r4, r5, r7, pc}
  80084a0:	fffffe70 	.word	0xfffffe70
  80084a4:	20000b0c 	.word	0x20000b0c
- 80084a8:	08013618 	.word	0x08013618
+ 80084a8:	0801361c 	.word	0x0801361c
  80084ac:	20000b0d 	.word	0x20000b0d
- 80084b0:	0801363c 	.word	0x0801363c
+ 80084b0:	08013640 	.word	0x08013640
  80084b4:	20000b0e 	.word	0x20000b0e
- 80084b8:	08013654 	.word	0x08013654
+ 80084b8:	08013658 	.word	0x08013658
  80084bc:	20000b0f 	.word	0x20000b0f
- 80084c0:	08013668 	.word	0x08013668
+ 80084c0:	0801366c 	.word	0x0801366c
 
 080084c4 <astronode_send_geo_wr>:
 
@@ -21968,8 +21968,8 @@ void astronode_send_geo_wr(int32_t latitude, int32_t longitude)
  8008634:	b067      	add	sp, #412	; 0x19c
  8008636:	bdf0      	pop	{r4, r5, r6, r7, pc}
  8008638:	fffffe70 	.word	0xfffffe70
- 800863c:	0801367c 	.word	0x0801367c
- 8008640:	080136a8 	.word	0x080136a8
+ 800863c:	08013680 	.word	0x08013680
+ 8008640:	080136ac 	.word	0x080136ac
 
 08008644 <astronode_send_pld_er>:
         }
@@ -22158,9 +22158,9 @@ bool astronode_send_pld_er ( uint16_t payload_id , char *p_payload , uint16_t pa
  8008780:	fffffe1e 	.word	0xfffffe1e
  8008784:	fffffe1c 	.word	0xfffffe1c
  8008788:	fffffe70 	.word	0xfffffe70
- 800878c:	08013720 	.word	0x08013720
- 8008790:	0801374c 	.word	0x0801374c
- 8008794:	08013768 	.word	0x08013768
+ 800878c:	08013724 	.word	0x08013724
+ 8008790:	08013750 	.word	0x08013750
+ 8008794:	0801376c 	.word	0x0801376c
 
 08008798 <astronode_send_pld_fr>:
 
@@ -22234,8 +22234,8 @@ void astronode_send_pld_fr(void)
  8008800:	bdb0      	pop	{r4, r5, r7, pc}
  8008802:	46c0      	nop			; (mov r8, r8)
  8008804:	fffffe70 	.word	0xfffffe70
- 8008808:	08013798 	.word	0x08013798
- 800880c:	080137d0 	.word	0x080137d0
+ 8008808:	0801379c 	.word	0x0801379c
+ 800880c:	080137d4 	.word	0x080137d4
 
 08008810 <astronode_send_res_cr>:
 
@@ -22313,8 +22313,8 @@ void astronode_send_res_cr(void)
  800887e:	bdb0      	pop	{r4, r5, r7, pc}
  8008880:	fffffe70 	.word	0xfffffe70
  8008884:	20000b0d 	.word	0x20000b0d
- 8008888:	0801380c 	.word	0x0801380c
- 800888c:	08013840 	.word	0x08013840
+ 8008888:	08013810 	.word	0x08013810
+ 800888c:	08013844 	.word	0x08013844
 
 08008890 <astronode_send_rtc_rr>:
 
@@ -22435,8 +22435,8 @@ uint32_t astronode_send_rtc_rr ( void )
  8008948:	bdb0      	pop	{r4, r5, r7, pc}
  800894a:	46c0      	nop			; (mov r8, r8)
  800894c:	fffffe6c 	.word	0xfffffe6c
- 8008950:	0801386c 	.word	0x0801386c
- 8008954:	080138ac 	.word	0x080138ac
+ 8008950:	08013870 	.word	0x08013870
+ 8008954:	080138b0 	.word	0x080138b0
 
 08008958 <astronode_send_sak_rr>:
 
@@ -22538,8 +22538,8 @@ void astronode_send_sak_rr(void)
  80089f4:	bdb0      	pop	{r4, r5, r7, pc}
  80089f6:	46c0      	nop			; (mov r8, r8)
  80089f8:	fffffe70 	.word	0xfffffe70
- 80089fc:	080138c8 	.word	0x080138c8
- 8008a00:	080138f4 	.word	0x080138f4
+ 80089fc:	080138cc 	.word	0x080138cc
+ 8008a00:	080138f8 	.word	0x080138f8
 
 08008a04 <astronode_send_sak_cr>:
 
@@ -22617,8 +22617,8 @@ void astronode_send_sak_cr(void)
  8008a72:	bdb0      	pop	{r4, r5, r7, pc}
  8008a74:	fffffe70 	.word	0xfffffe70
  8008a78:	20000b0c 	.word	0x20000b0c
- 8008a7c:	08013928 	.word	0x08013928
- 8008a80:	08013950 	.word	0x08013950
+ 8008a7c:	0801392c 	.word	0x0801392c
+ 8008a80:	08013954 	.word	0x08013954
 
 08008a84 <astronode_send_mpn_rr>:
         }
@@ -22804,9 +22804,9 @@ void astronode_send_mpn_rr(void)
  8008bc4:	bdf0      	pop	{r4, r5, r6, r7, pc}
  8008bc6:	46c0      	nop			; (mov r8, r8)
  8008bc8:	fffffe68 	.word	0xfffffe68
- 8008bcc:	08013a18 	.word	0x08013a18
- 8008bd0:	08013534 	.word	0x08013534
- 8008bd4:	08013570 	.word	0x08013570
+ 8008bcc:	08013a1c 	.word	0x08013a1c
+ 8008bd0:	08013538 	.word	0x08013538
+ 8008bd4:	08013574 	.word	0x08013574
 
 08008bd8 <astronode_send_cmd_cr>:
         }
@@ -22887,8 +22887,8 @@ void astronode_send_cmd_cr(void)
  8008c46:	bdb0      	pop	{r4, r5, r7, pc}
  8008c48:	fffffe70 	.word	0xfffffe70
  8008c4c:	20000b0e 	.word	0x20000b0e
- 8008c50:	08013e68 	.word	0x08013e68
- 8008c54:	08013e8c 	.word	0x08013e8c
+ 8008c50:	08013e6c 	.word	0x08013e6c
+ 8008c54:	08013e90 	.word	0x08013e90
 
 08008c58 <astronode_send_cmd_rr>:
 
@@ -23333,15 +23333,15 @@ bool astronode_send_cmd_rr ( char* my_astro_rcv_cmd )
  8008f72:	bdf0      	pop	{r4, r5, r6, r7, pc}
  8008f74:	fffffdec 	.word	0xfffffdec
  8008f78:	fffffe60 	.word	0xfffffe60
- 8008f7c:	08013ea4 	.word	0x08013ea4
- 8008f80:	08013ec0 	.word	0x08013ec0
- 8008f84:	08013f10 	.word	0x08013f10
- 8008f88:	08013534 	.word	0x08013534
- 8008f8c:	08014a78 	.word	0x08014a78
- 8008f90:	08013f24 	.word	0x08013f24
- 8008f94:	08013f50 	.word	0x08013f50
- 8008f98:	08013f68 	.word	0x08013f68
- 8008f9c:	08013f6c 	.word	0x08013f6c
+ 8008f7c:	08013ea8 	.word	0x08013ea8
+ 8008f80:	08013ec4 	.word	0x08013ec4
+ 8008f84:	08013f14 	.word	0x08013f14
+ 8008f88:	08013538 	.word	0x08013538
+ 8008f8c:	08014a80 	.word	0x08014a80
+ 8008f90:	08013f28 	.word	0x08013f28
+ 8008f94:	08013f54 	.word	0x08013f54
+ 8008f98:	08013f6c 	.word	0x08013f6c
+ 8008f9c:	08013f70 	.word	0x08013f70
 
 08008fa0 <is_sak_available>:
         }
@@ -24109,12 +24109,12 @@ static return_status_t astronode_decode_answer_transport(uint8_t *p_source_buffe
  8009482:	46bd      	mov	sp, r7
  8009484:	b009      	add	sp, #36	; 0x24
  8009486:	bdf0      	pop	{r4, r5, r6, r7, pc}
- 8009488:	08013ffc 	.word	0x08013ffc
- 800948c:	0801404c 	.word	0x0801404c
- 8009490:	0801409c 	.word	0x0801409c
- 8009494:	080140ec 	.word	0x080140ec
+ 8009488:	08014000 	.word	0x08014000
+ 800948c:	08014050 	.word	0x08014050
+ 8009490:	080140a0 	.word	0x080140a0
+ 8009494:	080140f0 	.word	0x080140f0
  8009498:	0000ffff 	.word	0x0000ffff
- 800949c:	08014138 	.word	0x08014138
+ 800949c:	0801413c 	.word	0x0801413c
 
 080094a0 <astronode_transport_send_receive>:
 
@@ -24521,18 +24521,18 @@ static void check_for_error(astronode_app_msg_t *p_answer)
  8009740:	00002501 	.word	0x00002501
  8009744:	00000611 	.word	0x00000611
  8009748:	00000601 	.word	0x00000601
- 800974c:	0801417c 	.word	0x0801417c
- 8009750:	080141c8 	.word	0x080141c8
- 8009754:	0801422c 	.word	0x0801422c
- 8009758:	08014264 	.word	0x08014264
- 800975c:	08014308 	.word	0x08014308
- 8009760:	08014370 	.word	0x08014370
- 8009764:	080143d0 	.word	0x080143d0
- 8009768:	0801445c 	.word	0x0801445c
- 800976c:	080144bc 	.word	0x080144bc
- 8009770:	08014568 	.word	0x08014568
- 8009774:	080145b4 	.word	0x080145b4
- 8009778:	080145fc 	.word	0x080145fc
+ 800974c:	08014180 	.word	0x08014180
+ 8009750:	080141cc 	.word	0x080141cc
+ 8009754:	08014230 	.word	0x08014230
+ 8009758:	08014268 	.word	0x08014268
+ 800975c:	0801430c 	.word	0x0801430c
+ 8009760:	08014374 	.word	0x08014374
+ 8009764:	080143d4 	.word	0x080143d4
+ 8009768:	08014460 	.word	0x08014460
+ 800976c:	080144c0 	.word	0x080144c0
+ 8009770:	0801456c 	.word	0x0801456c
+ 8009774:	080145b8 	.word	0x080145b8
+ 8009778:	08014600 	.word	0x08014600
 
 0800977c <receive_astronode_answer>:
 
@@ -24705,9 +24705,9 @@ static return_status_t receive_astronode_answer(uint8_t *p_rx_buffer, uint16_t *
  8009878:	b006      	add	sp, #24
  800987a:	bdb0      	pop	{r4, r5, r7, pc}
  800987c:	000005dc 	.word	0x000005dc
- 8009880:	08014620 	.word	0x08014620
- 8009884:	08014644 	.word	0x08014644
- 8009888:	08014690 	.word	0x08014690
+ 8009880:	08014624 	.word	0x08014624
+ 8009884:	08014648 	.word	0x08014648
+ 8009888:	08014694 	.word	0x08014694
 
 0800988c <uint8_to_ascii_buffer>:
 
@@ -24746,7 +24746,7 @@ static void uint8_to_ascii_buffer(const uint8_t value, uint8_t *p_target_buffer)
  80098c2:	b002      	add	sp, #8
  80098c4:	bd80      	pop	{r7, pc}
  80098c6:	46c0      	nop			; (mov r8, r8)
- 80098c8:	080149f0 	.word	0x080149f0
+ 80098c8:	080149f4 	.word	0x080149f4
 
 080098cc <my_astro_init>:
  *      Author: mzeml
@@ -24886,7 +24886,7 @@ bool my_astro_add_payload_2_queue ( uint16_t id , char* payload )
  8009982:	b004      	add	sp, #16
  8009984:	bd80      	pop	{r7, pc}
  8009986:	46c0      	nop			; (mov r8, r8)
- 8009988:	080146bc 	.word	0x080146bc
+ 8009988:	080146c0 	.word	0x080146c0
 
 0800998c <my_astro_handle_evt>:
 bool my_astro_handle_evt ( void )
@@ -24957,10 +24957,10 @@ bool my_astro_handle_evt ( void )
  80099f2:	46bd      	mov	sp, r7
  80099f4:	bd80      	pop	{r7, pc}
  80099f6:	46c0      	nop			; (mov r8, r8)
- 80099f8:	08014724 	.word	0x08014724
- 80099fc:	08014758 	.word	0x08014758
- 8009a00:	0801479c 	.word	0x0801479c
- 8009a04:	080147d8 	.word	0x080147d8
+ 80099f8:	08014728 	.word	0x08014728
+ 80099fc:	0801475c 	.word	0x0801475c
+ 8009a00:	080147a0 	.word	0x080147a0
+ 8009a04:	080147dc 	.word	0x080147dc
  8009a08:	20000c0c 	.word	0x20000c0c
  8009a0c:	20000c0a 	.word	0x20000c0a
 
@@ -25397,10 +25397,10 @@ bool my_gnss_acq_coordinates ( fix_astro* fix3d )
  8009cdc:	00000215 	.word	0x00000215
  8009ce0:	fffffef0 	.word	0xfffffef0
  8009ce4:	fffffdf4 	.word	0xfffffdf4
- 8009ce8:	08014818 	.word	0x08014818
- 8009cec:	08014820 	.word	0x08014820
- 8009cf0:	08014828 	.word	0x08014828
- 8009cf4:	08014830 	.word	0x08014830
+ 8009ce8:	0801481c 	.word	0x0801481c
+ 8009cec:	08014824 	.word	0x08014824
+ 8009cf0:	0801482c 	.word	0x0801482c
+ 8009cf4:	08014834 	.word	0x08014834
  8009cf8:	408f4000 	.word	0x408f4000
  8009cfc:	20000c34 	.word	0x20000c34
  8009d00:	2000001c 	.word	0x2000001c
@@ -25514,7 +25514,7 @@ uint16_t my_rtc_get_dt_s ( char* dt_s )
  8009db4:	bdf0      	pop	{r4, r5, r6, r7, pc}
  8009db6:	46c0      	nop			; (mov r8, r8)
  8009db8:	200006f4 	.word	0x200006f4
- 8009dbc:	08014880 	.word	0x08014880
+ 8009dbc:	08014884 	.word	0x08014884
 
 08009dc0 <my_rtc_set_alarm>:
 bool my_rtc_set_alarm ( uint32_t s )
@@ -25668,8 +25668,8 @@ bool my_rtc_set_alarm ( uint32_t s )
  8009eb6:	b027      	add	sp, #156	; 0x9c
  8009eb8:	bdf0      	pop	{r4, r5, r6, r7, pc}
  8009eba:	46c0      	nop			; (mov r8, r8)
- 8009ebc:	080148a0 	.word	0x080148a0
- 8009ec0:	080148bc 	.word	0x080148bc
+ 8009ebc:	080148a4 	.word	0x080148a4
+ 8009ec0:	080148c0 	.word	0x080148c0
  8009ec4:	200006f4 	.word	0x200006f4
 
 08009ec8 <my_rtc_set_dt_from_nmea_rmc>:
@@ -26029,7 +26029,7 @@ uint32_t my_conv_rtc2timestamp ( RTC_DateTypeDef* d , RTC_TimeTypeDef* t )
  800a0fe:	46c0      	nop			; (mov r8, r8)
  800a100:	fffff84f 	.word	0xfffff84f
  800a104:	fff50736 	.word	0xfff50736
- 800a108:	08014a00 	.word	0x08014a00
+ 800a108:	08014a04 	.word	0x08014a04
 
 0800a10c <my_conv_timestamp2rtc>:
 
@@ -26219,7 +26219,7 @@ void my_conv_timestamp2rtc ( uint32_t ts , RTC_DateTypeDef* d , RTC_TimeTypeDef*
  800a246:	46c0      	nop			; (mov r8, r8)
  800a248:	00015180 	.word	0x00015180
  800a24c:	000007b2 	.word	0x000007b2
- 800a250:	08014a0c 	.word	0x08014a0c
+ 800a250:	08014a10 	.word	0x08014a10
 
 0800a254 <my_conv_is_leap_year>:
 
@@ -26300,7 +26300,7 @@ void my_conv_dt_2_dts ( RTC_DateTypeDef* d , RTC_TimeTypeDef* t , char* dt_s )
  800a2d6:	46bd      	mov	sp, r7
  800a2d8:	b005      	add	sp, #20
  800a2da:	bdf0      	pop	{r4, r5, r6, r7, pc}
- 800a2dc:	080148c8 	.word	0x080148c8
+ 800a2dc:	080148cc 	.word	0x080148cc
 
 0800a2e0 <my_conv_string_2_uint32_t>:
 
@@ -26764,7 +26764,7 @@ double nmea2decimal ( const char *coord , char dir )
  800a5e2:	46bd      	mov	sp, r7
  800a5e4:	b006      	add	sp, #24
  800a5e6:	bdb0      	pop	{r4, r5, r7, pc}
- 800a5e8:	080148e8 	.word	0x080148e8
+ 800a5e8:	080148ec 	.word	0x080148ec
  800a5ec:	40590000 	.word	0x40590000
  800a5f0:	40240000 	.word	0x40240000
  800a5f4:	40180000 	.word	0x40180000
@@ -27081,7 +27081,7 @@ uint16_t my_nmea_get_gsv_tns ( const char* m ) //tns = Total Number Satelites
  800a832:	46bd      	mov	sp, r7
  800a834:	b006      	add	sp, #24
  800a836:	bdb0      	pop	{r4, r5, r7, pc}
- 800a838:	080148f4 	.word	0x080148f4
+ 800a838:	080148f8 	.word	0x080148f8
 
 0800a83c <my_nmea_get_rmc_date_yy>:
 
@@ -27150,7 +27150,7 @@ void my_nmea_get_rmc_date_yy ( const char* m , uint8_t* yy )
  800a8a6:	b007      	add	sp, #28
  800a8a8:	bd90      	pop	{r4, r7, pc}
  800a8aa:	46c0      	nop			; (mov r8, r8)
- 800a8ac:	080148f4 	.word	0x080148f4
+ 800a8ac:	080148f8 	.word	0x080148f8
 
 0800a8b0 <my_nmea_get_rmc_date_mm>:
 
@@ -27219,7 +27219,7 @@ void my_nmea_get_rmc_date_mm ( const char* m , uint8_t* mm )
  800a91a:	b007      	add	sp, #28
  800a91c:	bd90      	pop	{r4, r7, pc}
  800a91e:	46c0      	nop			; (mov r8, r8)
- 800a920:	080148f4 	.word	0x080148f4
+ 800a920:	080148f8 	.word	0x080148f8
 
 0800a924 <my_nmea_get_rmc_date_dd>:
 void my_nmea_get_rmc_date_dd ( const char* m , uint8_t* dd )
@@ -27287,7 +27287,7 @@ void my_nmea_get_rmc_date_dd ( const char* m , uint8_t* dd )
  800a98e:	b007      	add	sp, #28
  800a990:	bd90      	pop	{r4, r7, pc}
  800a992:	46c0      	nop			; (mov r8, r8)
- 800a994:	080148f4 	.word	0x080148f4
+ 800a994:	080148f8 	.word	0x080148f8
 
 0800a998 <my_nmea_get_rmc_utc_hh>:
 void my_nmea_get_rmc_utc_hh ( const char* m , uint8_t* hh )
@@ -27355,7 +27355,7 @@ void my_nmea_get_rmc_utc_hh ( const char* m , uint8_t* hh )
  800aa02:	b007      	add	sp, #28
  800aa04:	bd90      	pop	{r4, r7, pc}
  800aa06:	46c0      	nop			; (mov r8, r8)
- 800aa08:	080148f4 	.word	0x080148f4
+ 800aa08:	080148f8 	.word	0x080148f8
 
 0800aa0c <my_nmea_get_rmc_utc_mm>:
 void my_nmea_get_rmc_utc_mm ( const char* m , uint8_t* mm )
@@ -27423,7 +27423,7 @@ void my_nmea_get_rmc_utc_mm ( const char* m , uint8_t* mm )
  800aa76:	b007      	add	sp, #28
  800aa78:	bd90      	pop	{r4, r7, pc}
  800aa7a:	46c0      	nop			; (mov r8, r8)
- 800aa7c:	080148f4 	.word	0x080148f4
+ 800aa7c:	080148f8 	.word	0x080148f8
 
 0800aa80 <my_nmea_get_rmc_utc_ss>:
 void my_nmea_get_rmc_utc_ss ( const char* m , uint8_t* ss )
@@ -27491,7 +27491,7 @@ void my_nmea_get_rmc_utc_ss ( const char* m , uint8_t* ss )
  800aaea:	b007      	add	sp, #28
  800aaec:	bd90      	pop	{r4, r7, pc}
  800aaee:	46c0      	nop			; (mov r8, r8)
- 800aaf0:	080148f4 	.word	0x080148f4
+ 800aaf0:	080148f8 	.word	0x080148f8
 
 0800aaf4 <my_nmea_get_rmc_utc_sss>:
 void my_nmea_get_rmc_utc_sss ( const char* m , uint32_t* sss )
@@ -27548,12 +27548,12 @@ void my_nmea_get_rmc_utc_sss ( const char* m , uint32_t* sss )
  800ab52:	b005      	add	sp, #20
  800ab54:	bd90      	pop	{r4, r7, pc}
  800ab56:	46c0      	nop			; (mov r8, r8)
- 800ab58:	080148f8 	.word	0x080148f8
+ 800ab58:	080148fc 	.word	0x080148fc
 
 0800ab5c <my_tracker_api_is_cmd>:
- */
-
 #include <my_tracker_api.h>
+
+
 
 bool my_tracker_api_is_cmd ( const char* c )
 {
@@ -27771,7 +27771,7 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  800acae:	b004      	add	sp, #16
  800acb0:	bd80      	pop	{r7, pc}
  800acb2:	46c0      	nop			; (mov r8, r8)
- 800acb4:	080148fc 	.word	0x080148fc
+ 800acb4:	08014900 	.word	0x08014900
 
 0800acb8 <malloc>:
  800acb8:	b510      	push	{r4, lr}
@@ -28684,12 +28684,12 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  800b3fa:	2200      	movs	r2, #0
  800b3fc:	e033      	b.n	800b466 <_strtod_l+0x30e>
  800b3fe:	46c0      	nop			; (mov r8, r8)
- 800b400:	08014a28 	.word	0x08014a28
+ 800b400:	08014a2c 	.word	0x08014a2c
  800b404:	7ff00000 	.word	0x7ff00000
  800b408:	ffefffff 	.word	0xffefffff
  800b40c:	00000433 	.word	0x00000433
  800b410:	7fffffff 	.word	0x7fffffff
- 800b414:	08014a24 	.word	0x08014a24
+ 800b414:	08014a28 	.word	0x08014a28
  800b418:	9b1b      	ldr	r3, [sp, #108]	; 0x6c
  800b41a:	1c5a      	adds	r2, r3, #1
  800b41c:	921b      	str	r2, [sp, #108]	; 0x6c
@@ -29054,14 +29054,14 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  800b714:	e55b      	b.n	800b1ce <_strtod_l+0x76>
  800b716:	46c0      	nop			; (mov r8, r8)
  800b718:	00004e1f 	.word	0x00004e1f
- 800b71c:	08014d59 	.word	0x08014d59
- 800b720:	08014a3c 	.word	0x08014a3c
+ 800b71c:	08014d61 	.word	0x08014d61
+ 800b720:	08014a40 	.word	0x08014a40
  800b724:	7ff00000 	.word	0x7ff00000
- 800b728:	08014d51 	.word	0x08014d51
- 800b72c:	08014e07 	.word	0x08014e07
- 800b730:	08014e03 	.word	0x08014e03
- 800b734:	08014c78 	.word	0x08014c78
- 800b738:	08014c50 	.word	0x08014c50
+ 800b728:	08014d59 	.word	0x08014d59
+ 800b72c:	08014e0f 	.word	0x08014e0f
+ 800b730:	08014e0b 	.word	0x08014e0b
+ 800b734:	08014c80 	.word	0x08014c80
+ 800b738:	08014c58 	.word	0x08014c58
  800b73c:	fcb00000 	.word	0xfcb00000
  800b740:	7ca00000 	.word	0x7ca00000
  800b744:	7c900000 	.word	0x7c900000
@@ -29451,7 +29451,7 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  800ba6e:	d1a1      	bne.n	800b9b4 <_strtod_l+0x85c>
  800ba70:	e5de      	b.n	800b630 <_strtod_l+0x4d8>
  800ba72:	46c0      	nop			; (mov r8, r8)
- 800ba74:	08014a50 	.word	0x08014a50
+ 800ba74:	08014a58 	.word	0x08014a58
  800ba78:	fffffc02 	.word	0xfffffc02
  800ba7c:	7ff00000 	.word	0x7ff00000
  800ba80:	39500000 	.word	0x39500000
@@ -29930,7 +29930,7 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  800be96:	d0a2      	beq.n	800bdde <_strtol_l.constprop.0+0x46>
  800be98:	260a      	movs	r6, #10
  800be9a:	e7a8      	b.n	800bdee <_strtol_l.constprop.0+0x56>
- 800be9c:	08014a79 	.word	0x08014a79
+ 800be9c:	08014a81 	.word	0x08014a81
  800bea0:	7fffffff 	.word	0x7fffffff
 
 0800bea4 <_strtol_r>:
@@ -30077,7 +30077,7 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  800bfbe:	260a      	movs	r6, #10
  800bfc0:	e7a7      	b.n	800bf12 <_strtoul_l.constprop.0+0x4e>
  800bfc2:	46c0      	nop			; (mov r8, r8)
- 800bfc4:	08014a79 	.word	0x08014a79
+ 800bfc4:	08014a81 	.word	0x08014a81
 
 0800bfc8 <_strtoul_r>:
  800bfc8:	b510      	push	{r4, lr}
@@ -30764,10 +30764,10 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  800c52a:	4798      	blx	r3
  800c52c:	3601      	adds	r6, #1
  800c52e:	e7f2      	b.n	800c516 <__libc_init_array+0x1e>
- 800c530:	08014e94 	.word	0x08014e94
- 800c534:	08014e94 	.word	0x08014e94
- 800c538:	08014e9c 	.word	0x08014e9c
- 800c53c:	08014e94 	.word	0x08014e94
+ 800c530:	08014e9c 	.word	0x08014e9c
+ 800c534:	08014e9c 	.word	0x08014e9c
+ 800c538:	08014ea4 	.word	0x08014ea4
+ 800c53c:	08014e9c 	.word	0x08014e9c
 
 0800c540 <__retarget_lock_init_recursive>:
  800c540:	4770      	bx	lr
@@ -31533,9 +31533,9 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  800cb56:	d1dc      	bne.n	800cb12 <__gethex+0x286>
  800cb58:	e7ee      	b.n	800cb38 <__gethex+0x2ac>
  800cb5a:	46c0      	nop			; (mov r8, r8)
- 800cb5c:	08014a24 	.word	0x08014a24
- 800cb60:	08014b81 	.word	0x08014b81
- 800cb64:	08014b92 	.word	0x08014b92
+ 800cb5c:	08014a28 	.word	0x08014a28
+ 800cb60:	08014b89 	.word	0x08014b89
+ 800cb64:	08014b9a 	.word	0x08014b9a
  800cb68:	1e77      	subs	r7, r6, #1
  800cb6a:	2c00      	cmp	r4, #0
  800cb6c:	d12f      	bne.n	800cbce <__gethex+0x342>
@@ -31707,8 +31707,8 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  800ccc6:	4298      	cmp	r0, r3
  800ccc8:	dbe4      	blt.n	800cc94 <__gethex+0x408>
  800ccca:	e7af      	b.n	800cc2c <__gethex+0x3a0>
- 800cccc:	08014b81 	.word	0x08014b81
- 800ccd0:	08014b92 	.word	0x08014b92
+ 800cccc:	08014b89 	.word	0x08014b89
+ 800ccd0:	08014b9a 	.word	0x08014b9a
 
 0800ccd4 <L_shift>:
  800ccd4:	2308      	movs	r3, #8
@@ -32052,8 +32052,8 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  800cf72:	0020      	movs	r0, r4
  800cf74:	bdfe      	pop	{r1, r2, r3, r4, r5, r6, r7, pc}
  800cf76:	46c0      	nop			; (mov r8, r8)
- 800cf78:	08014b81 	.word	0x08014b81
- 800cf7c:	08014bf2 	.word	0x08014bf2
+ 800cf78:	08014b89 	.word	0x08014b89
+ 800cf7c:	08014bfa 	.word	0x08014bfa
 
 0800cf80 <__s2b>:
  800cf80:	b5f7      	push	{r0, r1, r2, r4, r5, r6, r7, lr}
@@ -32123,8 +32123,8 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  800d00a:	3701      	adds	r7, #1
  800d00c:	0001      	movs	r1, r0
  800d00e:	e7ed      	b.n	800cfec <__s2b+0x6c>
- 800d010:	08014b81 	.word	0x08014b81
- 800d014:	08014bf2 	.word	0x08014bf2
+ 800d010:	08014b89 	.word	0x08014b89
+ 800d014:	08014bfa 	.word	0x08014bfa
 
 0800d018 <__hi0bits>:
  800d018:	0003      	movs	r3, r0
@@ -32221,8 +32221,8 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  800d0ca:	6103      	str	r3, [r0, #16]
  800d0cc:	bd10      	pop	{r4, pc}
  800d0ce:	46c0      	nop			; (mov r8, r8)
- 800d0d0:	08014bf2 	.word	0x08014bf2
- 800d0d4:	08014b81 	.word	0x08014b81
+ 800d0d0:	08014bfa 	.word	0x08014bfa
+ 800d0d4:	08014b89 	.word	0x08014b89
 
 0800d0d8 <__multiply>:
  800d0d8:	b5f0      	push	{r4, r5, r6, r7, lr}
@@ -32395,8 +32395,8 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  800d22a:	3b01      	subs	r3, #1
  800d22c:	9303      	str	r3, [sp, #12]
  800d22e:	e79b      	b.n	800d168 <__multiply+0x90>
- 800d230:	08014b81 	.word	0x08014b81
- 800d234:	08014bf2 	.word	0x08014bf2
+ 800d230:	08014b89 	.word	0x08014b89
+ 800d234:	08014bfa 	.word	0x08014bfa
 
 0800d238 <__pow5mult>:
  800d238:	b5f7      	push	{r0, r1, r2, r4, r5, r6, r7, lr}
@@ -32456,7 +32456,7 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  800d2ae:	0030      	movs	r0, r6
  800d2b0:	bdfe      	pop	{r1, r2, r3, r4, r5, r6, r7, pc}
  800d2b2:	46c0      	nop			; (mov r8, r8)
- 800d2b4:	08014d40 	.word	0x08014d40
+ 800d2b4:	08014d48 	.word	0x08014d48
  800d2b8:	00000271 	.word	0x00000271
 
 0800d2bc <__lshift>:
@@ -32563,8 +32563,8 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  800d38a:	d8fb      	bhi.n	800d384 <__lshift+0xc8>
  800d38c:	e7f0      	b.n	800d370 <__lshift+0xb4>
  800d38e:	46c0      	nop			; (mov r8, r8)
- 800d390:	08014b81 	.word	0x08014b81
- 800d394:	08014bf2 	.word	0x08014bf2
+ 800d390:	08014b89 	.word	0x08014b89
+ 800d394:	08014bfa 	.word	0x08014bfa
 
 0800d398 <__mcmp>:
  800d398:	b530      	push	{r4, r5, lr}
@@ -32737,8 +32737,8 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  800d4ea:	e7dd      	b.n	800d4a8 <__mdiff+0xd8>
  800d4ec:	3801      	subs	r0, #1
  800d4ee:	e7e9      	b.n	800d4c4 <__mdiff+0xf4>
- 800d4f0:	08014b81 	.word	0x08014b81
- 800d4f4:	08014bf2 	.word	0x08014bf2
+ 800d4f0:	08014b89 	.word	0x08014b89
+ 800d4f4:	08014bfa 	.word	0x08014bfa
  800d4f8:	00000237 	.word	0x00000237
  800d4fc:	00000245 	.word	0x00000245
 
@@ -32926,8 +32926,8 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  800d670:	f7ff fcd2 	bl	800d018 <__hi0bits>
  800d674:	0164      	lsls	r4, r4, #5
  800d676:	e7e0      	b.n	800d63a <__d2b+0x6a>
- 800d678:	08014b81 	.word	0x08014b81
- 800d67c:	08014bf2 	.word	0x08014bf2
+ 800d678:	08014b89 	.word	0x08014b89
+ 800d67c:	08014bfa 	.word	0x08014bfa
  800d680:	0000030f 	.word	0x0000030f
  800d684:	fffffbcd 	.word	0xfffffbcd
  800d688:	fffffbce 	.word	0xfffffbce
@@ -33572,10 +33572,10 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  800dc00:	e00e      	b.n	800dc20 <_svfprintf_r+0x49c>
  800dc02:	46c0      	nop			; (mov r8, r8)
  800dc04:	7fefffff 	.word	0x7fefffff
- 800dc08:	08014d4c 	.word	0x08014d4c
- 800dc0c:	08014d50 	.word	0x08014d50
- 800dc10:	08014d54 	.word	0x08014d54
- 800dc14:	08014d58 	.word	0x08014d58
+ 800dc08:	08014d54 	.word	0x08014d54
+ 800dc0c:	08014d58 	.word	0x08014d58
+ 800dc10:	08014d5c 	.word	0x08014d5c
+ 800dc14:	08014d60 	.word	0x08014d60
  800dc18:	2300      	movs	r3, #0
  800dc1a:	930c      	str	r3, [sp, #48]	; 0x30
  800dc1c:	ab3f      	add	r3, sp, #252	; 0xfc
@@ -34036,13 +34036,13 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  800dfd6:	e3a3      	b.n	800e720 <_svfprintf_r+0xf9c>
  800dfd8:	3708      	adds	r7, #8
  800dfda:	e301      	b.n	800e5e0 <_svfprintf_r+0xe5c>
- 800dfdc:	08014d5c 	.word	0x08014d5c
- 800dfe0:	08014d6d 	.word	0x08014d6d
+ 800dfdc:	08014d64 	.word	0x08014d64
+ 800dfe0:	08014d75 	.word	0x08014d75
  800dfe4:	40300000 	.word	0x40300000
  800dfe8:	3fe00000 	.word	0x3fe00000
  800dfec:	fffffbff 	.word	0xfffffbff
- 800dff0:	08014d80 	.word	0x08014d80
- 800dff4:	08014d90 	.word	0x08014d90
+ 800dff0:	08014d88 	.word	0x08014d88
+ 800dff4:	08014d98 	.word	0x08014d98
  800dff8:	9b08      	ldr	r3, [sp, #32]
  800dffa:	930c      	str	r3, [sp, #48]	; 0x30
  800dffc:	e610      	b.n	800dc20 <_svfprintf_r+0x49c>
@@ -34711,8 +34711,8 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  800e546:	e518      	b.n	800df7a <_svfprintf_r+0x7f6>
  800e548:	fffffbff 	.word	0xfffffbff
  800e54c:	00007830 	.word	0x00007830
- 800e550:	08014d5c 	.word	0x08014d5c
- 800e554:	08014d6d 	.word	0x08014d6d
+ 800e550:	08014d64 	.word	0x08014d64
+ 800e554:	08014d75 	.word	0x08014d75
  800e558:	9b0f      	ldr	r3, [sp, #60]	; 0x3c
  800e55a:	2b65      	cmp	r3, #101	; 0x65
  800e55c:	dc00      	bgt.n	800e560 <_svfprintf_r+0xddc>
@@ -35117,8 +35117,8 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  800e896:	922e      	str	r2, [sp, #184]	; 0xb8
  800e898:	e6dd      	b.n	800e656 <_svfprintf_r+0xed2>
  800e89a:	46c0      	nop			; (mov r8, r8)
- 800e89c:	08014d7e 	.word	0x08014d7e
- 800e8a0:	08014d90 	.word	0x08014d90
+ 800e89c:	08014d86 	.word	0x08014d86
+ 800e8a0:	08014d98 	.word	0x08014d98
  800e8a4:	2010      	movs	r0, #16
  800e8a6:	1812      	adds	r2, r2, r0
  800e8a8:	6078      	str	r0, [r7, #4]
@@ -35527,8 +35527,8 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  800ebfa:	1e93      	subs	r3, r2, #2
  800ebfc:	9308      	str	r3, [sp, #32]
  800ebfe:	e420      	b.n	800e442 <_svfprintf_r+0xcbe>
- 800ec00:	08014d90 	.word	0x08014d90
- 800ec04:	08014d80 	.word	0x08014d80
+ 800ec00:	08014d98 	.word	0x08014d98
+ 800ec04:	08014d88 	.word	0x08014d88
 
 0800ec08 <__ssvfscanf_r>:
  800ec08:	b5f0      	push	{r4, r5, r6, r7, lr}
@@ -35820,7 +35820,7 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  800eea6:	e7e4      	b.n	800ee72 <__ssvfscanf_r+0x26a>
  800eea8:	fffffd34 	.word	0xfffffd34
  800eeac:	ffffdfff 	.word	0xffffdfff
- 800eeb0:	08014a79 	.word	0x08014a79
+ 800eeb0:	08014a81 	.word	0x08014a81
  800eeb4:	0800bea5 	.word	0x0800bea5
  800eeb8:	0800bfc9 	.word	0x0800bfc9
  800eebc:	2248      	movs	r2, #72	; 0x48
@@ -36977,7 +36977,7 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  800f828:	e7b6      	b.n	800f798 <__ssvfscanf_r+0xb90>
  800f82a:	46c0      	nop			; (mov r8, r8)
  800f82c:	0000fff6 	.word	0x0000fff6
- 800f830:	08014a79 	.word	0x08014a79
+ 800f830:	08014a81 	.word	0x08014a81
  800f834:	69fb      	ldr	r3, [r7, #28]
  800f836:	2b00      	cmp	r3, #0
  800f838:	d01c      	beq.n	800f874 <__ssvfscanf_r+0xc6c>
@@ -37348,12 +37348,12 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  800fb34:	6bbb      	ldr	r3, [r7, #56]	; 0x38
  800fb36:	195b      	adds	r3, r3, r5
  800fb38:	f7ff f92d 	bl	800ed96 <__ssvfscanf_r+0x18e>
- 800fb3c:	08014a79 	.word	0x08014a79
+ 800fb3c:	08014a81 	.word	0x08014a81
  800fb40:	0000fff6 	.word	0x0000fff6
  800fb44:	fffffdff 	.word	0xfffffdff
  800fb48:	fffffa7f 	.word	0xfffffa7f
  800fb4c:	fffffc7f 	.word	0xfffffc7f
- 800fb50:	08014da6 	.word	0x08014da6
+ 800fb50:	08014dae 	.word	0x08014dae
  800fb54:	fffff47f 	.word	0xfffff47f
  800fb58:	0763      	lsls	r3, r4, #29
  800fb5a:	d503      	bpl.n	800fb64 <__ssvfscanf_r+0xf5c>
@@ -37908,8 +37908,8 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  801002c:	fffffd7f 	.word	0xfffffd7f
  8010030:	0000026b 	.word	0x0000026b
  8010034:	0000026a 	.word	0x0000026a
- 8010038:	08014da0 	.word	0x08014da0
- 801003c:	08014e03 	.word	0x08014e03
+ 8010038:	08014da8 	.word	0x08014da8
+ 801003c:	08014e0b 	.word	0x08014e0b
 
 08010040 <_fclose_r>:
  8010040:	b570      	push	{r4, r5, r6, lr}
@@ -38266,8 +38266,8 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  8010312:	4798      	blx	r3
  8010314:	e7f5      	b.n	8010302 <__libc_fini_array+0xa>
  8010316:	46c0      	nop			; (mov r8, r8)
- 8010318:	08014ea0 	.word	0x08014ea0
- 801031c:	08014e9c 	.word	0x08014e9c
+ 8010318:	08014ea8 	.word	0x08014ea8
+ 801031c:	08014ea4 	.word	0x08014ea4
 
 08010320 <memchr>:
  8010320:	b2c9      	uxtb	r1, r1
@@ -38410,9 +38410,9 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  8010440:	f001 fa20 	bl	8011884 <fiprintf>
  8010444:	f002 fb08 	bl	8012a58 <abort>
  8010448:	200006d0 	.word	0x200006d0
- 801044c:	08014dc8 	.word	0x08014dc8
- 8010450:	08014e03 	.word	0x08014e03
- 8010454:	08014dd5 	.word	0x08014dd5
+ 801044c:	08014dd0 	.word	0x08014dd0
+ 8010450:	08014e0b 	.word	0x08014e0b
+ 8010454:	08014ddd 	.word	0x08014ddd
 
 08010458 <_calloc_r>:
  8010458:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
@@ -39008,10 +39008,10 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  8010922:	46c0      	nop			; (mov r8, r8)
  8010924:	7ff00000 	.word	0x7ff00000
  8010928:	0000270f 	.word	0x0000270f
- 801092c:	08014e0d 	.word	0x08014e0d
- 8010930:	08014e10 	.word	0x08014e10
- 8010934:	08014d7e 	.word	0x08014d7e
- 8010938:	08014d7f 	.word	0x08014d7f
+ 801092c:	08014e15 	.word	0x08014e15
+ 8010930:	08014e18 	.word	0x08014e18
+ 8010934:	08014d86 	.word	0x08014d86
+ 8010938:	08014d87 	.word	0x08014d87
  801093c:	3ff00000 	.word	0x3ff00000
  8010940:	fffffc01 	.word	0xfffffc01
  8010944:	3ff80000 	.word	0x3ff80000
@@ -39021,13 +39021,13 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  8010954:	3fc68a28 	.word	0x3fc68a28
  8010958:	509f79fb 	.word	0x509f79fb
  801095c:	3fd34413 	.word	0x3fd34413
- 8010960:	08014c78 	.word	0x08014c78
+ 8010960:	08014c80 	.word	0x08014c80
  8010964:	00000432 	.word	0x00000432
  8010968:	00000412 	.word	0x00000412
  801096c:	fe100000 	.word	0xfe100000
- 8010970:	08014b81 	.word	0x08014b81
- 8010974:	08014e11 	.word	0x08014e11
- 8010978:	08014c50 	.word	0x08014c50
+ 8010970:	08014b89 	.word	0x08014b89
+ 8010974:	08014e19 	.word	0x08014e19
+ 8010978:	08014c58 	.word	0x08014c58
  801097c:	9b03      	ldr	r3, [sp, #12]
  801097e:	2402      	movs	r4, #2
  8010980:	2b00      	cmp	r3, #0
@@ -39440,8 +39440,8 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  8010cfe:	9a08      	ldr	r2, [sp, #32]
  8010d00:	601a      	str	r2, [r3, #0]
  8010d02:	e4ba      	b.n	801067a <_dtoa_r+0x66>
- 8010d04:	08014c78 	.word	0x08014c78
- 8010d08:	08014c50 	.word	0x08014c50
+ 8010d04:	08014c80 	.word	0x08014c80
+ 8010d08:	08014c58 	.word	0x08014c58
  8010d0c:	3ff00000 	.word	0x3ff00000
  8010d10:	40240000 	.word	0x40240000
  8010d14:	401c0000 	.word	0x401c0000
@@ -39792,8 +39792,8 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  8010ffc:	40240000 	.word	0x40240000
  8011000:	00000433 	.word	0x00000433
  8011004:	7ff00000 	.word	0x7ff00000
- 8011008:	08014b81 	.word	0x08014b81
- 801100c:	08014e11 	.word	0x08014e11
+ 8011008:	08014b89 	.word	0x08014b89
+ 801100c:	08014e19 	.word	0x08014e19
  8011010:	000002ef 	.word	0x000002ef
  8011014:	0039      	movs	r1, r7
  8011016:	693a      	ldr	r2, [r7, #16]
@@ -40016,8 +40016,8 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  80111ee:	e6b6      	b.n	8010f5e <_dtoa_r+0x94a>
  80111f0:	e7b1      	b.n	8011156 <_dtoa_r+0xb42>
  80111f2:	46c0      	nop			; (mov r8, r8)
- 80111f4:	08014e04 	.word	0x08014e04
- 80111f8:	08014e0c 	.word	0x08014e0c
+ 80111f4:	08014e0c 	.word	0x08014e0c
+ 80111f8:	08014e14 	.word	0x08014e14
 
 080111fc <realloc>:
  80111fc:	b510      	push	{r4, lr}
@@ -40609,7 +40609,7 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  80116aa:	260a      	movs	r6, #10
  80116ac:	e780      	b.n	80115b0 <_strtoll_l.constprop.0+0x54>
  80116ae:	46c0      	nop			; (mov r8, r8)
- 80116b0:	08014a79 	.word	0x08014a79
+ 80116b0:	08014a81 	.word	0x08014a81
  80116b4:	7fffffff 	.word	0x7fffffff
 
 080116b8 <_strtoll_r>:
@@ -40787,7 +40787,7 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  8011812:	260a      	movs	r6, #10
  8011814:	e77e      	b.n	8011714 <_strtoull_l.constprop.0+0x54>
  8011816:	46c0      	nop			; (mov r8, r8)
- 8011818:	08014a79 	.word	0x08014a79
+ 8011818:	08014a81 	.word	0x08014a81
 
 0801181c <_strtoull_r>:
  801181c:	b510      	push	{r4, lr}
@@ -40822,7 +40822,7 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  8011854:	e7f3      	b.n	801183e <_mbrtowc_r+0x1a>
  8011856:	46c0      	nop			; (mov r8, r8)
  8011858:	20000444 	.word	0x20000444
- 801185c:	08014e03 	.word	0x08014e03
+ 801185c:	08014e0b 	.word	0x08014e0b
 
 08011860 <iswspace>:
  8011860:	b510      	push	{r4, lr}
@@ -40842,7 +40842,7 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  801187a:	4018      	ands	r0, r3
  801187c:	4770      	bx	lr
  801187e:	46c0      	nop			; (mov r8, r8)
- 8011880:	08014a79 	.word	0x08014a79
+ 8011880:	08014a81 	.word	0x08014a81
 
 08011884 <fiprintf>:
  8011884:	b40e      	push	{r1, r2, r3}
@@ -42044,10 +42044,10 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  801226a:	e7eb      	b.n	8012244 <_vfiprintf_r+0x704>
  801226c:	fffffbff 	.word	0xfffffbff
  8012270:	00007830 	.word	0x00007830
- 8012274:	08014d5c 	.word	0x08014d5c
- 8012278:	08014e69 	.word	0x08014e69
- 801227c:	08014e79 	.word	0x08014e79
- 8012280:	08014d6d 	.word	0x08014d6d
+ 8012274:	08014d64 	.word	0x08014d64
+ 8012278:	08014e71 	.word	0x08014e71
+ 801227c:	08014e81 	.word	0x08014e81
+ 8012280:	08014d75 	.word	0x08014d75
  8012284:	9b01      	ldr	r3, [sp, #4]
  8012286:	2b00      	cmp	r3, #0
  8012288:	d109      	bne.n	801229e <_vfiprintf_r+0x75e>
@@ -42335,7 +42335,7 @@ bool my_tracker_api_parse_cmd ( cmd_astro* cmd , char* s )
  80124d2:	1b9b      	subs	r3, r3, r6
  80124d4:	9305      	str	r3, [sp, #20]
  80124d6:	e575      	b.n	8011fc4 <_vfiprintf_r+0x484>
- 80124d8:	08014e69 	.word	0x08014e69
+ 80124d8:	08014e71 	.word	0x08014e71
 
 080124dc <__sbprintf>:
  80124dc:	b5f0      	push	{r4, r5, r6, r7, lr}

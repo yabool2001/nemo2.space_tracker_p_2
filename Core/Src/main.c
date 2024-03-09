@@ -58,7 +58,7 @@ UART_HandleTypeDef huart5;
 
 // SYSTEM
 char*		hello = "\nHello nemo2.space tracker p 2\r\n\0" ;
-const char*	fv = "0.0.3" ;
+const char*	fv = "0.0.3-alpha" ;
 uint8_t 	rx_byte = 0 ;
 bool 		sw1 , sw2 ;
 uint8_t		sys_mode = 0 ; // 0 - Production, 1 - Simulation, 2 - Test , 3 - Reserved (maybe Development)
@@ -70,9 +70,9 @@ char		rtc_dt_s[20] ;
 uint32_t 	my_rtc_alarmA_time = TIME_THS_1_H ;
 
 // ASTRO
-uint16_t	my_astro_payload_id = 0 ;
 char		my_astro_payload[ASTRONODE_PAYLOAD_MAX_LEN] = {0} ;
 cmd_astro	my_astro_cmd ;
+uint16_t	uplink_id = 0 ;
 
 // GNSS
 fix_astro	fix3d ;
@@ -212,13 +212,13 @@ int main(void)
 		  my_astro_handle_evt () ;
 	  }
 	  if ( sys_mode == 0 ) // Present sys_mode if other than production
-		  sprintf ( my_astro_payload , "%u,%.1f,%u,%lu,%s" , my_astro_payload_id , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) , fv ) ;
+		  sprintf ( my_astro_payload , "%u,%.1f,%u,%lu,%s" , uplink_id , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) , fv ) ;
 	  else
-		  sprintf ( my_astro_payload , "%u,%.1f,%u,%lu,%s,%u" , my_astro_payload_id , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) , fv , (uint16_t) sys_mode ) ;
+		  sprintf ( my_astro_payload , "%u,%.1f,%u,%lu,%s,%u" , uplink_id , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) , fv , (uint16_t) sys_mode ) ;
 	  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
 	  send_debug_logs ( dbg_payload ) ;
 	  my_astro_write_coordinates ( fix3d.latitude_astro_geo_wr , fix3d.longitude_astro_geo_wr ) ;
-	  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+	  my_astro_add_payload_2_queue ( uplink_id++ , my_astro_payload ) ;
 	  if ( my_rtc_set_alarm ( my_rtc_alarmA_time ) )
 	  {
 		  my_sys_deepsleep () ;
@@ -255,8 +255,8 @@ int main(void)
 		  if ( my_gnss_3dfix_flag )
 		  {
 			  my_astro_write_coordinates ( fix3d.latitude_astro_geo_wr , fix3d.longitude_astro_geo_wr ) ;
-			  sprintf ( my_astro_payload , "%u,%.1f,%u,%lu,%ld,%ld" , my_astro_payload_id , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) , fix3d.latitude_astro_geo_wr , fix3d.longitude_astro_geo_wr ) ;
-			  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+			  sprintf ( my_astro_payload , "%u,%.1f,%u,%lu,%ld,%ld" , uplink_id , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) , fix3d.latitude_astro_geo_wr , fix3d.longitude_astro_geo_wr ) ;
+			  my_astro_add_payload_2_queue ( uplink_id++ , my_astro_payload ) ;
 			  my_astro_turn_payload_id_counter () ;
 			  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ;
 			  send_debug_logs ( dbg_payload ) ;
@@ -907,51 +907,51 @@ bool my_tracker_handle_cmd ( void )
 			{
 			  case 1:
 				  my_sys_change_watchdog_time_ths ( my_astro_cmd.value ) ;
-				  sprintf ( my_astro_payload , "%u,%u,%u,%lu" , my_astro_payload_id , (uint16_t) my_astro_cmd.is_executed , my_astro_cmd.code , my_astro_cmd.value ) ;
+				  sprintf ( my_astro_payload , "%u,%u,%u,%lu" , uplink_id , (uint16_t) my_astro_cmd.is_executed , my_astro_cmd.code , my_astro_cmd.value ) ;
 				  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
 				  send_debug_logs ( dbg_payload ) ;
-				  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+				  my_astro_add_payload_2_queue ( uplink_id++ , my_astro_payload ) ;
 				  my_astro_turn_payload_id_counter () ;
 				  break ;
 			  case 2:
 				  my_sys_change_AlarmA_time ( my_astro_cmd.value ) ;
-				  sprintf ( my_astro_payload , "%u,%u,%u,%lu" , my_astro_payload_id , (uint16_t) my_astro_cmd.is_executed , my_astro_cmd.code , my_astro_cmd.value ) ;
+				  sprintf ( my_astro_payload , "%u,%u,%u,%lu" , uplink_id , (uint16_t) my_astro_cmd.is_executed , my_astro_cmd.code , my_astro_cmd.value ) ;
 				  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
 				  send_debug_logs ( dbg_payload ) ;
-				  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+				  my_astro_add_payload_2_queue ( uplink_id++ , my_astro_payload ) ;
 				  my_astro_turn_payload_id_counter () ;
 				  break ;
 			  case 3:
 				  my_sys_change_fix_acq_ths ( my_astro_cmd.value ) ;
-				  sprintf ( my_astro_payload , "%u,%u,%u,%lu" , my_astro_payload_id , (uint16_t) my_astro_cmd.is_executed , my_astro_cmd.code , my_astro_cmd.value ) ;
+				  sprintf ( my_astro_payload , "%u,%u,%u,%lu" , uplink_id , (uint16_t) my_astro_cmd.is_executed , my_astro_cmd.code , my_astro_cmd.value ) ;
 				  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
 				  send_debug_logs ( dbg_payload ) ;
-				  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+				  my_astro_add_payload_2_queue ( uplink_id++ , my_astro_payload ) ;
 				  my_astro_turn_payload_id_counter () ;
 				  break ;
 			  case 4:
 				  my_sys_change_min_tns_time_ths ( my_astro_cmd.value ) ;
-				  sprintf ( my_astro_payload , "%u,%u,%u,%lu" , my_astro_payload_id , (uint16_t) my_astro_cmd.is_executed , my_astro_cmd.code , my_astro_cmd.value ) ;
+				  sprintf ( my_astro_payload , "%u,%u,%u,%lu" , uplink_id , (uint16_t) my_astro_cmd.is_executed , my_astro_cmd.code , my_astro_cmd.value ) ;
 				  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
 				  send_debug_logs ( dbg_payload ) ;
-				  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+				  my_astro_add_payload_2_queue ( uplink_id++ , my_astro_payload ) ;
 				  my_astro_turn_payload_id_counter () ;
 				  break ;
 			  case 5:
 				  my_sys_change_pdop_ths ( my_astro_cmd.value ) ;
-				  sprintf ( my_astro_payload , "%u,%u,%u,%lu" , my_astro_payload_id , (uint16_t) my_astro_cmd.is_executed , my_astro_cmd.code , my_astro_cmd.value ) ;
+				  sprintf ( my_astro_payload , "%u,%u,%u,%lu" , uplink_id , (uint16_t) my_astro_cmd.is_executed , my_astro_cmd.code , my_astro_cmd.value ) ;
 				  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
 				  send_debug_logs ( dbg_payload ) ;
-				  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+				  my_astro_add_payload_2_queue ( uplink_id++ , my_astro_payload ) ;
 				  my_astro_turn_payload_id_counter () ;
 				  break ;
 			  case 8:
 				  if ( my_astro_cmd.value == (uint32_t) GET_SYS_CFG )
 				  {
-					  sprintf ( my_astro_payload , "%u,%s,%u,%u,%lu,%u,%u,%.1f" , my_astro_payload_id , fv , (uint16_t) sys_mode , sys_watchdog_time_ths , my_rtc_alarmA_time , fix_acq_ths , min_tns_time_ths , pdop_ths ) ;
+					  sprintf ( my_astro_payload , "%u,%s,%u,%u,%lu,%u,%u,%.1f" , uplink_id , fv , (uint16_t) sys_mode , sys_watchdog_time_ths , my_rtc_alarmA_time , fix_acq_ths , min_tns_time_ths , pdop_ths ) ;
 					  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
 					  send_debug_logs ( dbg_payload ) ;
-					  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+					  my_astro_add_payload_2_queue ( uplink_id++ , my_astro_payload ) ;
 					  my_astro_turn_payload_id_counter () ;
 				  }
 				  break ;
@@ -961,10 +961,10 @@ bool my_tracker_handle_cmd ( void )
 					  my_sys_restart () ;
 				  break ;
 			  default:
-				  sprintf ( my_astro_payload , "%u,%u,%u,%lu" , my_astro_payload_id , (uint16_t) my_astro_cmd.is_executed , my_astro_cmd.code , my_astro_cmd.value ) ;
+				  sprintf ( my_astro_payload , "%u,%u,%u,%lu" , uplink_id , (uint16_t) my_astro_cmd.is_executed , my_astro_cmd.code , my_astro_cmd.value ) ;
 				  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
 				  send_debug_logs ( dbg_payload ) ;
-				  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
+				  my_astro_add_payload_2_queue ( uplink_id++ , my_astro_payload ) ;
 				  my_astro_turn_payload_id_counter () ;
 				  return false ;
 			}
@@ -1104,8 +1104,32 @@ bool my_astro_evt_pin ()
 }
 void my_astro_turn_payload_id_counter ( void )
 {
-	if ( my_astro_payload_id > 99 )
-		my_astro_payload_id = 1 ;
+	if ( uplink_id > 99 )
+		uplink_id = 1 ;
+}
+
+// ACC LL Function
+int32_t my_lis2dw12_platform_write ( void *handle , uint8_t reg , const uint8_t *bufp , uint16_t len )
+{
+	HAL_GPIO_WritePin	( ACC_SPI1_CS_GPIO_Port , ACC_SPI1_CS_Pin , GPIO_PIN_RESET ) ;
+	HAL_Delay ( 20 ) ;
+	HAL_SPI_Transmit	( handle , &reg , 1 , 1000 ) ;
+	HAL_SPI_Transmit	( handle , (uint8_t*) bufp , len , 1000 ) ;
+	HAL_GPIO_WritePin	( ACC_SPI1_CS_GPIO_Port , ACC_SPI1_CS_Pin , GPIO_PIN_SET) ;
+
+	return 0 ;
+}
+
+int32_t my_lis2dw12_platform_read ( void *handle , uint8_t reg , uint8_t *bufp , uint16_t len )
+{
+	reg |= 0x80;
+	HAL_GPIO_WritePin ( ACC_SPI1_CS_GPIO_Port , ACC_SPI1_CS_Pin , GPIO_PIN_RESET) ;
+	HAL_Delay ( 20 ) ;
+	HAL_SPI_Transmit ( handle , &reg , 1 , 1000 ) ;
+	HAL_SPI_Receive ( handle , bufp , len , 1000 ) ;
+	HAL_GPIO_WritePin ( ACC_SPI1_CS_GPIO_Port , ACC_SPI1_CS_Pin , GPIO_PIN_SET) ;
+
+	return 0 ;
 }
 
 // TIM operations
