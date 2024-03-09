@@ -14,7 +14,6 @@
 #include <stdlib.h>
 
 #include "stm32g0xx_hal.h"
-#include "my_st_acc.h"
 
 #define TIME_THS_15_SEC				15
 #define TIME_THS_30_SEC				30

@@ -10,8 +10,7 @@ C_SRCS += \
 ../my_drivers/Src/iis2dh_reg.c \
 ../my_drivers/Src/my_astronode.c \
 ../my_drivers/Src/my_gnss.c \
-../my_drivers/Src/my_rtc.c \
-../my_drivers/Src/my_st_acc.c 
+../my_drivers/Src/my_rtc.c 
 
 OBJS += \
 ./my_drivers/Src/astronode_application.o \
@@ -19,8 +18,7 @@ OBJS += \
 ./my_drivers/Src/iis2dh_reg.o \
 ./my_drivers/Src/my_astronode.o \
 ./my_drivers/Src/my_gnss.o \
-./my_drivers/Src/my_rtc.o \
-./my_drivers/Src/my_st_acc.o 
+./my_drivers/Src/my_rtc.o 
 
 C_DEPS += \
 ./my_drivers/Src/astronode_application.d \
@@ -28,8 +26,7 @@ C_DEPS += \
 ./my_drivers/Src/iis2dh_reg.d \
 ./my_drivers/Src/my_astronode.d \
 ./my_drivers/Src/my_gnss.d \
-./my_drivers/Src/my_rtc.d \
-./my_drivers/Src/my_st_acc.d 
+./my_drivers/Src/my_rtc.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -39,7 +36,7 @@ my_drivers/Src/%.o my_drivers/Src/%.su my_drivers/Src/%.cyclo: ../my_drivers/Src
 clean: clean-my_drivers-2f-Src
 
 clean-my_drivers-2f-Src:
-	-$(RM) ./my_drivers/Src/astronode_application.cyclo ./my_drivers/Src/astronode_application.d ./my_drivers/Src/astronode_application.o ./my_drivers/Src/astronode_application.su ./my_drivers/Src/astronode_transport.cyclo ./my_drivers/Src/astronode_transport.d ./my_drivers/Src/astronode_transport.o ./my_drivers/Src/astronode_transport.su ./my_drivers/Src/iis2dh_reg.cyclo ./my_drivers/Src/iis2dh_reg.d ./my_drivers/Src/iis2dh_reg.o ./my_drivers/Src/iis2dh_reg.su ./my_drivers/Src/my_astronode.cyclo ./my_drivers/Src/my_astronode.d ./my_drivers/Src/my_astronode.o ./my_drivers/Src/my_astronode.su ./my_drivers/Src/my_gnss.cyclo ./my_drivers/Src/my_gnss.d ./my_drivers/Src/my_gnss.o ./my_drivers/Src/my_gnss.su ./my_drivers/Src/my_rtc.cyclo ./my_drivers/Src/my_rtc.d ./my_drivers/Src/my_rtc.o ./my_drivers/Src/my_rtc.su ./my_drivers/Src/my_st_acc.cyclo ./my_drivers/Src/my_st_acc.d ./my_drivers/Src/my_st_acc.o ./my_drivers/Src/my_st_acc.su
+	-$(RM) ./my_drivers/Src/astronode_application.cyclo ./my_drivers/Src/astronode_application.d ./my_drivers/Src/astronode_application.o ./my_drivers/Src/astronode_application.su ./my_drivers/Src/astronode_transport.cyclo ./my_drivers/Src/astronode_transport.d ./my_drivers/Src/astronode_transport.o ./my_drivers/Src/astronode_transport.su ./my_drivers/Src/iis2dh_reg.cyclo ./my_drivers/Src/iis2dh_reg.d ./my_drivers/Src/iis2dh_reg.o ./my_drivers/Src/iis2dh_reg.su ./my_drivers/Src/my_astronode.cyclo ./my_drivers/Src/my_astronode.d ./my_drivers/Src/my_astronode.o ./my_drivers/Src/my_astronode.su ./my_drivers/Src/my_gnss.cyclo ./my_drivers/Src/my_gnss.d ./my_drivers/Src/my_gnss.o ./my_drivers/Src/my_gnss.su ./my_drivers/Src/my_rtc.cyclo ./my_drivers/Src/my_rtc.d ./my_drivers/Src/my_rtc.o ./my_drivers/Src/my_rtc.su
 
 .PHONY: clean-my_drivers-2f-Src
 

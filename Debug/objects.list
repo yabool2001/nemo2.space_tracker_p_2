@@ -33,7 +33,6 @@
 "./my_drivers/Src/my_astronode.o"
 "./my_drivers/Src/my_gnss.o"
 "./my_drivers/Src/my_rtc.o"
-"./my_drivers/Src/my_st_acc.o"
 "./my_libraries/Src/my_conversions.o"
 "./my_libraries/Src/my_global.o"
 "./my_libraries/Src/my_nmea.o"

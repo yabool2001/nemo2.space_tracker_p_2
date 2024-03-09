@@ -14,6 +14,7 @@
 #include "my_astronode.h"
 #include "my_rtc.h"
 #include "my_gnss.h"
+#include "iis2dh_reg.h"
 
 // ASTRO COMMANDS
 

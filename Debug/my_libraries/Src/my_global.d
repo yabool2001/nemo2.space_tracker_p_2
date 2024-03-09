@@ -34,9 +34,7 @@ my_libraries/Src/my_global.o: ../my_libraries/Src/my_global.c \
  ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_tim.h \
  ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_tim_ex.h \
  ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart.h \
- ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart_ex.h \
- C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_drivers/Inc/my_st_acc.h \
- C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_drivers/Inc/iis2dh_reg.h
+ ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart_ex.h
 C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_libraries/Inc/my_global.h:
 ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal.h:
 ../Core/Inc/stm32g0xx_hal_conf.h:
@@ -73,5 +71,3 @@ C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_libraries/Inc/my_global.h:
 ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_tim_ex.h:
 ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart.h:
 ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart_ex.h:
-C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_drivers/Inc/my_st_acc.h:
-C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_drivers/Inc/iis2dh_reg.h:

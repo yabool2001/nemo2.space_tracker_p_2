@@ -79,9 +79,13 @@ fix_astro	fix3d ;
 
 // TIM
 
+// ACC
+stmdev_ctx_t	my_acc_ctx ;
+
 // Flags
 bool my_rtc_alarm_flag = false ;
 bool my_gnss_3dfix_flag = false ;
+bool my_acc_problem_flag = false ;
 
 /* USER CODE END PV */
 
@@ -205,8 +209,8 @@ int main(void)
 		  send_debug_logs ( dbg_payload ) ;
 	  }
   }
-  if ( !my_acc_init () )
-  	  my_st_acc_health_flag = 0 ;
+
+  my_acc_problem_flag = my_acc_init () ;
 
   if ( !my_astro_init () )
 	  my_sys_restart () ;
@@ -1081,10 +1085,21 @@ void my_gnss_verbose ( uint16_t time_seconds_ths )
 // ACC
 bool my_acc_init ( void )
 {
+	uint8_t id = 0 ;
+
+	iis2dh_device_id_get ( &my_acc_ctx , &id ) ;
+	if ( id != IIS2DH_ID )
+		return false ;
+
 	my_acc_ctx.write_reg = my_st_acc_platform_write ;
 	my_acc_ctx.read_reg = my_st_acc_platform_read ;
 	my_acc_ctx.handle = &hspi1 ;
-	return my_st_iis2dh_init () ;
+
+	iis2dh_full_scale_set ( &my_acc_ctx , IIS2DH_2g ) ;
+	iis2dh_operating_mode_set ( &my_acc_ctx , IIS2DH_LP_8bit ) ;
+	iis2dh_data_rate_set ( &my_acc_ctx , IIS2DH_ODR_10Hz ) ;
+
+	return true ;
 }
 
 // ** ASTRO Operations
