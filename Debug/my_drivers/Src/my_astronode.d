@@ -36,6 +36,8 @@ my_drivers/Src/my_astronode.o: ../my_drivers/Src/my_astronode.c \
  ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_tim_ex.h \
  ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart.h \
  ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart_ex.h \
+ C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_drivers/Inc/my_st_acc.h \
+ C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_drivers/Inc/iis2dh_reg.h \
  C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_drivers/Inc/astronode_application.h \
  C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_drivers/Inc/astronode_definitions.h \
  C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_drivers/Inc/astronode_transport.h
@@ -76,6 +78,8 @@ C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_libraries/Inc/my_global.h:
 ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_tim_ex.h:
 ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart.h:
 ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart_ex.h:
+C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_drivers/Inc/my_st_acc.h:
+C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_drivers/Inc/iis2dh_reg.h:
 C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_drivers/Inc/astronode_application.h:
 C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_drivers/Inc/astronode_definitions.h:
 C:/Users/mzeml/embedded/nemo2.space_tracker_p_2/my_drivers/Inc/astronode_transport.h:

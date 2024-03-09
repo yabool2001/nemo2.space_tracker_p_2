@@ -119,6 +119,11 @@ void my_gnss_sw_on ( void ) ;
 void my_gnss_sw_off ( void ) ;
 void my_gnss_verbose ( uint16_t ) ;
 
+// ACC
+bool 	my_acc_init ( void ) ;
+int32_t my_st_acc_platform_write ( void* , uint8_t , const uint8_t* , uint16_t ) ;
+int32_t my_st_acc_platform_read ( void* , uint8_t , uint8_t* , uint16_t ) ;
+
 void my_ant_sw_pos ( uint8_t ) ;
 
 void my_tim_init ( void ) ;
@@ -200,6 +205,8 @@ int main(void)
 		  send_debug_logs ( dbg_payload ) ;
 	  }
   }
+  if ( !my_acc_init () )
+  	  my_st_acc_health_flag = 0 ;
 
   if ( !my_astro_init () )
 	  my_sys_restart () ;
@@ -1071,6 +1078,14 @@ void my_gnss_verbose ( uint16_t time_seconds_ths )
 	  my_gnss_sw_off () ;
 }
 
+// ACC
+bool my_acc_init ( void )
+{
+	my_acc_ctx.write_reg = my_st_acc_platform_write ;
+	my_acc_ctx.read_reg = my_st_acc_platform_read ;
+	my_acc_ctx.handle = &hspi1 ;
+	return my_st_iis2dh_init () ;
+}
 
 // ** ASTRO Operations
 void my_astronode_reset ( void )
@@ -1109,7 +1124,7 @@ void my_astro_turn_payload_id_counter ( void )
 }
 
 // ACC LL Function
-int32_t my_lis2dw12_platform_write ( void *handle , uint8_t reg , const uint8_t *bufp , uint16_t len )
+int32_t my_st_acc_platform_write ( void* handle , uint8_t reg , const uint8_t* bufp , uint16_t len )
 {
 	HAL_GPIO_WritePin	( ACC_SPI1_CS_GPIO_Port , ACC_SPI1_CS_Pin , GPIO_PIN_RESET ) ;
 	HAL_Delay ( 20 ) ;
@@ -1120,7 +1135,7 @@ int32_t my_lis2dw12_platform_write ( void *handle , uint8_t reg , const uint8_t 
 	return 0 ;
 }
 
-int32_t my_lis2dw12_platform_read ( void *handle , uint8_t reg , uint8_t *bufp , uint16_t len )
+int32_t my_st_acc_platform_read ( void* handle , uint8_t reg , uint8_t* bufp , uint16_t len )
 {
 	reg |= 0x80;
 	HAL_GPIO_WritePin ( ACC_SPI1_CS_GPIO_Port , ACC_SPI1_CS_Pin , GPIO_PIN_RESET) ;

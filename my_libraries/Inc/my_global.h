@@ -14,6 +14,7 @@
 #include <stdlib.h>
 
 #include "stm32g0xx_hal.h"
+#include "my_st_acc.h"
 
 #define TIME_THS_15_SEC				15
 #define TIME_THS_30_SEC				30
@@ -68,10 +69,6 @@ void send_astronode_request ( uint8_t* , uint32_t ) ;
 uint32_t get_systick ( void ) ;
 bool is_systick_timeout_over ( uint32_t , uint16_t ) ;
 bool is_astronode_character_received ( uint8_t* ) ;
-
-// ACC
-int32_t my_lis2dw12_platform_write ( void* , uint8_t , const uint8_t , uint16_t ) ;
-int32_t my_lis2dw12_platform_read ( void* , uint8_t , uint8_t , uint16_t ) ;
 
 
 typedef struct
