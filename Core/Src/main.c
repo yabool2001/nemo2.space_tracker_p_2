@@ -965,6 +965,14 @@ bool my_tracker_handle_cmd ( void )
 					  my_astro_add_payload_2_queue ( uplink_id++ , my_astro_payload ) ;
 					  my_astro_turn_payload_id_counter () ;
 				  }
+				  if ( my_astro_cmd.value == (uint32_t) GET_SYS_COURSE )
+				  {
+					  sprintf ( my_astro_payload , "%u,%lu" , uplink_id , (uint32_t) ( fix3d.acq_total_time / 60 ) ) ;
+					  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
+					  send_debug_logs ( dbg_payload ) ;
+					  my_astro_add_payload_2_queue ( uplink_id++ , my_astro_payload ) ;
+					  my_astro_turn_payload_id_counter () ;
+				  }
 				  break ;
 			  case 9:
 				  // Tutaj wyjątkowo nie musi być uplink confimration, bo kolejny pakiet będzie miał id = 0, a logi będą wysłane w funkcji

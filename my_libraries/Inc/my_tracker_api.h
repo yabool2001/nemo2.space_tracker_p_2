@@ -24,6 +24,7 @@
 
 // 9,X Sensitive command regarding contingency situations
 #define 	GET_SYS_CFG 					1
+#define 	GET_SYS_COURSE 					2
 #define 	RESET_SYS_CMD_VALUE 			1	//HAL_NVIC_SystemReset
 
 bool		my_tracker_api_is_cmd ( const char* ) ;

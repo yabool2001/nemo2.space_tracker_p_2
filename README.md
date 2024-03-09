@@ -94,8 +94,11 @@ precision = maximum number of seconds for findind 3 satellites
 min precision = 0.01 meters (10 centimeter)
 max precision = 100 meters
 
-Get System configuration
+Get System
+8,1 Configuration
 fv , sys_mode , sys_watchdog_time_ths , my_rtc_alarmA_time , fix_acq_ths , min_tns_time_ths , pdop_ths ,
+8,2 Course
+total gnss minutes of work
 
 SYSTEM Software Reset
 9,9
