@@ -60,22 +60,22 @@ UART_HandleTypeDef huart5;
 char*		hello = "\nHello nemo2.space tracker p 2\r\n\0" ;
 const char*	fv = "0.0.3" ;
 uint8_t 	rx_byte = 0 ;
-bool sw1 , sw2 ;
-uint8_t sys_mode = 0 ; // 0 - Production, 1 - Simulation, 2 - Test , 3 - Reserved (maybe Development)
-uint8_t sys_mission = 0 ; // 0: Active, 1: Sustainable
-uint16_t sys_watchdog_time_ths = TIME_THS_15_MIN ;
+bool 		sw1 , sw2 ;
+uint8_t		sys_mode = 0 ; // 0 - Production, 1 - Simulation, 2 - Test , 3 - Reserved (maybe Development)
+uint8_t		sys_mission = 0 ; // 0: Active, 1: Sustainable
+uint16_t	sys_watchdog_time_ths = TIME_THS_15_MIN ;
 
 // RTC
 char		rtc_dt_s[20] ;
 uint32_t 	my_rtc_alarmA_time = TIME_THS_1_H ;
 
 // ASTRO
-uint16_t		my_astro_payload_id = 0 ;
-char			my_astro_payload[ASTRONODE_PAYLOAD_MAX_LEN] = {0} ;
-cmd_astro		my_astro_cmd ;
+uint16_t	my_astro_payload_id = 0 ;
+char		my_astro_payload[ASTRONODE_PAYLOAD_MAX_LEN] = {0} ;
+cmd_astro	my_astro_cmd ;
 
 // GNSS
-fix_astro		fix3d ;
+fix_astro	fix3d ;
 
 // TIM
 
@@ -113,6 +113,7 @@ void my_sys_change_fix_acq_ths ( uint32_t ) ;
 void my_sys_change_min_tns_time_ths ( uint32_t ) ;
 void my_sys_change_pdop_ths ( uint32_t ) ;
 bool my_tracker_handle_cmd ( void ) ;
+void my_astro_turn_payload_id_counter ( void ) ;
 
 void my_gnss_sw_on ( void ) ;
 void my_gnss_sw_off ( void ) ;
@@ -256,8 +257,7 @@ int main(void)
 			  my_astro_write_coordinates ( fix3d.latitude_astro_geo_wr , fix3d.longitude_astro_geo_wr ) ;
 			  sprintf ( my_astro_payload , "%u,%.1f,%u,%lu,%ld,%ld" , my_astro_payload_id , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) , fix3d.latitude_astro_geo_wr , fix3d.longitude_astro_geo_wr ) ;
 			  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
-			  if ( my_astro_payload_id == 0 )
-				  my_astro_payload_id++ ;
+			  my_astro_turn_payload_id_counter () ;
 			  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ;
 			  send_debug_logs ( dbg_payload ) ;
 		  }
@@ -911,8 +911,7 @@ bool my_tracker_handle_cmd ( void )
 				  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
 				  send_debug_logs ( dbg_payload ) ;
 				  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
-				  if ( my_astro_payload_id == 0 )
-					  my_astro_payload_id++ ;
+				  my_astro_turn_payload_id_counter () ;
 				  break ;
 			  case 2:
 				  my_sys_change_AlarmA_time ( my_astro_cmd.value ) ;
@@ -920,8 +919,7 @@ bool my_tracker_handle_cmd ( void )
 				  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
 				  send_debug_logs ( dbg_payload ) ;
 				  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
-				  if ( my_astro_payload_id == 0 )
-					  my_astro_payload_id++ ;
+				  my_astro_turn_payload_id_counter () ;
 				  break ;
 			  case 3:
 				  my_sys_change_fix_acq_ths ( my_astro_cmd.value ) ;
@@ -929,8 +927,7 @@ bool my_tracker_handle_cmd ( void )
 				  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
 				  send_debug_logs ( dbg_payload ) ;
 				  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
-				  if ( my_astro_payload_id == 0 )
-					  my_astro_payload_id++ ;
+				  my_astro_turn_payload_id_counter () ;
 				  break ;
 			  case 4:
 				  my_sys_change_min_tns_time_ths ( my_astro_cmd.value ) ;
@@ -938,8 +935,7 @@ bool my_tracker_handle_cmd ( void )
 				  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
 				  send_debug_logs ( dbg_payload ) ;
 				  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
-				  if ( my_astro_payload_id == 0 )
-					  my_astro_payload_id++ ;
+				  my_astro_turn_payload_id_counter () ;
 				  break ;
 			  case 5:
 				  my_sys_change_pdop_ths ( my_astro_cmd.value ) ;
@@ -947,8 +943,7 @@ bool my_tracker_handle_cmd ( void )
 				  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
 				  send_debug_logs ( dbg_payload ) ;
 				  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
-				  if ( my_astro_payload_id == 0 )
-					  my_astro_payload_id++ ;
+				  my_astro_turn_payload_id_counter () ;
 				  break ;
 			  case 8:
 				  if ( my_astro_cmd.value == (uint32_t) GET_SYS_CFG )
@@ -957,8 +952,7 @@ bool my_tracker_handle_cmd ( void )
 					  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
 					  send_debug_logs ( dbg_payload ) ;
 					  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
-					  if ( my_astro_payload_id == 0 )
-						  my_astro_payload_id++ ;
+					  my_astro_turn_payload_id_counter () ;
 				  }
 				  break ;
 			  case 9:
@@ -971,8 +965,7 @@ bool my_tracker_handle_cmd ( void )
 				  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
 				  send_debug_logs ( dbg_payload ) ;
 				  my_astro_add_payload_2_queue ( my_astro_payload_id++ , my_astro_payload ) ;
-				  if ( my_astro_payload_id == 0 )
-					  my_astro_payload_id++ ;
+				  my_astro_turn_payload_id_counter () ;
 				  return false ;
 			}
 		}
@@ -1108,6 +1101,11 @@ bool is_astronode_character_received ( uint8_t* p_rx_char )
 bool my_astro_evt_pin ()
 {
 	return ( HAL_GPIO_ReadPin ( ASTRO_EVT_GPIO_Port , ASTRO_EVT_Pin ) == GPIO_PIN_SET ? true : false);
+}
+void my_astro_turn_payload_id_counter ( void )
+{
+	if ( my_astro_payload_id > 99 )
+		my_astro_payload_id = 1 ;
 }
 
 // TIM operations

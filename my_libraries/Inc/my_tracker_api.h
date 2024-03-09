@@ -11,6 +11,11 @@
 #include "my_global.h"
 #include "my_conversions.h"
 
+#include "my_astronode.h"
+#include "my_rtc.h"
+#include "my_gnss.h"
+#include "my_st_acc.h"
+
 // ASTRO COMMANDS
 
 // 0,X Command to set Ultra-Low power settings
