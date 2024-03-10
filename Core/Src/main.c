@@ -82,6 +82,7 @@ fix_astro	fix3d ;
 
 // ACC
 stmdev_ctx_t	my_acc_ctx ;
+int16_t 		my_acc_temp = 0 ;
 
 // Flags
 bool my_rtc_alarm_flag = false ;
@@ -111,6 +112,7 @@ void my_sys_init ( void ) ;
 bool is_system_initialized ( void ) ;
 void my_sys_restart ( void ) ;
 void my_sys_standby ( void ) ;
+void my_sys_sleep ( char* ) ;
 void my_sys_deepsleep ( char* ) ;
 void my_sys_change_watchdog_time_ths ( uint32_t ) ;
 void my_sys_change_AlarmA_time ( uint32_t ) ;
@@ -129,6 +131,8 @@ void my_astro_send_uplink ( char* , char* ) ;
 
 // ACC
 bool 	my_acc_init ( void ) ;
+bool 	my_acc_start ( void ) ;
+bool 	my_acc_stop ( void ) ;
 int32_t my_st_acc_platform_write ( void* , uint8_t , const uint8_t* , uint16_t ) ;
 int32_t my_st_acc_platform_read ( void* , uint8_t , uint8_t* , uint16_t ) ;
 
@@ -203,8 +207,8 @@ int main(void)
   {
 	  if ( my_rtc_set_alarm ( my_rtc_alarmA_time ) )
 	  {
-		  sprintf ( dbg_payload , "%s,%d,my_sys_deepsleep (), my_rtc_alarmA [s] = %lu" , __FILE__ , __LINE__ , my_rtc_alarmA_time ) ;
-		  my_sys_deepsleep ( dbg_payload ) ;
+		  sprintf ( dbg_payload , "%s,%d,my_sys_sleep (), my_rtc_alarmA [s] = %lu" , __FILE__ , __LINE__ , my_rtc_alarmA_time ) ;
+		  my_sys_sleep ( dbg_payload ) ;
 	  }
   }
 
@@ -225,8 +229,8 @@ int main(void)
 	  my_astro_send_uplink ( my_astro_payload , dbg_payload ) ;
 	  if ( my_rtc_set_alarm ( my_rtc_alarmA_time ) )
 	  {
-		  sprintf ( dbg_payload , "%s,%d,my_sys_deepsleep (), my_rtc_alarmA [s] = %lu" , __FILE__ , __LINE__ , my_rtc_alarmA_time ) ;
-		  my_sys_deepsleep ( dbg_payload ) ;
+		  sprintf ( dbg_payload , "%s,%d,my_sys_sleep (), my_rtc_alarmA [s] = %lu" , __FILE__ , __LINE__ , my_rtc_alarmA_time ) ;
+		  my_sys_sleep ( dbg_payload ) ;
 	  }
   }
 
@@ -269,8 +273,8 @@ int main(void)
 	  }
 	  if ( my_rtc_set_alarm ( my_rtc_alarmA_time ) )
 	  {
-		  sprintf ( dbg_payload , "%s,%d,my_sys_deepsleep (), my_rtc_alarmA [s] = %lu" , __FILE__ , __LINE__ , my_rtc_alarmA_time ) ;
-		  my_sys_deepsleep ( dbg_payload ) ;
+		  sprintf ( dbg_payload , "%s,%d,my_sys_sleep (), my_rtc_alarmA [s] = %lu" , __FILE__ , __LINE__ , my_rtc_alarmA_time ) ;
+		  my_sys_sleep ( dbg_payload ) ;
 	  }
     /* USER CODE END WHILE */
 
@@ -849,7 +853,7 @@ void my_sys_standby ( void )
 	send_debug_logs ( dbg_payload ) ;
 }
 
-void my_sys_deepsleep ( char* m )
+void my_sys_sleep ( char* m )
 {
 	send_debug_logs ( m ) ;
 	my_tim_stop () ;
@@ -857,6 +861,21 @@ void my_sys_deepsleep ( char* m )
 	my_rtc_alarm_flag = false ;
 	HAL_PWR_EnterSTOPMode ( PWR_LOWPOWERREGULATOR_ON , PWR_STOPENTRY_WFE ) ;
 	HAL_ResumeTick () ;
+	my_rtc_get_dt_s ( rtc_dt_s ) ;
+	sprintf ( m , "%s,%d,%s,Wake-up" , __FILE__ , __LINE__ , rtc_dt_s ) ;
+	send_debug_logs ( m ) ;
+}
+
+void my_sys_deepsleep ( char* m )
+{
+	send_debug_logs ( m ) ;
+	my_tim_stop () ;
+	my_acc_stop () ;
+	HAL_SuspendTick () ;
+	my_rtc_alarm_flag = false ;
+	HAL_PWR_EnterSTOPMode ( PWR_LOWPOWERREGULATOR_ON , PWR_STOPENTRY_WFE ) ;
+	HAL_ResumeTick () ;
+	my_acc_start () ;
 	my_rtc_get_dt_s ( rtc_dt_s ) ;
 	sprintf ( m , "%s,%d,%s,Wake-up" , __FILE__ , __LINE__ , rtc_dt_s ) ;
 	send_debug_logs ( m ) ;
@@ -961,7 +980,8 @@ bool my_tracker_handle_cmd ( void )
 				  }
 				  if ( my_astro_cmd.value == (uint32_t) GET_SYS_COURSE )
 				  {
-					  sprintf ( my_astro_payload , "%u,%lu" , uplink_id , (uint32_t) ( fix3d.acq_total_time / 60 ) ) ;
+					  iis2dh_temperature_raw_get ( &my_acc_ctx , &my_acc_temp ) ;
+					  sprintf ( my_astro_payload , "%u,%lu,%d" , uplink_id , (uint32_t) ( fix3d.acq_total_time / 60 ) , my_acc_temp ) ;
 					  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
 					  send_debug_logs ( dbg_payload ) ;
 					  my_astro_add_payload_2_queue ( uplink_id++ , my_astro_payload ) ;
@@ -1088,7 +1108,6 @@ void my_gnss_verbose ( uint16_t time_seconds_ths )
 bool my_acc_init ( void )
 {
 	uint8_t id = 0 ;
-
 	iis2dh_device_id_get ( &my_acc_ctx , &id ) ;
 	if ( id != IIS2DH_ID )
 		return false ;
@@ -1097,12 +1116,48 @@ bool my_acc_init ( void )
 	my_acc_ctx.read_reg = my_st_acc_platform_read ;
 	my_acc_ctx.handle = &hspi1 ;
 
-	//  Configuration: 2g, LP and 10Hz gives 3 uA of ACC power consumption
+	return true ;
+}
+
+bool my_acc_start ( void )
+{
+	uint8_t id = 0 ;
+
+	iis2dh_device_id_get ( &my_acc_ctx , &id ) ;
+	if ( id != IIS2DH_ID )
+		return false ;
+
+	//  Configuration: 2g, LP and 25Hz gives 4 uA of ACC power consumption
 	iis2dh_full_scale_set ( &my_acc_ctx , IIS2DH_2g ) ; // FS bits [ 2 g - 16 g ]
 	iis2dh_operating_mode_set ( &my_acc_ctx , IIS2DH_LP_8bit ) ; // [ High Resolution , Normal Mode , Low Power]
-	iis2dh_data_rate_set ( &my_acc_ctx , IIS2DH_ODR_10Hz ) ;
+	iis2dh_data_rate_set ( &my_acc_ctx , IIS2DH_ODR_25Hz ) ; // Below 25Hz it will be hard to calculate free-fall
+	iis2dh_fifo_mode_set ( &my_acc_ctx , IIS2DH_FIFO_MODE ) ; // FIFO mode allows consistent power saving for the system, since the host processor does not need to	continuously poll data from the sensor, but it can wake up only when needed and burst the significant data out from the FIFO.
+
+	// Temperature sensor enable.
+	// iis2dh_temperature_meas_set( &my_acc_ctx , IIS2DH_TEMP_ENABLE ) ;
+	// To retrieve the temperature sensor data the BDU bit in CTRL_REG4 (23h) must be set to 1.
+	// iis2dh_block_data_update_set ( &my_acc_ctx , PROPERTY_ENABLE ) ;
+
+	// Interrupt request on INT1_SRC (31h) and INT2_SRC (35h) latched. Register cleared by reading INTx_SRC itself.
+	iis2dh_int1_pin_notification_mode_set ( &my_acc_ctx , IIS2DH_INT2_LATCHED ) ;
+	iis2dh_int2_pin_notification_mode_set ( &my_acc_ctx , IIS2DH_INT2_LATCHED ) ;
+
 	// The IIS2DH may also be configured to generate an inertial wake-up and free-fall interrupt signal according to a programmed acceleration event along the enabled axes. Both free-fall and wake-up can be available simultaneously on two different pins.
 
+
+	return true ;
+}
+
+bool my_acc_stop ( void )
+{
+	iis2dh_data_rate_set ( &my_acc_ctx , IIS2DH_POWER_DOWN ) ; // Below 25Hz it will be hard to calculate free-fall
+
+	// Temperature sensor disable.
+	iis2dh_temperature_meas_set( &my_acc_ctx , IIS2DH_TEMP_DISABLE ) ;
+	// To retrieve the temperature sensor data the BDU bit in CTRL_REG4 (23h) must be set to 1.
+	iis2dh_block_data_update_set ( &my_acc_ctx , PROPERTY_DISABLE ) ;
+
+	// The IIS2DH may also be configured to generate an inertial wake-up and free-fall interrupt signal according to a programmed acceleration event along the enabled axes. Both free-fall and wake-up can be available simultaneously on two different pins.
 
 	return true ;
 }

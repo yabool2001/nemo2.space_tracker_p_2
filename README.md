@@ -97,8 +97,8 @@ max precision = 100 meters
 Get System
 8,1 Configuration
 fv , sys_mode , sys_watchdog_time_ths , my_rtc_alarmA_time , fix_acq_ths , min_tns_time_ths , pdop_ths ,
-8,2 Course
-total gnss minutes of work
+8,2 Status
+total gnss minutes of work , temperature measure by accelerometer
 
 SYSTEM Software Reset
 9,9
