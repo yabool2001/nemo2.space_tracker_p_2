@@ -204,7 +204,20 @@ int main(void)
 	  my_acc_problem_flag = true ;
 	  send_debug_logs ( "ACC start problem" ) ;
   }
-  my_acc_stop () ;
+  //my_acc_stop () ;
+
+  if ( !my_astro_init () )
+	  my_sys_restart () ;
+  else
+  {
+	  while ( my_astro_evt_pin () )
+	  {
+		  sprintf ( dbg_payload , "%s,%d,my_astro_evt_pin" , __FILE__ , __LINE__ ) ;
+		  send_debug_logs ( dbg_payload ) ;
+		  my_astro_handle_evt () ;
+	  }
+  }
+
   // my_gnss_verbose ( 15 ) ;
 
   my_gnss_sw_on () ;
@@ -221,17 +234,8 @@ int main(void)
 		  my_sys_sleep ( dbg_payload ) ;
 	  }
   }
-
-  if ( !my_astro_init () )
-	  my_sys_restart () ;
   else
   {
-	  while ( my_astro_evt_pin () )
-	  {
-		  sprintf ( dbg_payload , "%s,%d,my_astro_evt_pin" , __FILE__ , __LINE__ ) ;
-		  send_debug_logs ( dbg_payload ) ;
-		  my_astro_handle_evt () ;
-	  }
 	  sprintf ( my_astro_payload , "%u,%.1f,%u,%lu,%s" , uplink_id , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) , fv ) ;
 	  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
 	  my_astro_send_uplink ( my_astro_payload , dbg_payload ) ;
@@ -241,6 +245,8 @@ int main(void)
 		  my_sys_sleep ( dbg_payload ) ;
 	  }
   }
+
+
 
   /* USER CODE END 2 */
 
