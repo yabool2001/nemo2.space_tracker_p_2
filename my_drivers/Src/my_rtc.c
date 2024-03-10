@@ -31,6 +31,14 @@ uint16_t my_rtc_get_dt_s ( char* dt_s )
 
 	return (uint16_t) ( 2000 + gDate.Year ) ;
 }
+uint32_t my_rtc_get_ts ( void )
+{
+	RTC_DateTypeDef d ;
+	RTC_TimeTypeDef t ;
+
+	my_rtc_get_dt ( &d , &t ) ;
+	return my_conv_rtc2timestamp ( &d , &t ) ;
+}
 bool my_rtc_set_alarm ( uint32_t s )
 {
 	char  rtc_dt_s[20] ;

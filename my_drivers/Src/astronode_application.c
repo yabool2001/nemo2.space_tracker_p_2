@@ -469,7 +469,7 @@ void astronode_send_pld_dr(void)
     }
 }
 
-bool astronode_send_pld_er ( uint16_t payload_id , char *p_payload , uint16_t payload_length )
+bool astronode_send_pld_er ( uint16_t payload_id , const char *p_payload , uint16_t payload_length )
 {
     astronode_app_msg_t request = {0};
     astronode_app_msg_t answer = {0};

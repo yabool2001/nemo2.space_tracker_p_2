@@ -73,6 +73,7 @@ uint32_t 	my_rtc_alarmA_time = TIME_THS_1_H ;
 char		my_astro_payload[ASTRONODE_PAYLOAD_MAX_LEN] = {0} ;
 cmd_astro	my_astro_cmd ;
 uint16_t	uplink_id = 0 ;
+uint32_t	last_uplink_send_ts = 0 ;
 
 // GNSS
 fix_astro	fix3d ;
@@ -110,7 +111,7 @@ void my_sys_init ( void ) ;
 bool is_system_initialized ( void ) ;
 void my_sys_restart ( void ) ;
 void my_sys_standby ( void ) ;
-void my_sys_deepsleep ( void ) ;
+void my_sys_deepsleep ( char* ) ;
 void my_sys_change_watchdog_time_ths ( uint32_t ) ;
 void my_sys_change_AlarmA_time ( uint32_t ) ;
 void my_sys_change_fix_acq_ths ( uint32_t ) ;
@@ -122,6 +123,9 @@ void my_astro_turn_payload_id_counter ( void ) ;
 void my_gnss_sw_on ( void ) ;
 void my_gnss_sw_off ( void ) ;
 void my_gnss_verbose ( uint16_t ) ;
+
+// ASTRO
+void my_astro_send_uplink ( char* , char* ) ;
 
 // ACC
 bool 	my_acc_init ( void ) ;
@@ -199,14 +203,8 @@ int main(void)
   {
 	  if ( my_rtc_set_alarm ( my_rtc_alarmA_time ) )
 	  {
-		  sprintf ( dbg_payload , "%s,%d,HAL_PWR_EnterSTANDBYMode" , __FILE__ , __LINE__ ) ;
-		  send_debug_logs ( dbg_payload ) ;
-		  my_tim_stop () ;
-		  my_rtc_alarm_flag = false ;
-		  HAL_PWR_EnterSTANDBYMode () ;
-		  my_rtc_get_dt_s ( rtc_dt_s ) ;
-		  sprintf ( dbg_payload , "%s,%d,%s" , __FILE__ , __LINE__ , rtc_dt_s ) ;
-		  send_debug_logs ( dbg_payload ) ;
+		  sprintf ( dbg_payload , "%s,%d,my_sys_deepsleep (), my_rtc_alarmA [s] = %lu" , __FILE__ , __LINE__ , my_rtc_alarmA_time ) ;
+		  my_sys_deepsleep ( dbg_payload ) ;
 	  }
   }
 
@@ -222,17 +220,13 @@ int main(void)
 		  send_debug_logs ( dbg_payload ) ;
 		  my_astro_handle_evt () ;
 	  }
-	  if ( sys_mode == 0 ) // Present sys_mode if other than production
-		  sprintf ( my_astro_payload , "%u,%.1f,%u,%lu,%s" , uplink_id , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) , fv ) ;
-	  else
-		  sprintf ( my_astro_payload , "%u,%.1f,%u,%lu,%s,%u" , uplink_id , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) , fv , (uint16_t) sys_mode ) ;
+	  sprintf ( my_astro_payload , "%u,%.1f,%u,%lu,%s" , uplink_id , fix3d.pdop , fix3d.acq_time , (uint32_t) ( fix3d.acq_total_time / 60 ) , fv ) ;
 	  sprintf ( dbg_payload , "%s,%d,payload: %s" , __FILE__ , __LINE__ , my_astro_payload ) ; // Żeby astro_payload_id był taki jak wysłany, bo po wysłaniu będzie zwiększony
-	  send_debug_logs ( dbg_payload ) ;
-	  my_astro_write_coordinates ( fix3d.latitude_astro_geo_wr , fix3d.longitude_astro_geo_wr ) ;
-	  my_astro_add_payload_2_queue ( uplink_id++ , my_astro_payload ) ;
+	  my_astro_send_uplink ( my_astro_payload , dbg_payload ) ;
 	  if ( my_rtc_set_alarm ( my_rtc_alarmA_time ) )
 	  {
-		  my_sys_deepsleep () ;
+		  sprintf ( dbg_payload , "%s,%d,my_sys_deepsleep (), my_rtc_alarmA [s] = %lu" , __FILE__ , __LINE__ , my_rtc_alarmA_time ) ;
+		  my_sys_deepsleep ( dbg_payload ) ;
 	  }
   }
 
@@ -275,7 +269,8 @@ int main(void)
 	  }
 	  if ( my_rtc_set_alarm ( my_rtc_alarmA_time ) )
 	  {
-		  my_sys_deepsleep () ;
+		  sprintf ( dbg_payload , "%s,%d,my_sys_deepsleep (), my_rtc_alarmA [s] = %lu" , __FILE__ , __LINE__ , my_rtc_alarmA_time ) ;
+		  my_sys_deepsleep ( dbg_payload ) ;
 	  }
     /* USER CODE END WHILE */
 
@@ -776,7 +771,7 @@ static void MX_GPIO_Init(void)
 // *** HARDWARE OPERATIONS
 
 // ** SYSTEM OPERATION
-void send_debug_logs ( char* p_tx_buffer )
+void send_debug_logs ( const char* p_tx_buffer )
 {
     uint32_t length = strlen ( p_tx_buffer ) ;
 
@@ -854,18 +849,17 @@ void my_sys_standby ( void )
 	send_debug_logs ( dbg_payload ) ;
 }
 
-void my_sys_deepsleep ( void )
+void my_sys_deepsleep ( char* m )
 {
-	sprintf ( dbg_payload , "%s,%d,PWR_LOWPOWERREGULATOR_ON,PWR_STOPENTRY_WFE" , __FILE__ , __LINE__ ) ;
-	send_debug_logs ( dbg_payload ) ;
+	send_debug_logs ( m ) ;
 	my_tim_stop () ;
 	HAL_SuspendTick () ;
 	my_rtc_alarm_flag = false ;
 	HAL_PWR_EnterSTOPMode ( PWR_LOWPOWERREGULATOR_ON , PWR_STOPENTRY_WFE ) ;
 	HAL_ResumeTick () ;
 	my_rtc_get_dt_s ( rtc_dt_s ) ;
-	sprintf ( dbg_payload , "%s,%d,%s,Wake-up after deepsleep" , __FILE__ , __LINE__ , rtc_dt_s ) ;
-	send_debug_logs ( dbg_payload ) ;
+	sprintf ( m , "%s,%d,%s,Wake-up" , __FILE__ , __LINE__ , rtc_dt_s ) ;
+	send_debug_logs ( m ) ;
 }
 
 void my_sys_change_watchdog_time_ths ( uint32_t t )
@@ -1103,14 +1097,18 @@ bool my_acc_init ( void )
 	my_acc_ctx.read_reg = my_st_acc_platform_read ;
 	my_acc_ctx.handle = &hspi1 ;
 
-	iis2dh_full_scale_set ( &my_acc_ctx , IIS2DH_2g ) ;
-	iis2dh_operating_mode_set ( &my_acc_ctx , IIS2DH_LP_8bit ) ;
+	//  Configuration: 2g, LP and 10Hz gives 3 uA of ACC power consumption
+	iis2dh_full_scale_set ( &my_acc_ctx , IIS2DH_2g ) ; // FS bits [ 2 g - 16 g ]
+	iis2dh_operating_mode_set ( &my_acc_ctx , IIS2DH_LP_8bit ) ; // [ High Resolution , Normal Mode , Low Power]
 	iis2dh_data_rate_set ( &my_acc_ctx , IIS2DH_ODR_10Hz ) ;
+	// The IIS2DH may also be configured to generate an inertial wake-up and free-fall interrupt signal according to a programmed acceleration event along the enabled axes. Both free-fall and wake-up can be available simultaneously on two different pins.
+
 
 	return true ;
 }
 
-// ** ASTRO Operations
+/* ************************************* */
+// ASTRO Operations
 void my_astronode_reset ( void )
 {
     HAL_GPIO_WritePin ( ASTRO_RST_GPIO_Port , ASTRO_RST_Pin , GPIO_PIN_SET ) ;
@@ -1145,8 +1143,19 @@ void my_astro_turn_payload_id_counter ( void )
 	if ( uplink_id > 99 )
 		uplink_id = 1 ;
 }
+void my_astro_send_uplink ( char* p , char* m )
+{
+	if ( uplink_id == 0 && sys_mode != 0 ) // Present sys_mode in welcome uplink message if mode is other than production
+		sprintf ( p , "%s,%u" , p , (uint16_t) sys_mode ) ;
+	my_astro_add_payload_2_queue ( uplink_id++ , p ) ;
+	my_astro_turn_payload_id_counter () ;
+	last_uplink_send_ts = my_rtc_get_ts () ;
+	send_debug_logs ( m ) ;
+}
 
+/* ************************************* */
 // ACC LL Function
+
 int32_t my_st_acc_platform_write ( void* handle , uint8_t reg , const uint8_t* bufp , uint16_t len )
 {
 	HAL_GPIO_WritePin	( ACC_SPI1_CS_GPIO_Port , ACC_SPI1_CS_Pin , GPIO_PIN_RESET ) ;
@@ -1170,6 +1179,7 @@ int32_t my_st_acc_platform_read ( void* handle , uint8_t reg , uint8_t* bufp , u
 	return 0 ;
 }
 
+/* ************************************* */
 // TIM operations
 void my_tim_init ()
 {

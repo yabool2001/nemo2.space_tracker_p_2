@@ -9,8 +9,6 @@
 #define MY_TRACKER_H_
 
 #include "my_global.h"
-#include "my_conversions.h"
-
 #include "my_astronode.h"
 #include "my_rtc.h"
 #include "my_gnss.h"

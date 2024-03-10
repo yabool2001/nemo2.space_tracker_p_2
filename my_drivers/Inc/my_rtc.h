@@ -11,6 +11,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include "my_global.h"
 #include "my_conversions.h"
 #include "my_nmea.h"
 
@@ -28,7 +29,7 @@ void		my_rtc_get_dt ( RTC_DateTypeDef* d , RTC_TimeTypeDef* t ) ;
 uint16_t	my_rtc_get_dt_s ( char* ) ;
 bool		my_rtc_set_alarm ( uint32_t ) ;
 void		my_rtc_set_dt_from_nmea_rmc ( const char* ) ;
-
-void		send_debug_logs ( char* ) ;
+uint32_t	my_rtc_get_ts ( void ) ;
+void		send_debug_logs ( const char* ) ;
 
 #endif /* MY_RTC_H_ */

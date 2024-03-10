@@ -15,6 +15,7 @@
 
 #include "stm32g0xx_hal.h"
 
+
 #define TIME_THS_15_SEC				15
 #define TIME_THS_30_SEC				30
 #define TIME_THS_45_SEC				45
@@ -62,7 +63,7 @@ bool is_fix3d () ;
 // Astronode
 extern char my_astro_rcv_cmd[40] ;
 
-void send_debug_logs ( char* ) ;
+void send_debug_logs ( const char* ) ;
 void my_astronode_reset ( void ) ;
 void send_astronode_request ( uint8_t* , uint32_t ) ;
 uint32_t get_systick ( void ) ;

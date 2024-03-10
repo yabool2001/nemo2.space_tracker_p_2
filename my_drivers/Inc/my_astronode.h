@@ -17,9 +17,9 @@
 
 bool my_astro_init ( void ) ;
 void my_astro_write_coordinates ( int32_t , int32_t ) ;
-bool my_astro_add_payload_2_queue ( uint16_t , char* ) ;
+bool my_astro_add_payload_2_queue ( uint16_t , const char* ) ;
 bool my_astro_handle_evt ( void ) ;
 bool my_astro_log ( void ) ;
-void send_debug_logs ( char* ) ;
+void send_debug_logs ( const char* ) ;
 
 #endif /* ASTROCAST_INC_MY_ASTRONODE_H_ */

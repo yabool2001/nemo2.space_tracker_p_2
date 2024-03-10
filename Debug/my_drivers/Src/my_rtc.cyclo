@@ -1,4 +1,5 @@
 ../my_drivers/Src/my_rtc.c:15:6:my_rtc_get_dt	1
 ../my_drivers/Src/my_rtc.c:20:10:my_rtc_get_dt_s	1
-../my_drivers/Src/my_rtc.c:34:6:my_rtc_set_alarm	2
-../my_drivers/Src/my_rtc.c:72:6:my_rtc_set_dt_from_nmea_rmc	1
+../my_drivers/Src/my_rtc.c:34:10:my_rtc_get_ts	1
+../my_drivers/Src/my_rtc.c:42:6:my_rtc_set_alarm	2
+../my_drivers/Src/my_rtc.c:80:6:my_rtc_set_dt_from_nmea_rmc	1

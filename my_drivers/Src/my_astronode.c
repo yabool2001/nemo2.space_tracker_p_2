@@ -40,7 +40,7 @@ bool my_astro_init ()
 	}
 }
 
-bool my_astro_add_payload_2_queue ( uint16_t id , char* payload )
+bool my_astro_add_payload_2_queue ( uint16_t id , const char* payload )
 {
 	size_t l = strlen ( payload ) ;
 	if ( l <= ASTRONODE_APP_PAYLOAD_MAX_LEN_BYTES )
