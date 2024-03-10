@@ -194,7 +194,17 @@ int main(void)
 
   my_tim_init () ;
   my_ant_sw_pos ( 2 ) ;
-
+  if ( !my_acc_init () )
+  {
+	  my_acc_problem_flag = true ;
+	  send_debug_logs ( "ACC init problem" ) ;
+  }
+  if ( !my_acc_start () )
+  {
+	  my_acc_problem_flag = true ;
+	  send_debug_logs ( "ACC start problem" ) ;
+  }
+  my_acc_stop () ;
   // my_gnss_verbose ( 15 ) ;
 
   my_gnss_sw_on () ;
@@ -211,8 +221,6 @@ int main(void)
 		  my_sys_sleep ( dbg_payload ) ;
 	  }
   }
-
-  my_acc_problem_flag = my_acc_init () ;
 
   if ( !my_astro_init () )
 	  my_sys_restart () ;
@@ -1108,13 +1116,14 @@ void my_gnss_verbose ( uint16_t time_seconds_ths )
 bool my_acc_init ( void )
 {
 	uint8_t id = 0 ;
-	iis2dh_device_id_get ( &my_acc_ctx , &id ) ;
-	if ( id != IIS2DH_ID )
-		return false ;
 
 	my_acc_ctx.write_reg = my_st_acc_platform_write ;
 	my_acc_ctx.read_reg = my_st_acc_platform_read ;
 	my_acc_ctx.handle = &hspi1 ;
+
+	iis2dh_device_id_get ( &my_acc_ctx , &id ) ;
+	if ( id != IIS2DH_ID )
+		return false ;
 
 	return true ;
 }
@@ -1130,7 +1139,7 @@ bool my_acc_start ( void )
 	//  Configuration: 2g, LP and 25Hz gives 4 uA of ACC power consumption
 	iis2dh_full_scale_set ( &my_acc_ctx , IIS2DH_2g ) ; // FS bits [ 2 g - 16 g ]
 	iis2dh_operating_mode_set ( &my_acc_ctx , IIS2DH_LP_8bit ) ; // [ High Resolution , Normal Mode , Low Power]
-	iis2dh_data_rate_set ( &my_acc_ctx , IIS2DH_ODR_25Hz ) ; // Below 25Hz it will be hard to calculate free-fall
+	iis2dh_data_rate_set ( &my_acc_ctx , IIS2DH_ODR_10Hz ) ; // Below 25Hz it will be hard to calculate free-fall
 	iis2dh_fifo_mode_set ( &my_acc_ctx , IIS2DH_FIFO_MODE ) ; // FIFO mode allows consistent power saving for the system, since the host processor does not need to	continuously poll data from the sensor, but it can wake up only when needed and burst the significant data out from the FIFO.
 
 	// Temperature sensor enable.
